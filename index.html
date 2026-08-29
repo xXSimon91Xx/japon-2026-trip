@@ -225,6 +225,12 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 
 <!-- ================= TAB TRAILER ================= -->
 <section id="tab-trailer" class="tab tab-trailer active">
+  <div class="trailer-video-wrap" style="position:relative;border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 10px 40px rgba(0,0,0,.45)">
+    <video id="trailerVideo" controls preload="metadata" playsinline style="width:100%;display:block;border-radius:16px;aspect-ratio:16/9;background:#000" poster="trailer/08_title_card.png">
+      <source src="trailer/trailer_final.mp4" type="video/mp4">
+    </video>
+    <div style="position:absolute;top:10px;left:10px;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.55);color:#ffd875;font-size:11px;font-weight:800;letter-spacing:.08em">▶ TRAILER OFICIAL · 47s · 1080p</div>
+  </div>
   <div class="trailer">
     <div class="slide" style="background-image:url('trailer/01_marc_beach_muscular.png')"></div>
     <div class="slide" style="background-image:url('trailer/02_ruben_shadow_dagger.png')"></div>
@@ -284,22 +290,27 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 <!-- ================= TAB RESTAURANTES ================= -->
 <section id="tab-restaurantes" class="tab">
   <div class="tab-head">
-    <h2>🍜 COMIDA CHATARRA</h2>
-    <p>Solo los 4 imprescindibles verificados en Tabelog. El resto del viaje: chatarra — platos completos por menos de 500¥.</p>
-  </div>
-  <div class="rest-grid" id="rest-list"></div>
-  <div class="tab-head" style="margin-top:28px"><h3>🍛 Comida barata — el plan real</h3><p>Nota: comeremos chatarra. Gyudon, sushi a 115¥ y onigiri 24/7.</p></div>
-  <table class="cheap-table">
-    <thead><tr><th>Cadena</th><th>Qué es</th><th>Precio</th></tr></thead>
-    <tbody>
-      <tr><td>🍛 Sukiya</td><td>Gyudon (bol de ternera, cebolla y arroz)</td><td>450¥</td></tr>
-      <tr><td>🍛 Matsuya</td><td>Gyudon clásico — abierto 24h</td><td>430¥</td></tr>
-      <tr><td>🍛 Yoshinoya</td><td>El rey del gyudon, por todas partes</td><td>~400-500¥</td></tr>
-      <tr><td>🍣 Kura Sushi</td><td>Conveyor belt: cada plato 115¥</td><td>115¥/plato</td></tr>
-      <tr><td>🏪 7-Eleven</td><td>Onigiri (triángulo de arroz) — desayuno base</td><td>120¥</td></tr>
-      <tr><td>🍛 Cadenas gyudon</td><td>Nakau, Matsuya &amp; co. — comida completa barata</td><td>400-600¥</td></tr>
-    </tbody>
-  </table>
+      <h2>🍜 COMIDA CHATARRA / CONVENI</h2>
+      <p>El plan real: konbini + gyudon + sushi a 115¥. Platos completos por menos de 500¥ y verificado en Tabelog para lo gordo.</p>
+    </div>
+    <div class="rest-grid" id="rest-list"></div>
+    <div class="tab-head" style="margin-top:28px"><h3>🍛 COMIDA CHATARRA / CONVENI — el menú del día a día</h3><p>Onigiri 24/7, gyudon por 400¥ y el sushi de cinta a 115¥. Esto es lo que comeremos el 90% de los días.</p></div>
+    <table class="cheap-table">
+      <thead><tr><th>Cadena</th><th>Qué es</th><th>Precio</th></tr></thead>
+      <tbody>
+        <tr><td>🏪 7-Eleven / FamilyMart / Lawson</td><td>Konbini 24 h: onigiri (120-180¥), karaage ~200-260¥ (el Karaage-kun de Lawson), bento 400-650¥, café latte ~150¥</td><td>120-650¥</td></tr>
+        <tr><td>🍛 Sukiya</td><td>Gyudon (bol de ternera, cebolla y arroz) — la comida más barata de Japón</td><td>450¥</td></tr>
+        <tr><td>🍛 Matsuya</td><td>Gyudon clásico — abierto 24h</td><td>430¥</td></tr>
+        <tr><td>🍛 Yoshinoya</td><td>El rey del gyudon, por todas partes</td><td>~400-600¥</td></tr>
+        <tr><td>🍜 Ichiran</td><td>Ramen tonkotsu en cabinas individuales (anti-sociales, el plan perfecto de resaca)</td><td>980-1.290¥</td></tr>
+        <tr><td>🍛 Coco Ichibanya</td><td>Kare (curry japonés) con niveles de picante y raciones extra</td><td>~800-1.200¥</td></tr>
+        <tr><td>🍔 Mos Burger</td><td>La hamburguesa japonesa: teriyaki burger y mos burger clásica</td><td>~400-600¥</td></tr>
+        <tr><td>🍣 Kura Sushi</td><td>Conveyor belt: cada plato 115¥ + gachapon gratis al reciclar 5 platos</td><td>115¥/plato</td></tr>
+        <tr><td>🍣 Sushiro</td><td>Conveyor belt: platos desde ~120¥, de las mejores cadenas kaiten</td><td>~120-150¥/plato</td></tr>
+        <tr><td>🐙 Takoyaki street</td><td>Dotonbori / Kuromon: bolas de pulpo a la brasa — 6 uds</td><td>500-700¥</td></tr>
+        <tr><td>🛒 Supermercado 20:00</td><td>Bento y sushi con hasta -50% al cierre: cena premium por 3€</td><td>300-600¥</td></tr>
+      </tbody>
+    </table>
   <p class="chatarra-note">🍜 <b>COMEREMOS CHATARRA.</b> Presupuesto comida rebajado al mínimo: konbini + gyudon + sushi a 115¥. Lo ahorrado va al wagyu (TATARA / Yoroniku) y a la fiesta.</p>
 </section>
 
@@ -332,31 +343,130 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
   </section>
 
   <!-- ================= TAB VIDEO ================= -->
-  <section id="tab-video" class="tab">
-    <div class="tab-head">
-      <h2>🎥 VIDEOS — ideas con las Ray-Ban</h2>
-      <p>14 ideas virales para grabar con las gafas. Día sugerido, hook, formato (POV / full / reacción) y coste en yenes.</p>
-    </div>
-    <div class="vid-grid" id="vid-list"></div>
-  </section>
+    <section id="tab-video" class="tab">
+      <div class="tab-head">
+        <h2>🎥 VIDEOS / GRABAR EN JAPÓN</h2>
+        <p>Formatos que funcionan, lugares TOP, consejos de equipo (Ray-Ban Meta / GoPro) y 6 ideas — una por cabeza. Datos verificados para dic 2026.</p>
+      </div>
 
-  <!-- ================= TAB ACTIVIDADES ================= -->
-  <section id="tab-actividades" class="tab">
-    <div class="tab-head">
-      <h2>🎪 ACTIVIDADES — cosas que no hay en España</h2>
-      <p>11 rarezas para los días libres (y alguna de día de ruta). Precios reales de dic 2026.</p>
-    </div>
-    <div class="act-grid" id="act-list"></div>
-  </section>
+      <div class="tab-head" style="margin-top:24px"><h3>🎯 Tipos de video que funcionan en YouTube</h3></div>
+      <ul class="bullets">
+        <li><b>Vlog de grupo en serie</b> — «6 amigos, 21 días en Japón»: un episodio por ciudad, promesa clara en el título y hook en los 3 primeros segundos (lo que más retiene).</li>
+        <li><b>Shorts verticales de 20-40 s</b> — un solo momento (el ciervo, el wagyu ardiendo, el ramen picante): el formato con más alcance nuevo fuera de Japón.</li>
+        <li><b>POV callejero con las Ray-Ban Meta</b> — caminar por Shibuya Crossing o Dotonbori en primera persona: el «walking tour» moderno, muy de moda en 2025-26.</li>
+        <li><b>Directos (live)</b> — comer en directo en Dotonbori o una tarde de gashapon: la audiencia de directos de Japón es fiel y el chat responde.</li>
+        <li><b>ASMR de comida</b> — takoyaki, ramen y karaage con el sonido ambiente real y sin música: lo que más empuja el algoritmo.</li>
+      </ul>
 
-  <!-- ================= TAB FIESTA ================= -->
-  <section id="tab-fiesta" class="tab">
-    <div class="tab-head">
-      <h2>🌃 FIESTA — vida nocturna low-cost</h2>
-      <p>11 planes de noche en Osaka y Tokyo. Sin covers, con direcciones y precios realistas.</p>
-    </div>
-    <div class="fiesta-grid" id="fiesta-list"></div>
-  </section>
+      <div class="tab-head" style="margin-top:24px"><h3>📍 Lugares TOP para grabar (y cuándo)</h3></div>
+      <ul class="bullets">
+        <li><b>Shibuya Crossing</b> — el cruce más transitado del mundo (~3.000 personas por cada verde): POV caminando o plano cenital desde el Starbucks de enfrente. De noche, mejor.</li>
+        <li><b>Dotonbori (Osaka)</b> — letrero Glico, canal y neones: el fondo perfecto para reacciones de comida y B-roll nocturno.</li>
+        <li><b>Senso-ji (Asakusa)</b> — la puerta Kaminarimon con su linterna gigante; antes de las 9:00 está vacío, luego se llena.</li>
+        <li><b>Akihabara</b> — neones, arcades y maid cafés: el «town walk» que más views da en el canal.</li>
+        <li><b>Fushimi Inari (Kioto)</b> — los 10.000 torii: time-lapse a primera hora sin gente (ya está en ruta, día 4).</li>
+        <li><b>Arashiyama, bosque de bambú (Kioto)</b> — llega antes de las 9:00; el bambú meciéndose es ASMR gratis (día 5).</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🛠️ Consejos Ray-Ban Meta &amp; GoPro</h3></div>
+      <ul class="bullets">
+        <li><b>Ray-Ban Meta</b>: ~4 h de batería de uso mixto + estuche de carga con varias recargas. 32-64 GB según generación y clips de 1-3 min por grabación.</li>
+        <li><b>Directos con las Meta</b>: se emite en vivo desde la app Meta View (Instagram/Facebook), pero la sesión corta a los ~30 min por batería/calor — directos cortos y con plan.</li>
+        <li><b>GoPro</b>: la estabilización HyperSmooth hace innecesario el gimbal en POV; lleva 2 baterías + tarjeta de 256 GB para el día entero.</li>
+        <li><b>Iluminación</b>: los neones y escaparates dan luz gratis de noche; para caras a oscuras, un LED pequeño de bolsillo (Ulanzi y similares, ~2.000¥).</li>
+        <li><b>Reglas japonesas</b>: en onsen NUNCA cámaras; en maid cafés y en M’s Pop Life no se graba sin permiso (y mejor con caras difuminadas); pide permiso antes de grabar a alguien de cerca.</li>
+        <li><b>Datos</b>: sincroniza las Meta al llegar al alojamiento (WiFi) y descarga los clips — no dejes la tarjeta llena para el último día.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🎬 6 ideas — una por cabeza</h3></div>
+      <div class="vid-grid" id="vid-list"></div>
+    </section>
+
+    <!-- ================= TAB ACTIVIDADES ================= -->
+    <section id="tab-actividades" class="tab">
+      <div class="tab-head">
+        <h2>🎪 ACTIVIDADES / DÍA LIBRE</h2>
+        <p>Cosas curiosas que no existen en España, organizadas por ciudad con precio estimado en yenes (dic 2026).</p>
+      </div>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🏙️ OSAKA</h3></div>
+      <ul class="bullets">
+        <li><b>Spa World</b> (~1.500-2.000¥) — onsen temático (Roma/Asia) que admite tatuajes con parches. La forma fácil de probar un onsen en plena ciudad.</li>
+        <li><b>Den Den Town / Nipponbashi</b> (0¥) — el Akihabara de Osaka: arcades, maid cafés y figuras, a 15 min a pie de Namba.</li>
+        <li><b>Mercado Kuromon</b> (500-2.000¥) — «la cocina de Osaka»: probar 3-4 puestos (takoyaki, wagyu a la brasa, fugu) = almuerzo completo.</li>
+        <li><b>300BAR</b> (990¥ / 3 tragos) — bar-retro de Ura-Namba donde un billete de 1992 vale por 3 shots.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🏯 KIOTO</h3></div>
+      <ul class="bullets">
+        <li><b>Iwatayama Monkey Park</b> (~600¥) — monos en libertad con vistas a Kioto; subida de 20 min, raro de verdad.</li>
+        <li><b>Nishiki Market</b> (0¥ entrada) — «la despensa de Kioto»: degustaciones de encurtidos, wagashi y marisco, 5 min de la estación.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🗼 TOKIO</h3></div>
+      <ul class="bullets">
+        <li><b>Ciber-café Gran Cyber Bagus</b> (~2.000-3.000¥ por 7-12 h) — cabina insonorizada con llave, ducha, bebidas y manga ilimitado, 24 h en Akihabara.</li>
+        <li><b>Mercado de Toyosu</b> (0¥ zonas públicas) — la lonja que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai (abierta 2024).</li>
+        <li><b>Museo del Ramen de Shin-Yokohama</b> (~380¥ entrada + ~1.000¥ por cuenco) — calles del Japón de 1958 con ramen regional de todo el país; a 30 min de Tokyo.</li>
+        <li><b>Cup Noodles Museum (Yokohama)</b> — entrada gratis, taller de tu Cup Noodle por 500¥.</li>
+        <li><b>Maid café AtHome (Akihabara)</b> (~2.000-3.000¥) — camareras kawaii con show en vivo; la «cheki» (foto) sale aparte (~1.000¥).</li>
+        <li><b>Purikura</b> (400-600¥) — fotomatones que te convierten en anime: Harajuku, Shinjuku y Akihabara.</li>
+        <li><b>Gashapon + grúas</b> (300-500¥) — Gashapon Department Store (Ikebukuro) y crane games en Akihabara.</li>
+        <li><b>Arcades GiGO / Taito Station</b> (100¥ por partida) — Akihabara y Shinjuku, de clásicos a modernos.</li>
+        <li><b>Cat café MOCHA</b> (~1.100¥ / 30 min con bebida) — gatos adoptables en Shibuya/Shinjuku.</li>
+        <li><b>teamLab Planets</b> (3.600¥, reserva) — caminar sobre el agua entre arte digital; ya está en el presupuesto (23 dic).</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🥤 RAREZAS Y NORMAS</h3></div>
+      <ul class="bullets">
+        <li><b>Máquinas expendedoras</b> (100-200¥) — Japón tiene más de 5 millones: melon soda, Pocari Sweat y café caliente/frío sin carbón.</li>
+        <li><b>Normas de onsen/sento</b> (sento ~500¥ / onsen 1.000-2.500¥) — se entra desnudo, te lavas ANTES de bañarte, la toalla pequeña no se mete al agua, y sin tatuajes salvo donde se permiten (o con parches).</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>✨ Todas las actividades en tarjetas</h3></div>
+      <div class="act-grid" id="act-list"></div>
+    </section>
+
+    <!-- ================= TAB FIESTA ================= -->
+    <section id="tab-fiesta" class="tab">
+      <div class="tab-head">
+        <h2>🌃 FIESTA / MALA VIDA</h2>
+        <p>Vida nocturna Osaka + Tokyo (+ Kioto, que es poco): clubs, bares, karaoke y las reglas de oro. Datos verificados dic 2026.</p>
+      </div>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🎧 Discotecas TOP</h3></div>
+      <ul class="bullets">
+        <li><b>Osaka</b>: Giraffe (el club comercial de Dotonbori: hip-hop/EDM, ~2.000-3.000¥) y Atom (Ura-Namba, hip-hop/comercial, ~2.000¥).</li>
+        <li><b>Tokio</b>: WOMB (Shibuya, la mítica de la electrónica, ~2.500-3.500¥), SEL Octagon (Roppongi, el templo del EDM, Top 100 DJMag 2025, ~3.000-4.000¥) y WARP (Kabukicho, ~2.000-3.000¥).</li>
+        <li><b>Kioto</b>: no tiene marcha gorda. El plan real: bares e izakayas de Pontocho/Kiyamachi y el último tren a Osaka.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>⚠️ OJO — cerrados para siempre</h3></div>
+      <ul class="bullets">
+        <li><b>Robot Restaurant</b>: el show de robots de Kabukicho cerró en marzo 2020 (pandemia) y su heredero «Samurai Restaurant» (2023) también ha cerrado. No lo busquéis.</li>
+        <li><b>ageHa</b>: la rave al aire libre de Shin-Kiba cerró definitivamente en enero 2022. Su relevo actual es SEL Octagon.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>🏮 Bares, izakayas y karaoke</h3></div>
+      <ul class="bullets">
+        <li><b>Golden Gai (Shinjuku)</b> — 6 callejuelas con ~200 bares miniatura de 3-6 personas; sin cover en muchos (algunos piden 500-1.000¥).</li>
+        <li><b>Tachinomi</b> (~300-500¥ el vaso) — bares de pie de Shinjuku y Ura-Namba: sake o highball rápido y barato.</li>
+        <li><b>Izakayas de Dotonbori y Hozenji</b> (~1.500-2.500¥) — yakitori, nabe y sake hasta tarde; el plan base de Osaka.</li>
+        <li><b>Karaoke nocturno</b> — Karaoke Kan (Osaka) y Big Echo 24h (Shinjuku): salas privadas y nomihodai (bebida libre) desde ~1.500¥/2 h.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>📌 Reglas de oro de la mala vida</h3></div>
+      <ul class="bullets">
+        <li><b>Último tren ~00:00-00:30</b> — el metro para temprano (Osaka un poco antes que Tokyo): si te quedas hasta tarde, toca taxi o esperar al primer tren de las 5:00.</li>
+        <li><b>Taxis carísimos</b> — bajada de bandera ~420-500¥ y sube rápido: 20 min ≈ 2.000-3.000¥. Reservados para emergencias.</li>
+        <li><b>Edad legal: 20+</b> — te pedirán identificación en clubs y al comprar alcohol.</li>
+        <li><b>Cover en discotecas</b> — habitual 1.000-2.000¥ con 1-2 consumiciones; sin propinas en Japón.</li>
+        <li><b>Grabar en clubs</b> — POV corto sin caras ajenas o te lo van a mirar mal; en locales con normas estrictas, fuera cámara.</li>
+      </ul>
+
+      <div class="tab-head" style="margin-top:24px"><h3>✨ Todos los planes en tarjetas</h3></div>
+      <div class="fiesta-grid" id="fiesta-list"></div>
+    </section>
 
   </main>
 
@@ -400,14 +510,24 @@ var REST = [
 ];
 
 var POIS = [
- {f:'🏝️', n:'Okinawa', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.'},
- {f:'⛩️', n:'Takayama', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.'},
- {f:'⛴️', n:'Hiroshima + Miyajima', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.'},
- {f:'🏔️', n:'Nikko', d:'Templo Toshogu lacado en oro (incluido el cállate mono), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.'},
- {f:'♨️', n:'Hakone Onsen', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.'},
- {f:'🎬', n:'Ghibli Museum', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.'},
- {f:'🎡', n:'Tokyo DisneySea', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.'},
- {f:'🍭', n:'Kawaii Monster Cafe', d:'El lado psicodélico de Harajuku: color, criaturas y shows kawaii.', w:'Experiencia visual única que no existe en ningún otro sitio; reserva online antes de ir.'}
+ {f:'🏝️', n:'Okinawa', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', lat:26.2124, lng:127.6809},
+ {f:'⛩️', n:'Takayama', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', lat:36.1462, lng:137.2521},
+ {f:'⛴️', n:'Hiroshima + Miyajima', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', lat:34.2956, lng:132.3198},
+ {f:'🏔️', n:'Nikko', d:'Templo Toshogu lacado en oro (incluido el cállate mono), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', lat:36.7586, lng:139.5990},
+ {f:'♨️', n:'Hakone Onsen', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', lat:35.2325, lng:139.1069},
+ {f:'🎬', n:'Ghibli Museum', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', lat:35.6962, lng:139.5702},
+ {f:'🎡', n:'Tokyo DisneySea', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', lat:35.6273, lng:139.8889},
+ {f:'🍭', n:'Kawaii Monster Cafe', d:'El lado psicodélico de Harajuku: color, criaturas y shows kawaii — ⚠️ cerrado desde 2020, no lo busquéis.', w:'Era una experiencia visual única que no existía en ningún otro sitio; queda el recuerdo para la próxima vida.', lat:35.6695, lng:139.7030},
+ {f:'🌉', n:'Shibuya Crossing', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', lat:35.6595, lng:139.7005},
+ {f:'⛩️', n:'Senso-ji Asakusa', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', lat:35.7148, lng:139.7967},
+ {f:'🗼', n:'Tokyo Skytree', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', lat:35.7101, lng:139.8107},
+ {f:'🎮', n:'Akihabara', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', lat:35.7001, lng:139.7715},
+ {f:'🥃', n:'Golden Gai (Shinjuku)', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', lat:35.6920, lng:139.7009},
+ {f:'🐟', n:'Mercado de Toyosu', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', lat:35.6437, lng:139.7863},
+ {f:'⛩️', n:'Fushimi Inari', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', lat:34.9671, lng:135.7727},
+ {f:'🎋', n:'Bosque de bambú de Arashiyama', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', lat:35.0173, lng:135.6725},
+ {f:'🏯', n:'Castillo de Osaka', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', lat:34.6873, lng:135.5262},
+ {f:'🦌', n:'Todai-ji (Nara)', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', lat:34.6887, lng:135.8398}
 ];
 
 var BUDGET = [
@@ -543,7 +663,11 @@ function playTrailer(){
   };
   step(0);
 }
-document.getElementById('btnPlay').addEventListener('click', playTrailer);
+document.getElementById('btnPlay').addEventListener('click', function(){
+  var v = document.getElementById('trailerVideo');
+  if (v){ stopTrailer(); v.play(); v.scrollIntoView({behavior:'smooth', block:'center'}); }
+  else playTrailer();
+});
 document.getElementById('btnSkip').addEventListener('click', function(){ stopTrailer(); goTab('ruta'); });
 
 setSlide(0);
@@ -715,20 +839,22 @@ function renderCheck(){
 
 /* ============ VIDEOS (Ray-Ban) ============ */
 var VIDEO = [
- {t:'ASMR de la navaja — Barbería Shoji (1870)', d:'Día 16 · 25 dic · mañana', f:'POV + close-up', c:'0¥ (corte 4.000¥ ya pagado)', h:'La barbería más antigua de Japón: toallas a 100°C y navaja recta. El afeitado con navaja solo lo pueden hacer barberos (por ley). Audio puro ASMR.'},
- {t:'Noche en la cápsula espacial — Nine Hours', d:'Día 19 · 28 dic', f:'POV crawl-in + reacción', c:'4.900-7.000¥ (opcional)', h:'Cápsulas blancas tipo nave: la habitación de hotel más rara del mundo, con escáner de sueño de 9 horas.'},
- {t:'Pasamos la noche en un ciber — Gran Bagus', d:'Día 15 · 24 dic', f:'Tour full + reacción', c:'3.800¥ noche', h:'Cabina insonorizada con llave, ducha y curry ilimitado: dormir en un ciber de Akihabara por 3.800¥.'},
- {t:"8 plantas de locura — M's Pop Life (blur)", d:'Día 15 · 24 dic', f:'Reacción + blur', c:'0¥ (gratis)', h:'El sex shop más grande del mundo en Akihabara: entrada gratis, reacciones con caras difuminadas.'},
- {t:'MEGA haul en Don Quijote', d:'Día 17 · 26 dic', f:'POV shopping + haul', c:'500-1.500¥', h:'8 plantas de caos con la musiquita Don Don Donki: el haul más absurdo del viaje.'},
- {t:'Ramen picante nivel 9-10 — Nakamoto', d:'Día 11 · 20 dic', f:'Reacción en mesa', c:'~1.100-1.200¥', h:'El ramen más picante de Japón: brodo rojo lava, sudor y cronómetro. El staff te mira raro al pedir Hokkyoku.'},
- {t:'Fugu: el pez que mata', d:'Día 9 · 18 dic (Kuromon)', f:'Reacción close-up', c:'1.000-2.000¥', h:'Comer pez globo (chef con licencia): una rareza que no existe en España y flipa en cualquier feed.'},
- {t:'Tsukiji a las 6am', d:'Día 16 · 25 dic', f:'Full walk + timelapse', c:'500-1.500¥', h:'El mercado de pescado más famoso del mundo antes de que despierte Tokyo: atún, cuchillos y humo.'},
- {t:'Ekiben ASMR en el shinkansen', d:'Día 11 · 20 dic', f:'POV ventanilla + unboxing', c:'1.000-1.500¥', h:'El bento de estación desembalado a 300 km/h: ASMR de Japón en movimiento.'},
- {t:'Un ciervo te hace una reverencia — Nara', d:'Día 6 · 15 dic', f:'POV + reacción', c:'150¥ senbei', h:'Ciervos que se inclinan para pedir galletas: el clip con más replay del viaje.'},
- {t:'1.000 torii a las 8am — Fushimi Inari', d:'Día 4 · 13 dic', f:'Time-lapse + walk', c:'0¥ (gratis)', h:'El túnel rojo de 10.000 torii vacío de gente si madrugas: la toma que todos quieren y pocos tienen.'},
- {t:'El agua infinita — teamLab Planets', d:'Día 14 · 23 dic', f:'Full + reacción', c:'0¥ extra (entrada 3.600¥ ya pagada)', h:'Arte digital donde caminas sobre el agua: B-roll imposible de imitar fuera de Japón.'},
- {t:'Karaoke de cumpleaños de Marc', d:'Día 1 · 10 dic', f:'POV grupo', c:'1.500¥ nomihodai', h:'Bebida libre 2h y el cumpleañero cantando en japonés mal: reacciones de grupo garantizadas.'},
- {t:'Purikura: la foto que no te esperas', d:'Día 12 · 21 dic (Harajuku)', f:'Reacción + resultado final', c:'400¥', h:'Los fotomatones que te transforman en anime: 400¥ y media hora de risas con el resultado.'}
+ {t:'🎂 MARC — street food en Dotonbori', d:'Día 1 · 10 dic · noche', f:'POV + ASMR', c:'500-1.000¥ (takoyaki + kushikatsu)', h:'El cumpleañero probando takoyaki, okonomiyaki y kushikatsu bajo el letrero Glico: la reacción viral del viaje.'},
+ {t:'🔥 RUBEN — el reto del ramen picante', d:'Día 11 · 20 dic · Nakamoto (Shinjuku)', f:'Reacción en mesa + cronómetro', c:'~1.200¥', h:'Nivel Hokkyoku (9-10): sudor, leche a mano y el staff mirándoos. Contenido garantizado.'},
+ {t:'🥩 ERIK — wagyu TATARA en cámara lenta', d:'Día 3 · 12 dic · noche', f:'Food-porn slow-mo', c:'0¥ extra (cena ya pagada)', h:'El wagyu ardiendo al carbón: el clip más «premium» del canal.'},
+ {t:'🦌 KAMAL — el ciervo que te hace una reverencia', d:'Día 6 · 15 dic · Nara', f:'POV + reacción', c:'150¥ senbei', h:'Un ciervo pidiendo galletas con reverencia: el formato que explota en Shorts.'},
+ {t:'⛩️ SIMON — time-lapse entre los 10.000 torii', d:'Día 4 · 13 dic · Fushimi Inari', f:'Time-lapse + walk', c:'0¥ (gratis)', h:'El túnel rojo vacío a las 8:00: la toma «pocos tienen» para el intro del vlog.'},
+ {t:'🎤 ADRIA — karaoke de madrugada + nomihodai', d:'Día 1 · 10 dic · noche · Namba', f:'POV grupo', c:'1.500¥ / 2h bebida libre', h:'El cumple de Marc cantando en japonés mal y el group-core: reacciones 100% compartibles.'},
+ {t:'Tipo que funciona: vlog episódico', d:'Cadencia: 1 por ciudad', f:'Full 8-15 min', c:'0¥', h:'«6 amigos, 21 días en Japón»: hook en 3 s, promesa en el título y cierre con el próximo episodio. El formato rey del travel YouTube.'},
+ {t:'Tipo que funciona: Shorts de un momento', d:'Subir 1-2 por día', f:'Vertical 20-40 s', c:'0¥', h:'Un solo momento por Shorts (el ciervo, el wagyu, el ramen): sin contexto ni intro. Lo que más alcance nuevo da.'},
+ {t:'Lugar top: Shibuya Crossing de noche', d:'Cualquier noche · 21-30 dic', f:'POV Meta + cenital', c:'0¥', h:'~3.000 personas por verde y neones: el POV que cualquier canal de viajes quiere tener.'},
+ {t:'Lugar top: Dotonbori a las 22:00', d:'Cualquier noche en Osaka', f:'POV + B-roll', c:'0¥', h:'El Glico, el canal y los tako-ya humeando: B-roll de manual para el vlog de Osaka.'},
+ {t:'Lugar top: Senso-ji antes de las 9:00', d:'Día 22 dic · mañana', f:'Walk + B-roll', c:'0¥', h:'La Kaminarimon y la Nakamise vacías: la estampa que los turistas de las 11:00 no se llevan.'},
+ {t:'Consejo: batería Ray-Ban Meta', d:'Antes de cada salida', f:'—', c:'0¥', h:'≈4 h de uso mixto y estuche con recargas: cargadlas por la noche y llevad el estuche encima. Clips de 1-3 min por grabación; 32-64 GB según generación.'},
+ {t:'Consejo: directos de ~30 min', d:'Cuando toque live', f:'Directo IG/FB vía Meta View', c:'0¥', h:'Las Meta transmiten por la app Meta View (Instagram/Facebook) pero cortan a ~30 min por batería/calor: directos cortos y con plan.'},
+ {t:'Consejo: GoPro HyperSmooth', d:'Días de parque y atracciones', f:'4K + recorte vertical', c:'0¥', h:'La estabilización HyperSmooth evita el gimbal en POV; 2 baterías + 256 GB para el día y graba en 4K para recortar a vertical después.'},
+ {t:'Consejo: reglas para grabar en Japón', d:'Siempre', f:'—', c:'0¥', h:'Prohibido en onsen; en maid cafés y en M’s Pop Life nada de grabar sin permiso (y mejor con blur); pide permiso antes de grabar caras de cerca.'},
+ {t:'Consejo: iluminación para noches', d:'Nocturnas', f:'—', c:'~2.000¥ (LED)', h:'Los neones y escaparates dan luz gratis; para caras a oscuras un LED pequeño de bolsillo (Ulanzi y similares) salva la toma.'}
 ];
 var vidBox = document.getElementById('vid-list');
 VIDEO.forEach(function(v){
@@ -742,17 +868,24 @@ VIDEO.forEach(function(v){
 
 /* ============ ACTIVIDADES ============ */
 var ACTS = [
- {n:'💈 Barbería desde 1870 — Shoji', p:'4.000¥', d:'Corte con navaja recta (solo los barberos pueden por ley) · 5-1-5 Namba B1F, Osaka · cerrado lunes.'},
- {n:'🛏️ Cápsula futurista Nine Hours', p:'4.900-7.000¥', d:'Cápsulas tipo nave espacial con escáner de sueño · Shinjuku · la más instagrameable.'},
- {n:'🕹️ Ciber Bagus — cabina con llave', p:'3.800¥ noche', d:'Ducha, curry ilimitado y PC en cabina insonorizada · Kabukicho 1-21-1, Shinjuku · 24h.'},
- {n:"🌶️ M's Pop Life — 8 plantas", p:'Gratis (blur)', d:'El sex shop más grande del mundo · Akihabara 1-15-13 Sotokanda · 10:00-23:00 · fotos con blur.'},
- {n:'📸 Purikura fotomatones', p:'400¥', d:'Fotos que te convierten en anime con filtros mágicos · Harajuku y Akihabara.'},
- {n:'🧸 Gachapon + crane games', p:'500¥', d:'Máquinas de cápsulas y grúas de peluche · Den Den Town (Osaka) y Akihabara.'},
- {n:'🍺 300BAR — billete de 1992', p:'990¥ 3 drinks', d:'Bar-retro donde un billete de 1992 te da 3 tragos · Ura-Namba, Osaka.'},
- {n:'👧 Maid cafe', p:'2.000-3.000¥', d:'Café con camareras kawaii y show en vivo · Akihabara / Nipponbashi (Osaka).'},
- {n:'🛒 Don Quijote 8 plantas', p:'24h', d:'Todo lo que no sabías que necesitabas + música Don Don Donki · Shibuya Honten, 28-6 Udagawacho.'},
- {n:'♨️ Onsen con tatuajes OK', p:'1.200-2.400¥', d:'Spa World Osaka: admiten tatuajes con pegatinas cubriendo · 3-4-24 Ebisu-higashi, Naniwa-ku.'},
- {n:'🎉 Matsuri de diciembre', p:'0¥', d:'Hagoita-ichi en Asakusa (17-19 dic) + mercadillos de fin de año y luces de temporada.'}
+ {n:'♨️ OSAKA · Spa World (onsen)', p:'~1.500-2.000¥', d:'Onsen temático (Roma/Asia) que admite tatuajes con parches · 3-4-24 Ebisu-higashi, Naniwa-ku · abierto hasta tarde.'},
+ {n:'🕹️ OSAKA · Den Den Town', p:'0¥ entrada', d:'El Akihabara de Osaka: arcades, maid cafés y tiendas de figuras · Nipponbashi, a 15 min a pie de Namba.'},
+ {n:'🐙 OSAKA · Mercado Kuromon', p:'500-2.000¥', d:'«La cocina de Osaka»: takoyaki, wagyu a la brasa, fugu… Probar 3-4 puestos = almuerzo completo.'},
+ {n:'🍺 OSAKA · 300BAR (billete de 1992)', p:'990¥ / 3 tragos', d:'Bar-retro de Ura-Namba donde un billete de 1992 vale por 3 shots.'},
+ {n:'🐒 KIOTO · Iwatayama Monkey Park', p:'~600¥', d:'Monos en libertad con vistas a Kioto; subida de 20 min, raro de verdad.'},
+ {n:'🥢 KIOTO · Nishiki Market', p:'0¥ entrada', d:'«La despensa de Kioto»: encurtidos, wagashi y marisco para degustar · a 5 min de la estación.'},
+ {n:'🕹️ TOKIO · Ciber-café Gran Cyber Bagus', p:'~2.000-3.000¥ / 7-12 h', d:'Cabina insonorizada con llave, ducha, bebidas y manga ilimitado · Akihabara · 24 h (packs nocturnos ~1.700-3.500¥).'},
+ {n:'👧 TOKIO · Maid café AtHome (Akihabara)', p:'~2.000-3.000¥', d:'Camareras kawaii con show en vivo; la «cheki» (foto impresa) sale aparte, ~1.000¥.'},
+ {n:'🐟 TOKIO · Mercado de Toyosu', p:'0¥ público (tours ~2.000¥)', d:'La lonja que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai (abierta 2024) con tiendas retro.'},
+ {n:'🍜 TOKIO · Museo del Ramen (Shin-Yokohama)', p:'~380¥ entrada', d:'Réplica de calles del Japón de 1958 con ramen regional de todo el país · a 30 min de Tokyo en tren.'},
+ {n:'🍜 TOKIO · Cup Noodles Museum (Yokohama)', p:'500¥ el taller', d:'Entrada gratis y creas tu propio Cup Noodle con sabor personalizado por 500¥.'},
+ {n:'📸 TOKIO · Purikura fotomatones', p:'400-600¥', d:'Fotos que te convierten en anime · Harajuku, Shinjuku y Akihabara.'},
+ {n:'🧸 TOKIO · Gashapon + grúas', p:'300-500¥', d:'Cápsulas (Gashapon Department Store en Ikebukuro) y crane games en Akihabara.'},
+ {n:'🎮 TOKIO · Arcades GiGO / Taito Station', p:'100¥ por partida', d:'Akihabara y Shinjuku: de los clásicos a los modernos.'},
+ {n:'🐱 TOKIO · Cat café MOCHA', p:'~1.100¥ / 30 min', d:'Gatos adoptables en Shibuya/Shinjuku · incluye bebida.'},
+ {n:'🌀 TOKIO · teamLab Planets', p:'3.600¥ (reserva)', d:'Arte digital donde caminas sobre el agua en Toyosu · ya en el presupuesto (23 dic).'},
+ {n:'🥤 RARO · Máquinas expendedoras', p:'100-200¥', d:'Japón tiene más de 5 millones de vending: melon soda, Pocari Sweat y café caliente/frío.'},
+ {n:'♨️ INFO · Normas de onsen/sento', p:'sento ~500¥ / onsen 1.000-2.500¥', d:'Entras desnudo, te lavas ANTES de bañarte, la toalla pequeña no se mete al agua, y sin tatuajes salvo donde se permiten (o con parches).'}
 ];
 var actBox = document.getElementById('act-list');
 ACTS.forEach(function(a){
@@ -764,17 +897,23 @@ ACTS.forEach(function(a){
 
 /* ============ FIESTA ============ */
 var FIESTA = [
- {n:'🎤 Karaoke Kan — nomihodai', p:'1.500¥ / 2h', d:'Bebida libre 2 horas · Namba y Tokyo · noche del cumple de Marc (10 dic).'},
- {n:'🏮 Golden Gai — 200 bares', p:'Sin cover', d:'6 callejuelas en Shinjuku 1-chome con ~200 bares miniatura de 3-6 personas · junto al santuario Hanazono.'},
- {n:'🍶 Tachinomi de barrio', p:'~300¥ el vaso', d:'Bares de pie: sake, highball o yakitori rápido y barato · Shinjuku y Ura-Namba.'},
- {n:'🥃 Bar Yeso', p:'~800¥ el trago', d:'Coctelería retro en Namba: madera, humo y gintonics de autor con ambiente de otra época.'},
- {n:'🔁 300BAR con DJ', p:'990¥ 3 drinks', d:'El billete de 1992 + DJ de vinilo en Ura-Namba · jueves a sábado por la noche.'},
- {n:'⚡ WARP Shinjuku', p:'~2.000-3.000¥', d:'El club enorme de Kabukicho: EDM, pista gigante y luces · 5-17-16 Shinjuku, 22:30-5:00.'},
- {n:'🌀 WOMB Shibuya', p:'~2.500-3.500¥', d:'La discoteca más mítica de Tokyo: electrónica de primer nivel · 2-16 Maruyamacho, Shibuya.'},
- {n:'🌊 AgeHa', p:'~3.000-4.000¥', d:'La rave al aire libre por excelencia · Shin-Kiba 2-2-10, Koto-ku · shuttle desde Shibuya.'},
- {n:'🔮 Atom Osaka', p:'~2.000¥', d:'El club de Ura-Namba: hip-hop y comercial para los primeros días · Chuo-ku, Osaka.'},
- {n:'🍢 Izakaya nocturna', p:'~1.500-2.500¥', d:'Cena completa de bar: yakitori, nabe y sake hasta tarde · Dotonbori y Hozenji.'},
- {n:'🥂 Ura-Namba bar hopping', p:'~1.000¥/bar', d:'El "detrás" de Namba: 20 bares escondidos en callejones · empieza en el 300BAR.'}
+ {n:'🦒 OSAKA · Giraffe', p:'~2.000-3.000¥', d:'El club comercial de Dotonbori: hip-hop, EDM y ambiente central · a pie de Namba, sin reserva.'},
+ {n:'🔮 OSAKA · Atom', p:'~2.000¥', d:'Club de Ura-Namba: hip-hop y comercial, la opción fácil para salir sin plan.'},
+ {n:'🎤 OSAKA · Karaoke Kan', p:'~1.500¥ / 2h nomihodai', d:'Bebida libre 2 h en Namba · la noche del cumple de Marc (10 dic).'},
+ {n:'🍢 OSAKA · Izakaya nocturna', p:'~1.500-2.500¥', d:'Yakitori, nabe y sake hasta tarde · Dotonbori y el callejón de Hozenji.'},
+ {n:'🍶 OSAKA · Tachinomi de barrio', p:'~300¥ el vaso', d:'Bares de pie: sake, highball o yakitori rápido y barato · cerca de Namba y de la base.'},
+ {n:'🥂 OSAKA · Ura-Namba bar hopping', p:'~1.000¥/bar', d:'El «detrás» de Namba: 20 bares escondidos en callejones · empezad en el 300BAR.'},
+ {n:'🥃 OSAKA · Bar Yeso', p:'~800¥ el trago', d:'Coctelería retro en Namba: madera, humo y gintonics de autor con ambiente de otra época.'},
+ {n:'🌀 TOKIO · WOMB Shibuya', p:'~2.500-3.500¥', d:'La discoteca más mítica de Tokyo: electrónica de primer nivel, Top 100 mundial · 2-16 Maruyamacho, Shibuya.'},
+ {n:'🟠 TOKIO · SEL Octagon', p:'~3.000-4.000¥', d:'El templo del EDM con la mejor producción del país (Top 100 DJMag) · Axall Roppongi B1F, 7-8-6 Roppongi.'},
+ {n:'⚡ TOKIO · WARP Shinjuku', p:'~2.000-3.000¥', d:'El club enorme de Kabukicho: EDM, pista gigante y luces · 5-17-16 Shinjuku, 22:30-5:00.'},
+ {n:'🏮 TOKIO · Golden Gai', p:'Sin cover (algunos 500-1.000¥)', d:'6 callejuelas junto al santuario Hanazono con ~200 bares miniatura de 3-6 personas.'},
+ {n:'🎤 TOKIO · Karaoke Big Echo 24h', p:'~1.500-3.000¥', d:'Salas privadas toda la noche en Shinjuku · el plan post-discoteca para acabar cantando.'},
+ {n:'🍶 TOKIO · Tachinomi (de pie)', p:'~300-500¥ el vaso', d:'Bares de pie de Shinjuku y Golden Gai: barato y sin ceremonias.'},
+ {n:'🤖 Robot Restaurant — CERRADO', p:'—', d:'El mítico show de robots de Kabukicho cerró en marzo 2020 (pandemia) y su heredero «Samurai Restaurant» (2023) también ha cerrado. No lo busquéis.'},
+ {n:'🌊 ageHa — CERRADO (2022)', p:'—', d:'La rave al aire libre de Shin-Kiba cerró para siempre en enero 2022. Su relevo actual es SEL Octagon.'},
+ {n:'🏮 KIOTO · Pontocho / Kiyamachi', p:'~1.000¥/bar', d:'Callejones de bares e izakayas junto al río Kamo · la «noche» de Kioto es esto… o volver a Osaka.'},
+ {n:'💤 KIOTO · Consejo nocturno', p:'0¥', d:'Kioto no tiene marcha gorda: cerrad los bares de Pontocho antes de las 00:00 y coged el último tren a Osaka.'}
 ];
 var fiestaBox = document.getElementById('fiesta-list');
 FIESTA.forEach(function(f){
