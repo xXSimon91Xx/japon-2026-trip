@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Japón 2026 — Osaka → Tokio (9-30 dic)</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root{--slate:#0F172A;--charcoal:#1E293B;--gold:#C9A86A;--cream:#F8FAFC;--muted:#64748B;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI",Helvetica,Arial,sans-serif;background:var(--slate);color:var(--cream);}
+  header{background:var(--slate);padding:10px 16px;border-bottom:2px solid var(--gold);display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+  header h1{font-size:15px;margin:0;letter-spacing:.5px;}
+  header h1 span{color:var(--gold);font-weight:400;}
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;}
+  .filters button{background:var(--charcoal);color:var(--cream);border:1px solid #334155;border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;transition:.15s;}
+  .filters button:hover{border-color:var(--gold);}
+  .filters button.active{background:var(--gold);color:var(--slate);border-color:var(--gold);font-weight:600;}
+  #map{height:calc(100vh - 116px);width:100%;background:#0F172A;}
+  .legend{background:rgba(15,23,42,.94);color:var(--cream);padding:10px 12px;border-radius:8px;border:1px solid #334155;font-size:12px;line-height:1.65;max-width:230px;box-shadow:0 4px 14px rgba(0,0,0,.4);}
+  .legend h3{margin:0 0 6px;font-size:12px;color:var(--gold);letter-spacing:.5px;border-bottom:1px solid #334155;padding-bottom:4px;}
+  .legend .row{display:flex;align-items:center;gap:7px;}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:0 0 auto;border:1px solid rgba(255,255,255,.35);}
+  .legend .cats{margin-top:7px;border-top:1px solid #334155;padding-top:6px;font-size:11.5px;color:#CBD5E1;}
+  .popup-body{font-size:12.5px;line-height:1.5;max-width:240px;}
+  .popup-body b{font-size:13px;}
+  .popup-body .z{color:#64748B;font-size:11px;}
+  .popup-body .h{color:#0F766E;font-weight:600;font-size:11.5px;}
+  .popup-body .n{color:#334155;font-size:11.5px;}
+  .popup-body .p{color:#B45309;font-weight:600;font-size:11.5px;}
+  .leaflet-popup-content-wrapper{border-radius:10px;border-top:3px solid var(--gold);}
+  footer{background:var(--slate);color:#94A3B8;font-size:11px;padding:6px 16px;border-top:1px solid #1E293B;display:flex;gap:16px;flex-wrap:wrap;}
+  @media(max-width:640px){#map{height:calc(100vh - 170px);} header h1{font-size:13px;}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🗾 Japón Dic 2026 <span>· Osaka → Tokio · 9-30 dic</span></h1>
+  <div class="filters" id="filters">
+    <button data-city="all" class="active">Todos</button>
+    <button data-city="Osaka">Osaka</button>
+    <button data-city="Kioto">Kioto</button>
+    <button data-city="Nara">Nara</button>
+    <button data-city="Tokio">Tokio</button>
+    <button data-city="Yokohama">Yokohama</button>
+  </div>
+</header>
+<div id="map"></div>
+<footer>
+  <span>📌 Coordenadas aproximadas de direcciones verificadas en Japon-Definitivo-2026.md, Restaurantes-Tabelog-Verificados.md e Iluminaciones-Navidad-2026.md</span>
+  <span>💡 Requiere internet solo para CDN Leaflet + tiles OpenStreetMap</span>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+// [ciudad, color]
+const CITY_COLOR = {Osaka:"#E11D48", Kioto:"#10B981", Nara:"#F59E0B", Tokio:"#2563EB", Yokohama:"#8B5CF6"};
+// emoji por categoría
+const CAT_ICON = {alojamiento:"🛏️", restaurante:"🍜", iluminacion:"✨", mercado:"🎄", actividad:"🎯", templo:"⛩️"};
+
+// name, city, cat, lat, lng, zona, horario, precio, nota
+const SPOTS = [
+  // ===== ALOJAMIENTOS =====
+  {name:"Airbnb Osaka — Shimanouchi", city:"Osaka", cat:"alojamiento", lat:34.6715, lng:135.5066, zona:"1-13-19 Shimanouchi, Chuo-ku 542-0082", horario:"10-20 dic", precio:"", nota:"Base Osaka ~10 noches · 2 min Mizuno/Rikimaru"},
+  {name:"Airbnb Tokio — Okubo", city:"Tokio", cat:"alojamiento", lat:34.7009, lng:139.6968, zona:"1-39 Okubo, Shinjuku 169-0072", horario:"20-30 dic", precio:"", nota:"Base Tokio ~10 noches · Korea Town, 2 min Matchan"},
+
+  // ===== OSAKA — RESTAURANTES =====
+  {name:"Shoji Chohatsusho (barbería 1870)", city:"Osaka", cat:"actividad", lat:34.6626, lng:135.5008, zona:"5-1-5 Namba B1F", horario:"9:00-19:00 · lunes cerrado", precio:"corte 4.000¥ · navaja 3.000¥", nota:"Barbería más antigua de Osaka (desde 1870)"},
+  {name:"Mizuno Okonomiyaki", city:"Osaka", cat:"restaurante", lat:34.6689, lng:135.5026, zona:"1-4-15 Dotonbori", horario:"11:00-22:00 · walk-in", precio:"1.500-3.000¥", nota:"Tabelog 3.57 (1.632) · Michelin Bib Gourmand desde 1945"},
+  {name:"Yakiniku Rikimaru Shinsaibashi", city:"Osaka", cat:"restaurante", lat:34.6747, lng:135.5006, zona:"1-12-14 Chuo-ku", horario:"—", precio:"tabehoudai 2.980¥/100min", nota:"Wagyu all-you-can-eat viral TikTok · 2 min base"},
+  {name:"Shimanouchi Ichiyo (kappo)", city:"Osaka", cat:"restaurante", lat:34.6722, lng:135.5082, zona:"2-11-20 Shimanouchi", horario:"cena", precio:"10.000-14.999¥", nota:"Tabelog 3.85 (560) · TOP3 Osaka · 2 min andando del Airbnb"},
+  {name:"Naniwa Robata TOYO", city:"Osaka", cat:"restaurante", lat:34.6630, lng:135.5015, zona:"Namba (30 s de la estación)", horario:"—", precio:"3.000-3.999¥", nota:"Tabelog 3.56 (171) · irori hearth grill"},
+  {name:"Yakiniku Kitan Houzenji", city:"Osaka", cat:"restaurante", lat:34.6692, lng:135.5034, zona:"Hozenji Yokocho 232m", horario:"cena 19:00 · same-day ok", precio:"8.000-9.999¥", nota:"Tabelog 3.57 (608) · TODAS salas privadas = ideal grupo 6"},
+  {name:"Osaka Teppanyaki Kobe Beef TATARA", city:"Osaka", cat:"restaurante", lat:34.6992, lng:135.5004, zona:"2-10-15 Sonezaki, Umeda 3F", horario:"L-V 17-23h · S-D 12-15h + 17-23h", precio:"cursos 7.800-25.000¥", nota:"Tabelog 3.52 (594) · Tabelog 100 2025 · privado 6 pax"},
+  {name:"Sushi Amato (aged edomae)", city:"Osaka", cat:"restaurante", lat:34.7085, lng:135.5000, zona:"Umeda/Nakatsu (Nakatsu 195m)", horario:"—", precio:"8.000-9.999¥", nota:"Tabelog 3.54 (563) · Nº1 reservas sushi Osaka"},
+
+  // ===== OSAKA — ILUMINACIONES =====
+  {name:"Midosuji Illumination", city:"Osaka", cat:"iluminacion", lat:34.6830, lng:135.5007, zona:"Avenida Midosuji, 3-4 km Umeda→Namba", horario:"nov-dic · 17:00-22:00", precio:"GRATIS", nota:"Pasa junto a Shimanouchi/Yodoyabashi · mejor a pie"},
+  {name:"Osaka Hikari Renaissance", city:"Osaka", cat:"iluminacion", lat:34.6933, lng:135.5015, zona:"Isla Nakanoshima (City Hall→parque)", horario:"14-25 dic · 17:00-22:00", precio:"GRATIS", nota:"Plato fuerte Festival of Lights Osaka"},
+  {name:"Osaka Castle Illuminage", city:"Osaka", cat:"iluminacion", lat:34.6873, lng:135.5259, zona:"Osaka Castle Park", horario:"nov 2026 - feb 2027 · 17:00-22:00", precio:"2.000¥ (navidad +bono)", nota:"Días pico 21-25 dic con bono obligatorio"},
+
+  // ===== OSAKA — ACTIVIDADES =====
+  {name:"Dotonbori", city:"Osaka", cat:"actividad", lat:34.6687, lng:135.5016, zona:"Dotonbori, Chuo-ku", horario:"24h / neones toda la noche", precio:"gratis", nota:"Cartel Glico, Takoyaki Wanaka, canal"},
+  {name:"Kuromon Market", city:"Osaka", cat:"actividad", lat:34.6656, lng:135.5060, zona:"1-22 Nipponbashi", horario:"~9:00-18:00", precio:"degustaciones 300-1.000¥", nota:"«Cocina de Osaka» · fugu, vieiras, dulces"},
+  {name:"Universal Studios Japan (USJ)", city:"Osaka", cat:"actividad", lat:34.6654, lng:135.4322, zona:"2-1-33 Sakurajima, Konohana-ku", horario:"9:00-21:00 aprox", precio:"Studio 8.600-9.800¥ + Express 7.800-23.900¥", nota:"Super Nintendo World timed entry por app · reservar 1 mes antes"},
+  {name:"Kaiyukan Aquarium", city:"Osaka", cat:"actividad", lat:34.6544, lng:135.4294, zona:"Tempozan, Minato-ku", horario:"10:00-20:00", precio:"2.700¥", nota:"Tiburón ballena, enorme tanque central"},
+
+  // ===== KIOTO =====
+  {name:"Fushimi Inari Taisha", city:"Kioto", cat:"templo", lat:34.9671, lng:135.7727, zona:"68 Fukakusa Yabunouchicho", horario:"abierto 24h", precio:"GRATIS", nota:"Miles de torii rojos · plan 8:00 sin gente"},
+  {name:"Kiyomizu-dera", city:"Kioto", cat:"templo", lat:34.9948, lng:135.7850, zona:"1-294 Kiyomizu, Higashiyama", horario:"6:00-18:00", precio:"500¥", nota:"Vistas de Kioto desde el escenario de madera"},
+  {name:"Arashiyama Bamboo Grove", city:"Kioto", cat:"templo", lat:35.0165, lng:135.6721, zona:"Arashiyama, Ukyo-ku", horario:"24h (mejor 7:30)", precio:"GRATIS", nota:"Bosque de bambú · Tenryu-ji al lado"},
+  {name:"Kinkaku-ji (Pabellón Dorado)", city:"Kioto", cat:"templo", lat:35.0394, lng:135.7292, zona:"1 Kinkakujicho, Kita-ku", horario:"9:00-17:00", precio:"500¥", nota:"Templo cubierto de pan de oro sobre el espejo de agua"},
+  {name:"OSTERIA IS -Gion-", city:"Kioto", cat:"restaurante", lat:35.0038, lng:135.7742, zona:"Gion (2 min Gion-Shijo/Keihan Sanjo)", horario:"—", precio:"5.000-5.999¥", nota:"Tabelog 3.52 (196) · Italiano + Omi beef bistecca · NUEVO dic 2026"},
+  {name:"Kobe Gyuu Kisshoukichi Kyoto Honten", city:"Kioto", cat:"restaurante", lat:35.0107, lng:135.7734, zona:"Sanjo, Nakagyo (vista río Kamo)", horario:"—", precio:"8.000-9.999¥", nota:"Tabelog 3.55 (75) · Teppanyaki Kobe estilo francés · NUEVO dic 2026"},
+
+  // ===== NARA =====
+  {name:"Todai-ji + Nara Park (ciervos)", city:"Nara", cat:"templo", lat:34.6890, lng:135.8397, zona:"406-1 Zoshicho, Nara", horario:"7:30-17:30", precio:"800¥", nota:"Gran Buda Daibutsu · ciervos con shika senbei 200¥"},
+  {name:"Nakatanidou (mochi tsuki)", city:"Nara", cat:"actividad", lat:34.6840, lng:135.8172, zona:"29 Hashimoto-cho, Nara", horario:"~9:00-19:00", precio:"mochi 180-300¥", nota:"Mochi pounding show viral · Nakatanidou"},
+
+  // ===== TOKIO — ILUMINACIONES / NAVIDAD =====
+  {name:"Shibuya Blue Cave (Ao no Dokutsu)", city:"Tokio", cat:"iluminacion", lat:35.6630, lng:139.6970, zona:"Shibuya Koen-dori → Parque Yoyogi", horario:"4-25 dic · 17:00-22:00", precio:"GRATIS", nota:"800 m con 600.000 LEDs azules · TOP"},
+  {name:"Roppongi Hills Keyakizaka", city:"Tokio", cat:"iluminacion", lat:35.6604, lng:139.7292, zona:"Keyakizaka St, detrás Roppongi Hills", horario:"nov-25 dic · 17:00-23:00", precio:"GRATIS", nota:"800.000 LEDs con Tokyo Tower de fondo"},
+  {name:"Tokyo Midtown Starlight Garden", city:"Tokio", cat:"iluminacion", lat:35.6664, lng:139.7313, zona:"Tokyo Midtown, Roppongi", horario:"nov-25 dic · 17:00-23:00", precio:"GRATIS", nota:"A 15 min a pie de Roppongi Hills: combinar"},
+  {name:"Marunouchi Illumination", city:"Tokio", cat:"iluminacion", lat:35.6816, lng:139.7638, zona:"Nakadori St, junto Tokyo Station", horario:"nov-feb · 17:00-23:00", precio:"GRATIS", nota:"1,2 km de árboles dorados champán"},
+  {name:"Azabudai Hills Christmas Market", city:"Tokio", cat:"mercado", lat:35.6605, lng:139.7393, zona:"Central Green, Mori JP Tower", horario:"22 nov-25 dic · 11:00-21:00", precio:"GRATIS", nota:"Mercado + iluminaciones en el rascacielos más alto"},
+  {name:"Meiji Jingu Gaien Christmas Market", city:"Tokio", cat:"mercado", lat:35.6755, lng:139.7152, zona:"Gaienmae (10 min)", horario:"21 nov-25 dic · 11:00-21:30", precio:"1.000-2.000¥ + mug", nota:"30 puestos comida + 20 regalos + pirámide Grimm 14 m"},
+
+  // ===== TOKIO — RESTAURANTES =====
+  {name:"Yoroniku (yakiniku)", city:"Tokio", cat:"restaurante", lat:35.6655, lng:139.7100, zona:"Minami-Aoyama / Omotesando", horario:"—", precio:"10.000-14.999¥", nota:"Tabelog 3.80 (3.048) · wagyu 'Silk Rose'"},
+  {name:"Ginza Sushi Sendou", city:"Tokio", cat:"restaurante", lat:35.6717, lng:139.7668, zona:"Ginza (Ginza Sta. 380m)", horario:"—", precio:"8.000-9.999¥", nota:"Tabelog 3.52 (426) · sushi Edomae omakase"},
+  {name:"Sushi Yoshikawa Kaido Shinjuku", city:"Tokio", cat:"restaurante", lat:35.6910, lng:139.6950, zona:"Nishi-Shinjuku (286m)", horario:"—", precio:"10.000-14.999¥", nota:"Tabelog 3.55 (71) · cerca de Okubo"},
+  {name:"Matchan (yakiniku)", city:"Tokio", cat:"restaurante", lat:34.7017, lng:139.6988, zona:"1-7-10 Hyakunincho, Shin-Okubo", horario:"—", precio:"tabehoudai 2.980-3.980¥", nota:"Tabelog 3.46 (710) · TOP1 Okubo · 2 min de la base"},
+  {name:"YOSUL (Korean 24h)", city:"Tokio", cat:"restaurante", lat:34.7018, lng:139.6989, zona:"1-7-10 Hyakunincho, Shin-Okubo", horario:"24h (08-16 lunch / 16-08 cena)", precio:"3.000-3.999¥", nota:"Tabelog 3.48 (924) · único 24h en Okubo · all-you-can-drink 990¥"},
+  {name:"Korean Bulbam", city:"Tokio", cat:"restaurante", lat:34.7019, lng:139.6991, zona:"Shin-Okubo", horario:"11:00-24:00 (LO 23:00)", precio:"3.000-3.999¥", nota:"Tabelog 3.48 (1.049) · más reseñas de Okubo"},
+  {name:"Mouko Tanmen Nakamoto", city:"Tokio", cat:"restaurante", lat:35.6943, lng:139.6913, zona:"7-8-11 Nishi-Shinjuku B1F", horario:"11:00-24:00", precio:"950-1.200¥", nota:"Ramen picante nivel 10 · nivel 9 visual brutal"},
+  {name:"Kikanbo (Karashibi Miso)", city:"Tokio", cat:"restaurante", lat:35.6919, lng:139.7705, zona:"2-10-9 Kajicho, Kanda", horario:"L-S 11:00-21:30 · Dom 11-16h", precio:"1.080¥ (+200¥ Oni)", nota:"Ramen picante + sansho · nivel 'Oni Devil' 1.280¥"},
+
+  // ===== TOKIO — ACTIVIDADES =====
+  {name:"Shibuya Crossing + Shibuya Sky", city:"Tokio", cat:"actividad", lat:35.6586, lng:139.7009, zona:"Shibuya Scramble / Shibuya Scramble Square", horario:"Sky 10:00-22:30", precio:"2.500¥", nota:"Cruce más famoso del mundo + mirador 229 m"},
+  {name:"teamLab Borderless (Azabudai)", city:"Tokio", cat:"actividad", lat:35.6603, lng:139.7391, zona:"Azabudai Hills, Garden Plaza B", horario:"—", precio:"3.600-5.600¥ dinámico", nota:"Buy 26 nov 00:00 JST · se agota en dic"},
+  {name:"Nine Hours Shinjuku (cápsula)", city:"Tokio", cat:"actividad", lat:35.6960, lng:139.7038, zona:"1-13-1 Kabukicho", horario:"check-in 15:00 · out 11:00", precio:"4.900-7.000¥", nota:"Cápsulas futuristas · video 'cápsula hotel $40'"},
+  {name:"Anshin Oyado Premier Shinjuku", city:"Tokio", cat:"actividad", lat:35.6908, lng:139.6999, zona:"4-2-10 Shinjuku", horario:"24h/365d", precio:"6.480¥+", nota:"Cápsula premium con sauna + curry gratis · max 27h"},
+  {name:"Gran Cyber Cafe Bagus", city:"Tokio", cat:"actividad", lat:35.6955, lng:139.7038, zona:"1-21-1 Kabukicho 4F", horario:"24h/365d", precio:"night pack 3.800¥", nota:"Privados insonorizados + ducha + bebida libre"},
+  {name:"M's Pop Life (sex shop Akiba)", city:"Tokio", cat:"actividad", lat:35.6991, lng:139.7713, zona:"1-15-13 Sotokanda, Akihabara", horario:"10:00-23:00", precio:"gratis", nota:"7-8 plantas · el más grande del mundo · NO filmar dentro"},
+  {name:"MEGA Don Quijote Shibuya", city:"Tokio", cat:"actividad", lat:35.6608, lng:139.6991, zona:"28-6 Udagawacho, Shibuya", horario:"24h/365d", precio:"dulces 150-1.620¥", nota:"Tax free en 7F >5.000¥ · KitKat matcha, Tokyo Banana"},
+  {name:"Comiket 107 Winter (Big Sight)", city:"Tokio", cat:"actividad", lat:35.6304, lng:139.7930, zona:"3-11-1 Ariake, Tokyo Big Sight", horario:"29-31 dic · 10:00-16:00", precio:"catálogo 440¥", nota:"3 días (raro) · 250-300K asistentes · vuestro 30 dic = día 2"},
+  {name:"Asakusa Senso-ji + Kappabashi", city:"Tokio", cat:"templo", lat:35.7148, lng:139.7967, zona:"2-3-1 Asakusa, Taito", horario:"6:00-17:00", precio:"GRATIS", nota:"Templo más antiguo de Tokio + calle de utensilios cocina"},
+  {name:"Tsukiji Outer Market", city:"Tokio", cat:"actividad", lat:35.6653, lng:139.7701, zona:"4-16-2 Tsukiji", horario:"5:00-14:00", precio:"—", nota:"Desayuno sushi + tamagoyaki + dulces"},
+  {name:"Harajuku / Takeshita", city:"Tokio", cat:"actividad", lat:35.6706, lng:139.7027, zona:"1-1 Takeshita-dori", horario:"—", precio:"—", nota:"Calle de la moda kawaii"},
+  {name:"Odaiba (libre 30 dic)", city:"Tokio", cat:"actividad", lat:35.6297, lng:139.7732, zona:"Odaiba, bahía de Tokio", horario:"—", precio:"—", nota:"Gundam, Rainbow Bridge, vistas"},
+
+  // ===== YOKOHAMA =====
+  {name:"Yokohama Yorunoyo Winter Illumination", city:"Yokohama", cat:"iluminacion", lat:35.4510, lng:139.6420, zona:"Waterfront Yokohama (Osanbashi Pier)", horario:"4-30 dic · 17:00-21:05", precio:"GRATIS", nota:"45 landmarks sincronizados en 3 km · ballena luminosa 25 m"},
+  {name:"Red Brick Warehouse Christmas Market", city:"Yokohama", cat:"mercado", lat:35.4522, lng:139.6400, zona:"Yokohama Red Brick, Naka-ku", horario:"20 nov-25 dic · 11:00-21:30", precio:"GRATIS", nota:"Mercado alemán en el waterfront · combinar con Yorunoyo"},
+];
+
+const map = L.map('map', {zoomControl:true}).setView([35.45, 137.7], 6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+const markers = [];
+SPOTS.forEach((s, i) => {
+  const color = CITY_COLOR[s.city];
+  const icon = L.divIcon({
+    className: '',
+    html: `<div style="background:${color};border:2px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:22px;height:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.5);">
+             <span style="transform:rotate(45deg);font-size:11px;line-height:1;">${CAT_ICON[s.cat]||'📍'}</span>
+           </div>`,
+    iconSize: [22,22], iconAnchor: [11, 22], popupAnchor: [0, -20]
+  });
+  const price = s.precio ? `<div class="p">💰 ${s.precio}</div>` : '';
+  const popup = `<div class="popup-body">
+      <b>${CAT_ICON[s.cat]||''} ${s.name}</b>
+      <div class="z">📍 ${s.zona}</div>
+      ${s.horario ? `<div class="h">🕒 ${s.horario}</div>` : ''}
+      ${price}
+      ${s.nota ? `<div class="n">${s.nota}</div>` : ''}
+    </div>`;
+  const m = L.marker([s.lat, s.lng], {icon}).addTo(map).bindPopup(popup);
+  m.city = s.city;
+  markers.push(m);
+});
+
+// Leyenda
+const legend = L.control({position:'bottomleft'});
+legend.onAdd = function(){
+  const div = L.DomUtil.create('div', 'legend');
+  let html = '<h3>LEGENDA</h3>';
+  Object.entries(CITY_COLOR).forEach(([c, col]) => {
+    html += `<div class="row"><span class="dot" style="background:${col}"></span>${c}</div>`;
+  });
+  html += '<div class="cats">';
+  Object.entries(CAT_ICON).forEach(([k, e]) => { html += `<div class="row">${e} ${k}</div>`; });
+  html += '</div>';
+  div.innerHTML = html;
+  return div;
+};
+legend.addTo(map);
+
+// Filtro por ciudad
+document.getElementById('filters').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  document.querySelectorAll('#filters button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const city = btn.dataset.city;
+  markers.forEach(m => {
+    const show = city === 'all' || m.city === city;
+    if(show && !map.hasLayer(m)) m.addTo(map);
+    if(!show && map.hasLayer(m)) map.removeLayer(m);
+  });
+  if(city !== 'all') map.fitBounds(markers.filter(m => m.city === city).map(m => m.getLatLng()), {padding:[40,40]});
+  else map.setView([35.45, 137.7], 6);
+});
+</script>
+</body>
+</html>
