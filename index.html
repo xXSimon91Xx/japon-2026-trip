@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,11 +10,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#0b0e14;--card:#141b28;--card2:#1a2332;--text:#e8ecf4;--muted:#94a0b5;
---accent:#ff3b5c;--accent2:#ffb020;--gold:#f5c518;--border:#222b3c;
---nav:#0b0e14cc;--tag:#1a2332;--shadow:0 10px 30px rgba(0,0,0,.45)}
-[data-theme="light"]{--bg:#f7f7f5;--card:#ffffff;--card2:#f1f1ee;--text:#1c1917;--muted:#57534e;
---accent:#e11d48;--accent2:#d97706;--gold:#b45309;--border:#e7e5e4;--nav:#ffffffcc;--tag:#f5f5f4}
+:root{--bg:#F8FAFC;--card:#FFFFFF;--card2:#F1F5F9;--text:#0F172A;
+--muted:#64748B;--accent:#E30613;--accent2:#D4AF37;--gold:#D4AF37;--border:#E2E8F0;
+--nav:#FFFFFFcc;--tag:#F1F5F9;--shadow:0 10px 30px rgba(15,23,42,.12)}
+[data-theme="dark"]{--bg:#0F172A;--card:#1E293B;--card2:#243349;--text:#F8FAFC;--muted:#94A3B8;
+--accent:#FF4D4D;--accent2:#E6C66A;--gold:#D4AF37;--border:#334155;--nav:#0F172Acc;--tag:#1E293B;
+--shadow:0 10px 30px rgba(0,0,0,.45)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);
@@ -187,7 +188,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
 </style>
 </head>
 <body>
-<div class="nav"><div class="brand">JAPÓN <span>2026</span></div><button data-tab="0" class="active" onclick="goTab('0')">🎬 Trailer</button><button data-tab="1" class="" onclick="goTab('1')">🗓️ Ruta</button><button data-tab="2" class="" onclick="goTab('2')">🗺️ Mapa</button><button data-tab="3" class="" onclick="goTab('3')">🍜 Comida</button><button data-tab="4" class="" onclick="goTab('4')">🎆 Actividades</button><button data-tab="5" class="" onclick="goTab('5')">🌃 Fiesta</button><button data-tab="6" class="" onclick="goTab('6')">🎥 Vídeos</button><button data-tab="7" class="" onclick="goTab('7')">💰 Presupuesto</button><button data-tab="8" class="" onclick="goTab('8')">✅ Checklist</button></div>
+<div class="nav"><div class="brand">JAPÓN <span>2026</span></div><button data-tab="0" class="active" onclick="goTab('0')">🎬 Trailer</button><button data-tab="1" class="" onclick="goTab('1')">🗓️ Ruta</button><button data-tab="2" class="" onclick="goTab('2')">🗺️ Mapa</button><button data-tab="3" class="" onclick="goTab('3')">🍜 Comida</button><button data-tab="4" class="" onclick="goTab('4')">🎆 Actividades</button><button data-tab="5" class="" onclick="goTab('5')">🌃 Fiesta</button><button data-tab="6" class="" onclick="goTab('6')">🎥 Vídeos</button><button data-tab="7" class="" onclick="goTab('7')">💰 Presupuesto</button><button data-tab="8" class="" onclick="goTab('8')">✅ Checklist</button><button class="tt" id="themeIcon" onclick="toggleTheme()" title="Cambiar tema">🌙</button></div>
 <main>
 
 <section class="tab" id="tab-trailer">
@@ -773,8 +774,8 @@ function goTab(i){i=+i||0;document.querySelectorAll('.tab').forEach(t=>t.classLi
 document.getElementById('tab-'+['trailer','ruta','mapa','comida','actividades','fiesta','videos','presupuesto','checklist'][i]).classList.add('active');
 document.querySelectorAll('.nav button[data-tab]').forEach(b=>b.classList.toggle('active',+b.dataset.tab===i));
 if(i===2&&!map)initMap();}
-function toggleTheme(){const d=document.documentElement;d.setAttribute('data-theme','dark');localStorage.removeItem('jpTheme');}
-(function(){localStorage.removeItem('jpTheme');document.documentElement.setAttribute('data-theme','dark');})();
+function toggleTheme(){const d=document.documentElement;const cur=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',cur);localStorage.setItem('jpTheme',cur);const ic=document.getElementById('themeIcon');if(ic)ic.textContent=cur==='dark'?'☀️':'🌙';}
+(function(){let t=localStorage.getItem('jpTheme')||'light';document.documentElement.setAttribute('data-theme',t);const ic=document.getElementById('themeIcon');if(ic)ic.textContent=t==='dark'?'☀️':'🌙';})();
 function initMap(){
  map=L.map('map').setView([35.2,136.5],6);
    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
