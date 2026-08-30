@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23e11d48'/><text x='50' y='66' font-size='48' text-anchor='middle' fill='white'>⛩</text></svg>">
 <title>Japón 2026 — 6 amigos · 21 días · 1 misión</title>
 <meta name="description" content="9 dic 2026 → 1 ene 2027. Osaka, Kioto, Nara y Tokio. Presupuesto 1000€ (sin vuelos ni alojamiento). Comida chatarra, actividades raras y mucha fiesta.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -185,7 +186,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
   <p class="sec-sub">Osaka (10-20 dic) → Shinkansen 20 dic → Tokio (20-30 dic) · Kioto y Nara desde Osaka · horarios, transporte, precios y vídeo-idea de cada día.</p>
   <div class="filters" id="dayfilters"><button data-f="all" class="on">Todos</button><button data-f="OSAKA">Osaka</button><button data-f="KYOTO">Kioto</button><button data-f="NARA">Nara</button><button data-f="TOKIO">Tokio</button><button data-f="VUELTA">Vuelta</button></div>
   <div id="days">
-<div class="day" data-base="OSAKA" style="--dc:#2563eb">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#2563eb">
   <div class="num">1<small>jue 10 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -200,7 +201,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://s.tabelog.com/en/osaka/A2701/A270202/27012741">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#2563eb">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#2563eb">
   <div class="num">2<small>vie 11 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -215,7 +216,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Osaka+Castle">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#2563eb">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#2563eb">
   <div class="num">3<small>sáb 12 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -230,7 +231,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://shoji-bb.com/en">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#16a34a">
+<div class="day" data-base="OSAKA" data-zona="KYOTO" style="--dc:#16a34a">
   <div class="num">4<small>dom 13 dic</small></div>
   <div>
     <h3>KYOTO <span class="zone">OSAKA</span></h3>
@@ -245,7 +246,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Fushimi+Inari+Taisha">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#16a34a">
+<div class="day" data-base="OSAKA" data-zona="KYOTO" style="--dc:#16a34a">
   <div class="num">5<small>lun 14 dic</small></div>
   <div>
     <h3>KYOTO <span class="zone">OSAKA</span></h3>
@@ -260,7 +261,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Arashiyama+Bamboo+Grove">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#ea580c">
+<div class="day" data-base="OSAKA" data-zona="NARA" style="--dc:#ea580c">
   <div class="num">6<small>mar 15 dic</small></div>
   <div>
     <h3>NARA <span class="zone">OSAKA</span></h3>
@@ -275,7 +276,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Nara+Park">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#64748b">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#64748b">
   <div class="num">7<small>mié 16 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -290,7 +291,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#2563eb">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#2563eb">
   <div class="num">8<small>jue 17 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -305,7 +306,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.usj.co.jp/web/en/us">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#2563eb">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#2563eb">
   <div class="num">9<small>vie 18 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -320,7 +321,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Kaiyukan+Osaka">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="OSAKA" style="--dc:#64748b">
+<div class="day" data-base="OSAKA" data-zona="Osaka" style="--dc:#64748b">
   <div class="num">10<small>sáb 19 dic</small></div>
   <div>
     <h3>Osaka <span class="zone">OSAKA</span></h3>
@@ -335,7 +336,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     
   </div>
 </div>
-<div class="day" data-base="→TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="→TOKIO" data-zona="Shinkansen" style="--dc:#7c3aed">
   <div class="num">11<small>dom 20 dic</small></div>
   <div>
     <h3>Shinkansen <span class="zone">→ TOKIO</span></h3>
@@ -350,7 +351,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://smart-ex.jp/en">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Shibuya" style="--dc:#7c3aed">
   <div class="num">12<small>lun 21 dic</small></div>
   <div>
     <h3>Shibuya <span class="zone">TOKIO</span></h3>
@@ -365,7 +366,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Shibuya+Crossing">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Shinjuku" style="--dc:#7c3aed">
   <div class="num">13<small>mar 22 dic</small></div>
   <div>
     <h3>Shinjuku <span class="zone">TOKIO</span></h3>
@@ -380,7 +381,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://ninehours.co.jp/en">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Akihabara" style="--dc:#7c3aed">
   <div class="num">14<small>mié 23 dic</small></div>
   <div>
     <h3>Akihabara <span class="zone">TOKIO</span></h3>
@@ -395,7 +396,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Ms+Pop+Life+1-15-13+Sotokanda">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#7c3aed">
   <div class="num">15<small>jue 24 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -410,7 +411,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Sensoji+Temple+Asakusa">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#7c3aed">
   <div class="num">16<small>vie 25 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -425,7 +426,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=teamLab+Borderless+Azabudai">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#64748b">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#64748b">
   <div class="num">17<small>sáb 26 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -440,7 +441,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#7c3aed">
   <div class="num">18<small>dom 27 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -455,7 +456,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Tsukiji+Outer+Market">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#7c3aed">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#7c3aed">
   <div class="num">19<small>lun 28 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -470,7 +471,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     <a class="lnk" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Takadanobaba">📍 Ver en el mapa / reserva →</a>
   </div>
 </div>
-<div class="day" data-base="TOKIO" style="--dc:#64748b">
+<div class="day" data-base="TOKIO" data-zona="Tokio" style="--dc:#64748b">
   <div class="num">20<small>mar 29 dic</small></div>
   <div>
     <h3>Tokio <span class="zone">TOKIO</span></h3>
@@ -485,7 +486,7 @@ footer{border-top:1px solid var(--border);margin-top:48px;padding:28px 20px;text
     
   </div>
 </div>
-<div class="day" data-base="VUELTA" style="--dc:#b91c1c">
+<div class="day" data-base="VUELTA" data-zona="Narita" style="--dc:#b91c1c">
   <div class="num">21<small>mié 30 dic</small></div>
   <div>
     <h3>Narita <span class="zone">VUELTA</span></h3>
@@ -754,6 +755,15 @@ function openInfo(cat,idx){
 function closeModal(){document.getElementById('modalBack').classList.remove('open');}
 document.getElementById('modalBack').addEventListener('click',e=>{if(e.target.id==='modalBack')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+// filtro de dias (Ruta): por BASE o ZONA (Kioto/Nara estan bajo base OSAKA)
+document.querySelectorAll('#dayfilters button').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('#dayfilters button').forEach(x=>x.classList.remove('on'));btn.classList.add('on');
+ const f=btn.dataset.f;
+ document.querySelectorAll('.day').forEach(d=>{
+   const hit = f==='all' || d.dataset.base===f || d.dataset.zona===f;
+   d.style.display = hit ? '' : 'none';
+ });
+}));
 </script>
 </body>
 </html>
