@@ -215,13 +215,17 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
     <button class="tab-btn active" data-tab="trailer">▶ TRAILER</button>
     <button class="tab-btn" data-tab="ruta">📅 Ruta 21 días</button>
     <button class="tab-btn" data-tab="mapa">🗺️ Mapa</button>
+    <button class="tab-btn" data-tab="comida">🍱 Comida</button>
+    <button class="tab-btn" data-tab="actividades">🎆 Actividades</button>
+    <button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button>
+    <button class="tab-btn" data-tab="videos">🎥 Vídeos</button>
     <button class="tab-btn" data-tab="restaurantes">🍜 Restaurantes</button>
     <button class="tab-btn" data-tab="presupuesto">💰 Presupuesto</button>
     <button class="tab-btn" data-tab="checklist">📝 Checklist</button>
   </div>
   <div class="spacer"></div>
   <button id="themeToggle" title="Cambiar tema">🌙</button>
-</nav><button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button></nav>
+</nav>
 
 <main>
 
@@ -565,19 +569,36 @@ var TIPS = [
 ];
 
 var CHECK = [
- ['✈️','Vuelos ZH ida/vuelta','PNR QJ8B3P · BCN→KIX 11:20','—',true],
+ ['✈️','Vuelos ZH ida/vuelta','PNR QJ8B3P · BCN→KIX 11:20 · vuelta NRT 19:00','—',true],
  ['🎎','Alojamiento Osaka','Shimanouchi 1-13-19 · 10-20 dic','—',true],
  ['🗼','Alojamiento Tokyo','Okubo 1-39 · 20-30 dic','—',true],
- ['🚄','Shinkansen Nozomi 20 dic','Osaka→Tokyo, reservado','14.720¥',false],
- ['🎂','Cena cumple Marc (Hozenji)','Matsusakagyu M Hozenji · 10 dic 20:00','—',false],
- ['🔥','TATARA Osaka (wagyu)','Noche 12 dic · Saison 7.800¥','7.800¥',false],
+ ['🚄','Shinkansen Nozomi 20 dic','Osaka→Tokyo · reservado (SmartEX)','14.720¥',false],
+ ['🎂','Cena cumple Marc (Hozenji)','Matsusakagyu M Hozenji · 10 dic 20:00 · reserva 6 pax','10-14k¥',false],
+ ['🔥','TATARA Osaka (wagyu)','Noche 12 dic · Saison 7.800¥ / wagyu 9.500¥ / Kobe 25.000¥','9.500¥',false],
  ['💎','Yoroniku Tokio','Reserva 1 mes antes · Ebisu','—',false],
- ['🎢','Entradas USJ 17 dic','Universal Studios Japan','8.600¥',false],
- ['🌀','teamLab Planets','Tokio, 23 dic','3.600¥',false],
  ['🍣','Sushi Yoshikawa Kaido','Cena Navidad 25 dic · Ginza','—',false],
- ['📶','eSIM / datos móviles','Contratar antes de volar','—',false],
- ['🛡️','Seguro de viaje','Cobertura médica + equipaje','—',false],
- ['💈','Barbería Shoji 1870','Corte retro · 25 dic mañana','4.000¥',false]
+ ['🥩','Kobe Gyuu Kisshoukichi Kioto','Teppanyaki Kobe · 13-14 dic · Gion/Sanjo','8-10k¥',false],
+ ['🍝','OSTERIA IS -Gion-','Kioto 13-14 dic · Tabelog 3.52 · ¥5-6k','5.500¥',false],
+ ['🎢','Entradas USJ 17 dic','Nintendo World · llegar 7:30 (timed entry)','8.600¥',false],
+ ['🌀','teamLab Planets/Borderless','Tokio · comprar 26 nov 00:00 JST','3.600¥',false],
+ ['⛩️','Fushimi Inari (día 4)','Kioto 13 dic · 1.000 torii a 8am','400¥',false],
+ ['🦌','Nara + Todai-ji (día 6)','15 dic · ciervos + Buda 15m','600¥',false],
+ ['✨','Iluminaciones Navidad','Midosuji Osaka · Blue Cave Shibuya · Roppongi · Keyakizaka','0¥',false],
+ ['🎤','Karaoke Kan Namba','Sala 6 pax + nomihodai · cumple Marc','2-3k¥',false],
+ ['🍺','Golden Gai / Omoide Yokocho','Tokyo noche · 200 bares sin cover (algunos 500¥ cover)','—',false],
+ ['💈','Barbería Shoji 1870','Namba B1F · corte + navaja · LUN cerrado','4.000¥',false],
+ ['🛏️','Nine Hours cápsula','Kabukicho · noche grupo (reserva 2 semanas antes)','4.900¥',false],
+ ['💻','Cyber Bagus Shinjuku','Night 19-5h · box privado + ducha','3.800¥',false],
+ ['🔞','M\'s Pop Life Akiba','8 plantas · gratis · BLUR para cámara','0¥',false],
+ ['🕹️','Purikura + gachapon','Fotomatones 400¥ · máquinas 500¥','500¥',false],
+ ['🛍️','Don Quijote haul','Shibuya/Sinjuku · 24h · tax free >5.000¥','3k¥',false],
+ ['📶','eSIM / datos móviles','2× eSIM Ubigi + 1 Pocket WiFi · contratar antes','23€',false],
+ ['💴','Efectivo yen','Retirar en KIX (ATM 7-Bank) · tarjeta Revolut/N26','50k¥',false],
+ ['🛡️','Seguro de viaje','Cobertura médica + equipaje + cancelación','—',false],
+ ['📱','App Google Maps offline','Descargar mapas Osaka/Tokio/Kioto antes de volar','0¥',false],
+ ['🔌','Adaptador enchufe','Japón: clavija tipo A (USA) · 100V','5€',false],
+ ['🧳','Takuhaibin maleta','Enviar maleta a NRT desde conbini (último día)','2.000¥',false],
+ ['🪪','Pasaporte + visado','Pasaporte 6 meses validez · sin visado UE <90d','—',false]
 ];
 
 /* ============ THEME ============ */
@@ -586,7 +607,7 @@ function setTheme(t){
   document.documentElement.dataset.theme = t;
   try{localStorage.setItem('japon-theme', t);}catch(e){}
   themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
-  if (window.tileLayer) tileLayer.setUrl(t === 'dark' ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+  if (window.tileLayer) tileLayer.setUrl(t === 'dark' ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}' : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}');
   initChart();
 }
 themeBtn.addEventListener('click', function(){
@@ -757,7 +778,7 @@ function initMap(){
   if (map){ map.remove(); map = null; }
   var dark = document.documentElement.dataset.theme === 'dark';
   map = L.map('map').setView([35.5, 137.5], 5);
-  tileLayer = L.tileLayer(dark ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap', maxZoom:19}).addTo(map);
+  tileLayer = L.tileLayer(dark ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}' : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {attribution:'© Esri · OpenStreetMap', maxZoom:19}).addTo(map);
   MAPS.forEach(function(m){
     var ic = L.divIcon({className:'mm-pin ' + m.t, html:'<span>' + m.n.charAt(0) + '</span>', iconSize:[26,26], iconAnchor:[13,26], popupAnchor:[0,-24]});
     L.marker(m.c, {icon: ic}).addTo(map).bindPopup('<b>' + m.n + '</b><br>' + m.d);
