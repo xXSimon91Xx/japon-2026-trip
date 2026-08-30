@@ -488,3 +488,54 @@ Loop infinito PREMIUM sigue — workspace limpio, todo en VAULT.
 Toca 02 NAVIDAD — profundizar Mega Illumi fechas exactas 2026-27 (checkear calendario dias carrera dic 2026) + Hikari Renaissance Osaka 2026 fechas + confirmar Jewellumination 1.800¥ 2026 + verificar 3 links NAVIDAD (planmyjapan, matcha-jp, japan-guide e2304) + si Mega Illumi encaja en RUTA 22 dic (Shinjuku -> Oi + vuelta).
 
 Loop infinito PREMIUM sigue — workspace limpio, todo en VAULT.
+
+### Iteracion 9 — 30 ago 2026 (08:15, v3 PREMIUM VAULT — NAVIDAD)
+
+**Mision PREMIUM v3 NAVIDAD (tocaba NAVIDAD tras DASHBOARD -> siguiente CUMPLE): Excel 60.425 bytes, 2 filas NUEVAS + 1 FIX link 404 + precios CONFIRMADOS**
+
+**5 investigaciones NUEVAS no incluidas en Iter 1-8 (web_search + web_extract + curl 30 ago 08:15):**
+
+**1) Jewellumination 2026-27 CONFIRMADA con fechas y precio exactos (enjoytokyo.jp/event/478596 200 OK):**
+- 29 oct 2026 → 4 abr 2027 (138 dias), 17ª temporada, tema "LIGHT is LOVE" + sub-tema "Growing Light" (iluminacion VERDE nueva tras 2 años).
+- Adulto 18-64: 1.800¥ CONFIRMADO (after-pass 15:00+ 3.100¥). Horas 16:00-20:30 (varia por temporada).
+- NUEVO: walk-through del Grand Sanctuary (piscina WAI) y foto a distancia nunca vista.
+- FIX hoja: decia "16ª temporada ~1.800¥" -> 17ª + confirmado + link enjoytokyo.
+
+**2) Tokyo Mega Illumi — precios por dia + NORMA CLAVE NORTH GATE (tokyocheapo + planmyjapan 200 OK):**
+- 4:30pm-9pm, last entry 20:00 SOLO por NORTH GATE (NO seguir Google Maps a la entrada principal, te manda a la principal).
+- Precios dic 2025-26 (2026-27 por confirmar): finde/festivo advance 1.300¥ / same-day 1.600¥; entre semana advance 800¥ / same-day 1.000¥; niños 400-900¥; Klook desde ~600¥.
+- CERRADO dias de carrera: chequear calendario oficial antes de comprar advance.
+- Outdoor Xmas Week 2025-26 (13-23 dic): sky lanterns LED advance 4.500¥/5.800¥ + bonfires + sky bungee — 2026-27 pendiente oficial.
+
+**3) Marunouchi Illumination NUEVO (no estaba):** Nakadori 1,2km junto Tokyo Station, 800.000 LEDs champagne-gold, GRATIS, 24ª edicion, mid-nov → mid-feb; en DICIEMBRE hasta 24:00; Gyoko-dori (Palacio→Tokyo Sta) 28 nov-25 dic 16:00-24:00 + PISTA DE HIELO. Perfecto noches 22-23 o 28-29 dic (Tokyo Cheapo + rakuten 200 OK).
+
+**4) OSAKA Christmas Market Umeda Sky Building NUEVO (no estaba):** 14 nov → 25 dic 2026, 11:00-22:00, mercado aleman gratis + gluhwein, en el Umeda Sky iconico — 20 min desde Shimanouchi. UNICA ventana de xmas market en Osaka 10-20 dic. Ademas 2025 hubo edicion Namba/Dotonbori/Shinsaibashi 8 puntos (a 5 min base) — vigilar 2026.
+
+**5) Hikari Renaissance Osaka confirmado patron:** 2025: 14-25 dic 17:00-22:00 (japan-guide e2304.html); sin expo en 2026 Midosuji desde nov (no abril). Encaja en vuestra estancia Osaka 10-20 dic.
+
+**Verificacion links (curl/web_extract 30 ago):**
+- ✅ https://planmyjapan.com/roppongi-hills-christmas-lights-market -> 200 OK (luces 17:00-24:00, market 11:00-21:00 — corregido D4)
+- ✅ https://www.japan-guide.com/e/e2304.html -> 200 OK (FIX: el link en Excel sin .html daba 404)
+- ✅ https://www.shibuya-aonodokutsu.jp/ -> 200 OK
+- ✅ https://tokyocheapo.com/events/tokyo-mega-illumination -> 200 OK (precios)
+- ✅ https://www.enjoytokyo.jp/event/478596 -> 200 OK (Jewellumination 2026)
+- ✅ https://en.japantravel.com/tokyo/tokyo-mega-illumination-53911/53910 + rurubu 20003370 -> 200 OK
+- ⚠️ matcha-jp 22272/15048: curl 000 (red local IPv6) pero web_extract matcha 26291 OK -> links SE MANTIENEN (funcionan en navegador).
+
+**Cambios Excel PREMIUM VAULT (mismo path, openpyxl, backup en anteriores/ — verificado reload):**
+- Hoja mejorada rotacion: 02 NAVIDAD 2026 (tocaba NAVIDAD tras DASHBOARD -> siguiente CUMPLE)
+  - A1/A2: stamp Iter 9 + resumen hallazgos
+  - D4: Roppongi luces 17:00-23:00 -> 17:00-24:00; market 11:00-21:30 -> 11:00-21:00 (planmyjapan 2026)
+  - E6/G6: FIX link japan-guide e2304 -> e2304.html (404 -> 200) + dato Hikari Renaissance 17:00-22:00
+  - D13/E13/F13: Mega Illumi precios advance/same-day + 16:30-21:00 + last entry 20:00 NORTH GATE + cerrado dias carrera + sky lanterns Xmas Week
+  - D14/E14/G14: Jewellumination 17ª temporada CONFIRMADA (fechas, precio, after-pass, tema Growing Light) + link enjoytokyo
+  - E12/F12/G12: fila verificacion links actualizada 30 ago
+  - A15:G15 NUEVA 7a Marunouchi Illumination + Gyoko-dori ice skating (GRATIS, dic hasta 24:00)
+  - A16:G16 NUEVA 7b Osaka Christmas Market Umeda Sky (14 nov-25 dic 2026)
+- 08 YOUTUBE IDEAS fila 30 NUEVA: "Mega Illumi SKY LANTERNS — Outdoor Xmas Week" 🔥 (2025: 13-23 dic; 2026 pendiente; nadie en español)
+- Verificado: openpyxl reload + spot-check A1/D4/G6/D13/D14/A15/B15/B16 + YOUTUBE A30 + size 60.425 bytes
+
+**Proxima iteracion (rotacion: NAVIDAD -> CUMPLE -> RUTA -> LOGISTICA -> SPOTS -> COMIDA -> YOUTUBE -> PRESUPUESTO -> CHECKLIST -> DASHBOARD -> NAVIDAD...):**
+Toca 03 CUMPLE MARC — preparar cena 10 dic Matsusakagyu M Hozenji 20:00 6pax (confirmar reserva via Tabelog/Gurunavi, plan B yakuiniku Rikimaru 2 min base), verificar link restaurante, idea sorpresa (tarta en Donki + video cumple), checkear disponibilidad dic 2026.
+
+Loop infinito PREMIUM sigue — workspace limpio, todo en VAULT.
