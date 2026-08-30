@@ -221,7 +221,7 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
   </div>
   <div class="spacer"></div>
   <button id="themeToggle" title="Cambiar tema">🌙</button>
-</nav><button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button><span class="spacer"></span><button class="tt" id="themeIcon" onclick="toggleTheme()" title="Cambiar tema">☀️</button></nav>
+</nav><button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button></nav>
 
 <main>
 
@@ -859,8 +859,7 @@ function initExtras(){ if(typeof CHATARRA==="undefined"||typeof VIDEOS==="undefi
   if (f) renderExtra('fiesta-grid', FIESTA, function(x){ return '<div class="card"><h3>'+x[0]+'</h3><p>'+x[2]+'</p><div class="price">'+x[1]+'</div></div>'; });
 }
 
-function toggleTheme(){var d=document.documentElement;var cur=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',cur);localStorage.setItem('jpTheme',cur);var ic=document.getElementById('themeIcon');if(ic)ic.textContent=cur==='dark'?'☀️':'🌙';if(typeof initMap==='function'&&document.getElementById('tab-mapa').classList.contains('active'))initMap();if(typeof initChart==='function')try{initChart()}catch(e){}}
-(function(){var t=localStorage.getItem('jpTheme')||'dark';document.documentElement.setAttribute('data-theme',t);var ic=document.getElementById('themeIcon');if(ic)ic.textContent=t==='dark'?'☀️':'🌙';})();
+
 </script>
 </body>
 </html>
