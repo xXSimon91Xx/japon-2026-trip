@@ -231,9 +231,7 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
     <button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button>
     <button class="tab-btn" data-tab="presupuesto">💰 Presupuesto</button>
         <button class="tab-btn" data-tab="checklist">📝 Checklist</button>
-        
-        
-        
+
       </div>
   <div class="spacer"></div>
   <button id="themeToggle" title="Cambiar tema">🌙</button>
@@ -243,12 +241,7 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 
 <!-- ================= TAB TRAILER ================= -->
 <section id="tab-trailer" class="tab tab-trailer active">
-  <div class="trailer-video-wrap" style="position:relative;border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 10px 40px rgba(0,0,0,.45)">
-    <video id="trailerVideo" controls preload="metadata" playsinline style="width:100%;display:block;border-radius:16px;aspect-ratio:16/9;background:#000" poster="trailer/08_title_card.png">
-      <source src="trailer/trailer_final.mp4" type="video/mp4">
-    </video>
-    <div style="position:absolute;top:10px;left:10px;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.55);color:#ffd875;font-size:11px;font-weight:800;letter-spacing:.08em">▶ TRAILER OFICIAL · 47s · 1080p</div>
-  </div>
+  
   <div class="trailer">
     <div class="slide" style="background-image:url('trailer/01_marc_beach_muscular.png')"></div>
     <div class="slide" style="background-image:url('trailer/02_ruben_shadow_dagger.png')"></div>
@@ -305,7 +298,6 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
   </div>
 </section>
 
-
 <!-- ================= TAB PRESUPUESTO ================= -->
 <section id="tab-presupuesto" class="tab">
   <div class="tab-head">
@@ -334,9 +326,6 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
   <div class="check-grid" id="check-list"></div>
   </section>
 
-  
-    
-    
   <section id="tab-comida" class="tab">
   <div class="tab-head"><h2>🍱 Comida — por categorías</h2><p>Conbini, cadenas, tradicional y los restaurantes TOP marcados con ★ (los que NO nos saltamos).</p></div>
   <h3 class="sec-title">🛒 SUPER & CONBINI</h3>
@@ -462,8 +451,6 @@ var ROUTE = [
  {d:20, fecha:'MAR 29 DIC', city:'TOKYO', title:'Último día completo', badge:'', m:'Souvenirs y spots favoritos (vuelve donde más flipaste).', t:'Comodín: el sitio que más gustó o retos pendientes.', n:'Noche de despedida: izakaya + última caminata iluminada.', tr:'Metro', price:'~30 €', vid:'El grupo entero diciendo adiós a Tokyo.', food:'Izakaya final'},
  {d:21, fecha:'MIE 30 DIC', city:'VUELTA', title:'Hasta pronto, Japón ✈️', badge:'', m:'Check-out y Narita Express al aeropuerto.', t:'Vuelo de vuelta.', n:'En el avión, editando el trailer del próximo viaje.', tr:'N\’EX ~3.200¥ + vuelo', price:'~25 €', vid:'Créditos: los mejores momentos en loop.', food:'Konbini final (despedida a lo grande)'}
 ];
-
-
 
 var POIS = [
  {f:'🏝️', n:'Okinawa', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', lat:26.2124, lng:127.6809},
@@ -683,11 +670,7 @@ function playTrailer(){
   };
   step(0);
 }
-document.getElementById('btnPlay').addEventListener('click', function(){
-  var v = document.getElementById('trailerVideo');
-  if (v){ stopTrailer(); v.play(); v.scrollIntoView({behavior:'smooth', block:'center'}); }
-  else playTrailer();
-});
+document.getElementById('btnPlay').addEventListener('click', function(){ playTrailer(); });
 document.getElementById('btnSkip').addEventListener('click', function(){ stopTrailer(); goTab('ruta'); });
 
 setSlide(0);
@@ -717,7 +700,6 @@ ROUTE.forEach(function(d){
 });
 
 /* ============ RESTAURANTES ============ */
-
 
 /* ============ MAPA ============ */
 var MAPS = [
@@ -849,18 +831,11 @@ function toggleVid(i){ vidDone[i] = !vidDone[i]; try{ localStorage.setItem('japo
 /* ============ CHECKLIST ============ */
 // checklist v9: CHECK/renderCheck/toggleCheck definidos arriba
 
-
 /* ============ VIDEOS (Ray-Ban) ============ */
-
-
 
 /* ============ ACTIVIDADES ============ */
 
-
-
 /* ============ FIESTA ============ */
-
-
 
 /* ============ INIT ============ */
 
