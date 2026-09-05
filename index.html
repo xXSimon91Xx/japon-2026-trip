@@ -596,7 +596,7 @@ function goTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
   document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('active', s.id === 'tab-' + name); });
   window.scrollTo(0,0);
-  if(name==='mapa'){ setTimeout(function(){ if(window.map){ map.invalidateSize(); } else { initMap(); } }, 150); }
+  if(name==='mapa'){ setTimeout(function(){ if(window.map){ map.invalidateSize(); if(!map.__fitted && JAPAN_B){ map.fitBounds(JAPAN_B, {padding:[36,36]}); map.__fitted = true; } } else { initMap(); } }, 150); }
   if(name==='videos') renderVideos();
   if(name==='checklist'){ renderCheck(); }
   if(name==='presupuesto'){ try{ initChart(); }catch(e){} }
@@ -823,10 +823,15 @@ function initMap(){
       .bindPopup('<b>' + p.f + ' ' + p.n + '</b><br>' + poiDist(p.lat, p.lng) + '<br>' + (p.h ? p.h + '<br>' : '') + '<a href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a>');
   });
   JAPAN_B = L.latLngBounds(pts);
+    map.__fitted = false;
     setTimeout(function(){
       map.invalidateSize();
-      map.fitBounds(JAPAN_B, {padding:[36,36]});
-    }, 350);
+      var tabEl = document.getElementById('tab-mapa');
+      if(tabEl && getComputedStyle(tabEl).display !== 'none'){
+        map.fitBounds(JAPAN_B, {padding:[36,36]});
+        map.__fitted = true;
+      }
+    }, 60);
   map.on('moveend', function(){
     var z = map.getZoom(), bb = map.getBounds();
     document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
