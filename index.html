@@ -224,7 +224,8 @@ html,body{overflow-x:clip}
 #poi-list{display:block}
 .grid.g2>.card,.grid.g3>.card,.poi-grid>.poi,.check-grid>.check-item{height:100%}
 .card{display:flex;flex-direction:column}
-.card-foot{margin-top:auto;padding-top:10px}
+.card-foot{margin-top:auto;padding-top:10px;flex-wrap:wrap;gap:8px}
+.grid.g2>.card,.grid.g3>.card,.check-grid>.check-item{min-width:0}
 .map-legend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;font-size:.8rem;color:var(--muted)}
 #map{height:520px;border-radius:18px;z-index:1;margin-bottom:6px}
 .mm-pin2{border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #ff3b5c;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.5)}
