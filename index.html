@@ -234,7 +234,27 @@ html,body{overflow-x:clip}
 .leaflet-popup-content{font-size:.83rem}
 .leaflet-container{background:var(--card2);font-family:inherit}
 .map-legend b{color:var(--text)}
-.dotk{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:baseline}
+/* ===== v18: mapa capas, chips ruta, lock dia ===== */
+.map-bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.mbtn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:999px;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s}
+.mbtn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.mbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+#map{height:560px;border-radius:18px}
+@media (max-width:640px){#map{height:430px}}
+.day-maps{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 12px}
+.loc-chip{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);color:var(--text);font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:12px;text-decoration:none;white-space:nowrap;transition:.2s}
+.loc-chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.day-locked .slots,.day-locked .day-maps,.day-locked .meta{display:none}
+.lock-cover{display:none;flex-direction:column;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(255,59,92,.13),rgba(161,61,255,.09));border:1px dashed var(--accent);border-radius:14px;padding:18px;margin:10px 0 4px}
+.day-locked .lock-cover{display:flex}
+.lock-cover b{font-size:1rem;letter-spacing:.04em}
+.lock-cover p{color:var(--muted);font-size:.85rem;line-height:1.5;margin:0}
+.lock-go{border:0;background:var(--accent);color:#fff;font-weight:800;padding:9px 18px;border-radius:999px;cursor:pointer;font-size:.85rem}
+.lock-go:hover{filter:brightness(1.12)}
+.train-note{margin:4px 0 18px}
+.train-note b{color:var(--text)}
+.train-note br{display:none}
+.train-note{line-height:1.75}
 </style>
 <script>
 (function(){try{var t=localStorage.getItem('japon-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}})();
@@ -299,7 +319,13 @@ html,body{overflow-x:clip}
     <span class="chip">💰 <b>620 €</b> en destino ≈ 4.836 ¥/día</span>
     <span class="chip">🎂 Cumple Marc <b>10 dic · 22 años</b></span>
   </div>
-  <div id="ruta-list"></div>
+  <div class="note train-note"><b>🎫 Trenes — dónde se compra cada uno:</b><br>
+• <b>Nankai KIX→Namba (día 1, al llegar):</b> nada de online. En la salida de KIX hay máquinas verdes de Nankai: billete a Namba 920¥, o saca una <b>ICOCA</b> (2.000¥ = 1.500¥ de saldo) y entra directo con ella.<br>
+• <b>Kioto y Nara desde Osaka:</b> con la misma ICOCA, sin billete ni reserva — tocas y entras (JR Osaka→Kioto 580¥).<br>
+• <b>Shinkansen 22 dic (Shin-Osaka→Tokio, 14.720¥):</b> el único que necesita reserva: online en <b>Smart EX</b> (QR) o en las máquinas JR "Midori no Madoguchi" de Shin-Osaka.<br>
+• <b>Narita Express (30 dic, 3.200¥):</b> máquinas JR de Tokio o ventanilla mostrando el pasaporte.<br>
+• <b>Metro y buses:</b> siempre ICOCA. Resumen: solo Nozomi y NEX se compran por adelantado; todo lo demás es tocar con la tarjeta en el sitio.</div>
+<div id="ruta-list"></div>
 </section>
 
 <!-- ================= TAB MAPA ================= -->
@@ -308,18 +334,12 @@ html,body{overflow-x:clip}
     <h2>🗺️ Mapa del viaje</h2>
     <p>Bases, restaurantes verificados, iluminaciones navideñas y spots de filmación. 32 puntos marcados.</p>
   </div>
-  <div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H Casa Osaka</b> (checkpoint)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· abajo, de cerca a lejos</span></div>
+  <div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H</b> casas (Osaka · Tokio)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· pines de cerca a lejos · toca un pin para ver distancia y ruta</span></div>
 <div id="map"></div>
-<div class="map-wrap"><iframe id="gmap" title="Mapa de Japón" src="https://maps.google.com/maps?q=Osaka,Kyoto,Nara,Tokyo,Japan&z=6&hl=es&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
-  <div class="map-btns">
-    <button data-mq="Osaka,Kyoto,Nara,Tokyo,Japan" data-mz="6" class="active">🗾 Todo Japón</button>
-    <button data-mq="Osaka,Japan" data-mz="12">🏠 Osaka</button>
-    <button data-mq="Kyoto,Japan" data-mz="11">⛩️ Kioto</button>
-    <button data-mq="Nara,Japan" data-mz="12">🦌 Nara</button>
-    <button data-mq="Tokyo,Japan" data-mz="11">🗼 Tokio</button>
-  </div>
-  <p class="map-note">🏠 Checkpoint: casa Osaka — Shimanouchi 1-13-19 (<a href="https://www.google.com/maps/search/Shimanouchi+1-13-19+Osaka" target="_blank" rel="noopener">ver en Maps</a>). Abajo, los POIs extra con su distancia a la casa. ¿My Maps con pines? pásame el ID y lo incrusto.<br>💡 Mapa de Google en español, sin claves. Toca una zona para centrarla. Los 32 spots de la ruta están en las tarjetas de cada día con su 📍 Cómo llegar.</p>
-  <div class="pois">
+<div class="map-bar" id="capasBar"><button class="mbtn active" data-base="sat">🛰️ Satélite</button><button class="mbtn" data-base="map">🗺️ Mapa</button></div>
+<div class="map-bar" id="areaBar"><button class="mbtn active" data-area="all">🗾 Todos los pines</button><button class="mbtn" data-area="osaka">🏠 Osaka</button><button class="mbtn" data-area="kioto">⛩️ Kioto</button><button class="mbtn" data-area="nara">🦌 Nara</button><button class="mbtn" data-area="tokio">🗼 Tokio</button></div>
+<p class="map-note">🏠 <b>Base Osaka</b>: Shimanouchi 1-13-19 (10-22 dic) · <b>Base Tokio</b>: Okubo 1-39 (22-30 dic). Los pines extra son sitios que no están en el plan y su distancia se mide desde la casa más cercana. Los 21 días de ruta llevan su 📍 en cada tarjeta con el botón "Cómo llegar" a Google Maps.</p>
+<div class="pois">
     <h3>🌏 PUNTOS DE INTERÉS EXTRA</h3>
     <p>Sitios que NO están en el plan de 2026… pero que merecen mucho la pena (apuntados para la próxima misión).</p>
     <div class="poi-grid" id="poi-list"></div>
@@ -389,13 +409,16 @@ html,body{overflow-x:clip}
     <p id="bday-err" class="muted" style="display:none;margin-top:8px">❌ Contraseña incorrecta.</p>
   </div>
   <div id="bday-content" style="display:none">
-    <div class="note">🤫 Hoy cumple 22 — cena 20:00. Que no vea esta pestaña.</div>
+    <div class="note">🤫 Plan sorpresa del día 10 (JUE 10 DIC). Que Marc no vea esta pestaña ni la tarjeta del día 1 en la ruta (va bloqueada).</div>
+    <div class="card" style="margin-bottom:14px"><h3>🛬 Crono realista del día 10 (Simon + Marc)</h3><div class="slots"><div class="slot"><b>14:00 · Aterrizaje KIX</b><br>Vuelo ZH (PNR QJ8B3P) · inmigración + maletas ≈ 40-60 min (KIX suele ir fluido)</div><div class="slot"><b>15:10 · Máquinas Nankai</b><br>En la salida: ICOCA 2.000¥ (o billete 920¥) → tren Airport Express a Namba (45 min)</div><div class="slot"><b>16:00 · Namba</b><br>De camino a casa: comprar la tarta (Rikuro's está a 1 min de la estación) + velas</div><div class="slot"><b>16:20 · Check-in Shimanouchi 1-13-19</b><br>Dejar maletas y descansar 20 min</div><div class="slot"><b>17:00 · 🎂 Tarta + velas + regalo</b><br>En casa, sin prisa</div><div class="slot"><b>18:30 · Dotonbori + cena</b><br>Glico, callejones, cena low-cost</div><div class="slot"><b>20:30 · Karaoke Kan</b><br>Sala 2 pax + nomihodai 1.500¥/2h</div><div class="slot"><b>~23:00 · Vuelta a casa</b><br>Día 11: Kuromon + Amerikamura</div></div><p style="font-size:.82rem;color:var(--muted);margin-top:6px">⏱️ Si el avión llega puntual y no hay colas raras, a las <b>16:20-16:30</b> estáis en casa; el cumple arranca a las <b>17:00</b>. Las 15:00 serían solo si KIX va vacío y no esperáis maletas — no lo contéis como fijo.</p></div>
     <div class="grid g2">
-      <div class="card"><h3>🥩 Cena Matsusakagyu M Hozenji · JUE 10, 20:00</h3><p>Wagyu A5 Matsusaka, reserva 6 pax. La sorpresa gorda del día.</p><div class="price">10-14k¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
-      <div class="card"><h3>🎤 Karaoke Kan Namba · después</h3><p>Sala 6 pax + nomihodai. Tarta FamilyMart + velas del Donki en el Airbnb antes de salir.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
-      <div class="card"><h3>🎁 Ideas de regalo</h3><p>Figura de Akihabara a su gusto, funda Ray-Ban grabada, o entrada sorpresa teamLab.</p><div class="price">—</div></div>
+      <div class="card"><h3>🎂 Tarta: Rikuro Ojisan (Namba)</h3><p>El cheesecake que toca la campanilla — 900¥, recién hecho, a 1 min de la salida de Nankai Namba. Backup 24h: tarta de FamilyMart (1.500-2.500¥) en cualquier conbini. Velas y globos: Daiso/Seria (100¥) o Don Quijote de Namba.</p><div class="price">900-2.500¥</div><div class="card-foot"><span class="tag">🕐 Rikuro's 10:00-20:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6625,135.501/34.6631,135.5016?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎁 Regalo: 3 opciones</h3><p>1) Figura de Akihabara a su gusto (5-10k¥) · 2) Funda Ray-Ban grabada o correa extra para las Meta · 3) Entrada sorpresa a teamLab Planets el 23 dic (3.600¥). Si llegáis sin regalo, Don Quijote Namba tiene de todo hasta tarde.</p><div class="price">3.600-10.000¥</div></div>
+      <div class="card"><h3>🍜 Cena low-cost Dotonbori (sin wagyu)</h3><p>Takoyaki (500¥), kushikatsu u okonomiyaki — cenar picoteando por Dotonbori ~1.000-1.500¥ p.p. El wagyu top NO hoy: TATARA ya está reservado el 14 dic con los 6 (9.500¥ p.p.). Matsusakagyu M Hozenji (10-14k¥) queda descartado para 2: demasiado para una cena privada + repetir con el grupo.</p><div class="price">~2.500¥ los 2</div><div class="card-foot"><span class="tag">🕐 puestos 10:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6687,135.5013?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎤 Karaoke Kan Namba · 20:30</h3><p>Sala pequeña 2 pax, 1.500¥/2h con bebida libre (nomihodai). Perfecto para el "feliz cumpleaños" cantado mal a propósito. Si Marc quiere noche tranquila: tachinomi en Ura-Namba en vez de karaoke.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>💶 Coste del plan (los 2)</h3><p>Nankai 2×920¥ + ICOCA 2×2.000¥ + tarta 900¥ + velas 100¥ + cena 2×1.300¥ + karaoke 2×1.500¥ ≈ <b>11.000-12.000¥ (~75 €)</b> contando que la ICOCA se queda con saldo para el resto del viaje. La ICOCA es gasto real de transporte, no del cumple: el cumple puro son ~5.000¥ (~32 €).</p><div class="price">~75 € los 2</div></div>
+      <div class="card"><h3>🎒 Mini-checklist del día 10</h3><p>1) Comprar ICOCA en KIX (máquinas, efectivo) · 2) Tarta Rikuro's en Namba (o FamilyMart) · 3) Velas + globos Daiso/Donki · 4) Regalo (decidir antes de salir de España o Donki) · 5) Reservar karaoke Kan por la app al llegar a casa (o a pie de local, suele haber sala).</p></div>
     </div>
-  </div>
 </section>
 </main>
 
@@ -433,23 +456,23 @@ var ROUTE = [
 ];
 
 var POIS = [
- {f:'🏝️', n:'Okinawa', img:'poi-okinawa.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', lat:26.2124, lng:127.6809},
- {f:'⛩️', n:'Takayama', img:'poi-takayama.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', lat:36.1462, lng:137.2521},
- {f:'⛴️', n:'Hiroshima + Miyajima', img:'poi-miyajima.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', lat:34.2956, lng:132.3198},
- {f:'🏔️', n:'Nikko', img:'poi-nikko.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', lat:36.7586, lng:139.5990},
- {f:'♨️', n:'Hakone Onsen', img:'poi-hakone.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', lat:35.2325, lng:139.1069},
- {f:'🎬', n:'Ghibli Museum', img:'poi-ghibli.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', lat:35.6962, lng:139.5702},
- {f:'🎡', n:'Tokyo DisneySea', img:'poi-disneysea.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', lat:35.6273, lng:139.8889},
- {f:'🌉', n:'Shibuya Crossing', img:'poi-shibuya.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', lat:35.6595, lng:139.7005},
- {f:'⛩️', n:'Senso-ji Asakusa', img:'poi-sensoji.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', lat:35.7148, lng:139.7967},
- {f:'🗼', n:'Tokyo Skytree', img:'poi-skytree.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', lat:35.7101, lng:139.8107},
- {f:'🎮', n:'Akihabara', img:'poi-akihabara.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', lat:35.7001, lng:139.7715},
- {f:'🥃', n:'Golden Gai (Shinjuku)', img:'poi-goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', lat:35.6920, lng:139.7009},
- {f:'🐟', n:'Mercado de Toyosu', img:'poi-toyosu.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', lat:35.6437, lng:139.7863},
- {f:'⛩️', n:'Fushimi Inari', img:'poi-fushimi.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', lat:34.9671, lng:135.7727},
- {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'poi-arashiyama.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', lat:35.0173, lng:135.6725},
- {f:'🏯', n:'Castillo de Osaka', img:'poi-castle.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', lat:34.6873, lng:135.5262},
- {f:'🦌', n:'Todai-ji (Nara)', img:'poi-todaiji.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', lat:34.6887, lng:135.8398}
+ {f:'🏝️', n:'Okinawa', img:'poi-okinawa.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', h:'🕐 castillo 8:30-17:00 · playas 24h', lat:26.2124, lng:127.6809},
+ {f:'⛩️', n:'Takayama', img:'poi-takayama.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', h:'🕐 calles y museos 9:00-17:00', lat:36.1462, lng:137.2521},
+ {f:'⛴️', n:'Hiroshima + Miyajima', img:'poi-miyajima.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
+ {f:'🏔️', n:'Nikko', img:'poi-nikko.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', h:'🕐 Toshogu 8:00-17:00 (cierra 16:00 en invierno)', lat:36.7586, lng:139.5990},
+ {f:'♨️', n:'Hakone Onsen', img:'poi-hakone.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', h:'🕐 onsen 10:00-20:00 · lago 24h', lat:35.2325, lng:139.1069},
+ {f:'🎬', n:'Ghibli Museum', img:'poi-ghibli.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', h:'🕐 10:00-18:00 · cerrado los martes', lat:35.6962, lng:139.5702},
+ {f:'🎡', n:'Tokyo DisneySea', img:'poi-disneysea.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', h:'🕐 8:00-22:00 (varía por día)', lat:35.6273, lng:139.8889},
+ {f:'🌉', n:'Shibuya Crossing', img:'poi-shibuya.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
+ {f:'⛩️', n:'Senso-ji Asakusa', img:'poi-sensoji.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
+ {f:'🗼', n:'Tokyo Skytree', img:'poi-skytree.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', h:'🕐 10:00-21:00 (última subida 20:00)', lat:35.7101, lng:139.8107},
+ {f:'🎮', n:'Akihabara', img:'poi-akihabara.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
+ {f:'🥃', n:'Golden Gai (Shinjuku)', img:'poi-goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', h:'🕐 18:00-4:00 (bares)', lat:35.6920, lng:139.7009},
+ {f:'🐟', n:'Mercado de Toyosu', img:'poi-toyosu.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', h:'🕐 lonja 5:00-14:00 · zona gourmet 7:00-17:00', lat:35.6437, lng:139.7863},
+ {f:'⛩️', n:'Fushimi Inari', img:'poi-fushimi.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
+ {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'poi-arashiyama.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', h:'🕐 24h · mejor antes de las 9:00', lat:35.0173, lng:135.6725},
+ {f:'🏯', n:'Castillo de Osaka', img:'poi-castle.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', h:'🕐 9:00-17:00 · parque 24h', lat:34.6873, lng:135.5262},
+ {f:'🦌', n:'Todai-ji (Nara)', img:'poi-todaiji.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
 ];
 
 var BUDGET = [
@@ -561,7 +584,7 @@ function setTheme(t){
   document.documentElement.dataset.theme = t;
   try{localStorage.setItem('japon-theme', t);}catch(e){}
   themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
-  if(window.tileLayer){ tileLayer.setUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); mapDark(t === 'dark'); }
+  if(typeof curBase !== 'undefined'){ mapDark(curBase === 'map' && t === 'dark'); }
   initChart();
 }
 themeBtn.addEventListener('click', function(){
@@ -666,7 +689,7 @@ function mathDist(lat1, lng1, lat2, lng2){
   var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
-var DAY_MAPS = {"1": [["Dotonbori", 34.6687, 135.5013], ["Namba", 34.6625, 135.501]], "2": [["Kuromon", 34.6659, 135.5056], ["Amerikamura", 34.669, 135.4985], ["Spa World", 34.6522, 135.5062]], "3": [["Namba", 34.6625, 135.501], ["Dotonbori", 34.6687, 135.5013], ["Shinsekai", 34.6525, 135.5063]], "4": [["Osaka Castle", 34.6873, 135.5262], ["Dotonbori", 34.6687, 135.5013]], "5": [["Kuromon", 34.6659, 135.5056], ["Den Den", 34.6686, 135.5027], ["TATARA", 34.6677, 135.501]], "6": [["Fushimi Inari", 34.9671, 135.7727], ["Gion", 35.003, 135.775], ["Pontocho", 35.0045, 135.772]], "7": [["Arashiyama", 35.0173, 135.6725], ["Kiyomizu", 34.9949, 135.785]], "8": [["Nara Park", 34.6887, 135.8398], ["Todai-ji", 34.689, 135.8398]], "9": [["USJ", 34.6654, 135.4322]], "10": [["Spa World", 34.6522, 135.5062], ["Shinsaibashi", 34.6694, 135.4988]], "11": [["Nishiki", 35.0044, 135.7646], ["Kisshoukichi", 35.0039, 135.7786]], "12": [["Kuromon", 34.6659, 135.5056], ["Shinsekai", 34.6525, 135.5063]], "13": [["Shin-Osaka", 34.7331, 135.5001], ["Shibuya", 35.6595, 139.7005], ["Golden Gai", 35.693, 139.7005]], "14": [["Toyosu", 35.6437, 135.7863], ["teamLab", 35.648, 139.79]], "15": [["Akihabara", 35.6986, 139.771], ["Bagus", 35.6939, 139.7035]], "16": [["Ginza", 35.6717, 139.7651], ["Shoji", 35.6938, 139.7034]], "17": [["Donki Shibuya", 35.6598, 139.7005], ["Yoroniku", 35.6731, 139.7115]], "18": [["Ueno", 35.7106, 139.7747], ["Senso-ji", 35.7148, 139.7967], ["Nakamoto", 35.6953, 139.7137]], "19": [["Tsukiji", 35.6654, 139.7714], ["Skytree", 35.7101, 139.8107], ["Sendou", 35.6717, 139.7651]], "20": [["Shinjuku", 35.6938, 139.7034]], "21": [["Narita", 35.7734, 140.3934]]};
+var DAY_MAPS = {"1": [], "2": [["Kuromon", 34.6659, 135.5056], ["Amerikamura", 34.669, 135.4985], ["Spa World", 34.6522, 135.5062]], "3": [["Namba", 34.6625, 135.501], ["Dotonbori", 34.6687, 135.5013], ["Shinsekai", 34.6525, 135.5063]], "4": [["Osaka Castle", 34.6873, 135.5262], ["Dotonbori", 34.6687, 135.5013]], "5": [["Kuromon", 34.6659, 135.5056], ["Den Den", 34.6686, 135.5027], ["TATARA", 34.6677, 135.501]], "6": [["Fushimi Inari", 34.9671, 135.7727], ["Gion", 35.003, 135.775], ["Pontocho", 35.0045, 135.772]], "7": [["Arashiyama", 35.0173, 135.6725], ["Kiyomizu", 34.9949, 135.785]], "8": [["Nara Park", 34.6887, 135.8398], ["Todai-ji", 34.689, 135.8398]], "9": [["USJ", 34.6654, 135.4322]], "10": [["Spa World", 34.6522, 135.5062], ["Shinsaibashi", 34.6694, 135.4988]], "11": [["Nishiki", 35.0044, 135.7646], ["Kisshoukichi", 35.0039, 135.7786]], "12": [["Kuromon", 34.6659, 135.5056], ["Shinsekai", 34.6525, 135.5063]], "13": [["Shin-Osaka", 34.7331, 135.5001], ["Shibuya", 35.6595, 139.7005], ["Golden Gai", 35.693, 139.7005]], "14": [["Toyosu", 35.6437, 135.7863], ["teamLab", 35.648, 139.79]], "15": [["Akihabara", 35.6986, 139.771], ["Bagus", 35.6939, 139.7035]], "16": [["Ginza", 35.6717, 139.7651], ["Shoji", 35.6938, 139.7034]], "17": [["Donki Shibuya", 35.6598, 139.7005], ["Yoroniku", 35.6731, 139.7115]], "18": [["Ueno", 35.7106, 139.7747], ["Senso-ji", 35.7148, 139.7967], ["Nakamoto", 35.6953, 139.7137]], "19": [["Tsukiji", 35.6654, 139.7714], ["Skytree", 35.7101, 139.8107], ["Sendou", 35.6717, 139.7651]], "20": [["Shinjuku", 35.6938, 139.7034]], "21": [["Narita", 35.7734, 140.3934]]};
 
 var rutaBox = document.getElementById('ruta-list');
 ROUTE.forEach(function(d){
@@ -674,6 +697,8 @@ ROUTE.forEach(function(d){
   var badge = d.badge ? '<span class="badge">' + d.badge + '</span>' : '';
   var card = document.createElement('article');
   card.className = 'day';
+  if(d.d === 1) card.className = 'day day-locked';
+  var lockCov = d.d === 1 ? '<div class="lock-cover"><b>🔒 Día 10 — plan sorpresa</b><p>El plan de este día está escondido (que Marc no lo vea). Se abre con contraseña en la pestaña Cumple.</p><button class="lock-go" onclick="goTab(\'cumple\')">🔑 Abrir plan del día 10</button></div>' : '';
   card.innerHTML =
     '<div class="day-header"><span class="dnum">D' + d.d + '</span><div><h3>' + d.fecha + ' · <span class="city">' + d.city + '</span></h3><p>' + d.title + '</p></div>' + badge + '</div>' +
     '<div class="slots">' +
@@ -681,11 +706,12 @@ ROUTE.forEach(function(d){
       slot('☀️','TARDE', d.t) +
       slot('🌙','NOCHE', d.n) +
     '</div>' +
-    '<div class="day-maps">' + (DAY_MAPS[d.d] ? DAY_MAPS[d.d].map(function(s){
+    '<div class="day-maps">' + (d.d !== 1 && DAY_MAPS[d.d] ? DAY_MAPS[d.d].map(function(s){
       var m2 = mathDist(s[1], s[2], d.d < 10 ? 34.6686 : 35.7013, d.d < 10 ? 135.5017 : 139.6935);
       var t = m2 < 6 ? 'walking' : 'transit';
-      return '<a class="maps" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/' + (d.d < 10 ? '34.6686,135.5017' : '35.7013,139.6935') + '/' + s[1] + ',' + s[2] + '?travelmode=' + t + '">📍 ' + s[0] + '</a>';
+      return '<a class="loc-chip" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/' + (d.d < 10 ? '34.6686,135.5017' : '35.7013,139.6935') + '/' + s[1] + ',' + s[2] + '?travelmode=' + t + '">📍 ' + s[0] + '</a>';
     }).join('') : '') + '</div>' +
+    lockCov +
     '<div class="meta">' +
       '<span>🚆 <b>' + d.tr + '</b></span>' +
       '<span>💶 <b>' + d.price + '</b></span>' +
@@ -695,7 +721,7 @@ ROUTE.forEach(function(d){
   rutaBox.appendChild(card);
 });
 
-/* ============ RESTAURANTES ============ */
+/* ============ RESTAURANTES/* ============ RESTAURANTES ============ */
 
 /* ============ MAPA ============ */
 var MAPS = [
@@ -731,33 +757,69 @@ var MAPS = [
  {n:'🤖 Unicorn Gundam Odaiba', d:'Estatua transformable · 23 dic', c:[35.6246,139.7758], t:'spot'},
  {n:'🎌 Ueno + Ameyoko', d:'Mercadillo caótico · 27 dic', c:[35.7106,139.7747], t:'spot'}
 ];
-var map = null, tileLayer = null;
-var PIN_COL = {'base':'#ff3b5c','Ciudad y ocio':'#00c2ff','Naturaleza':'#3ddc84','Cultura':'#f5c518','Museos y parques':'#a13dff'};
+var map = null, curBase = 'sat';
+var baseM = null, baseS = null, lblS = null, JAPAN_B = null;
+var T_OSM = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+var T_IM  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var T_LB  = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
 function pinIcon(html, color, big){
   var s = big ? 36 : 28;
   return L.divIcon({className:'', html:'<div class="mm-pin2" style="width:'+s+'px;height:'+s+'px;border-color:'+color+'"><span>'+html+'</span></div>', iconSize:[s,s], iconAnchor:[s/2,s], popupAnchor:[0,-s]});
 }
+function mkLayers(){
+  baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19});
+  baseS = L.tileLayer(T_IM, {attribution:'© Esri · Maxar', maxZoom:18});
+  lblS  = L.tileLayer(T_LB, {attribution:'© Esri', maxZoom:18});
+  baseM.on('tileerror', function(){ if(baseM._url === T_OSM) baseM.setUrl('https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); });
+  baseS.on('tileerror', function(){ if(baseS._url === T_IM) baseS.setUrl(T_OSM); });
+}
+function setBase(mode){
+  curBase = mode;
+  if(!baseM) mkLayers();
+  map.removeLayer(baseM); map.removeLayer(baseS); map.removeLayer(lblS);
+  if(mode === 'sat'){ map.addLayer(baseS); map.addLayer(lblS); }
+  else { map.addLayer(baseM); }
+  mapDark(mode === 'map' && document.documentElement.dataset.theme === 'dark');
+  document.querySelectorAll('#capasBar .mbtn').forEach(function(b){ b.classList.toggle('active', b.dataset.base === mode); });
+}
+var AREAS = {osaka:[34.6686,135.5017,13], kioto:[35.0116,135.7681,12], nara:[34.6851,135.8049,13], tokio:[35.6762,139.6503,12]};
 function initMap(){
   var el = document.getElementById('map');
   if(!el || !window.L) return;
   if(map){ map.remove(); map = null; }
-  map = L.map('map').setView([35.2, 138.3], 5);
-  tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {attribution:'© OpenStreetMap · © CARTO', subdomains:'abcd', maxZoom:19}).addTo(map);
-  tileLayer.on('tileerror', function(){ tileLayer.setUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'); });
-  mapDark(document.documentElement.dataset.theme === 'dark');
-  L.marker([34.6686,135.5017], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Osaka (checkpoint)</b><br>Shimanouchi 1-13-19');
-  L.marker([35.7013,139.6935], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Tokio</b><br>Okubo 1-39');
+  map = L.map('map', {zoomControl:true}).setView([34.9, 136.9], 5);
+  setBase('sat');
+  var pts = [L.latLng(34.6686,135.5017), L.latLng(35.7013,139.6935)];
+  L.marker([34.6686,135.5017], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Osaka (checkpoint)</b><br>Shimanouchi 1-13-19 · Abe Heights<br><a href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5017?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Ver en Google Maps</a>');
+  L.marker([35.7013,139.6935], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Tokio</b><br>Okubo 1-39<br><a href="https://www.google.com/maps/dir/35.7013,139.6935/35.7013,139.6935?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Ver en Google Maps</a>');
   POIS.forEach(function(p){
-    L.marker([p.lat, p.lng], {icon: pinIcon(p.f, PIN_COL[p.cat] || '#ff3b5c', false)}).addTo(map).bindPopup('<b>' + p.f + ' ' + p.n + '</b><br>' + poiDist(p.lat, p.lng) + '<br><a href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a>');
+    pts.push(L.latLng(p.lat, p.lng));
+    L.marker([p.lat, p.lng], {icon: pinIcon(p.f, PIN_COL[p.cat] || '#ff3b5c', false)}).addTo(map)
+      .bindPopup('<b>' + p.f + ' ' + p.n + '</b><br>' + poiDist(p.lat, p.lng) + '<br>' + (p.h ? p.h + '<br>' : '') + '<a href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a>');
+  });
+  JAPAN_B = L.latLngBounds(pts);
+  map.fitBounds(JAPAN_B, {padding:[36,36]});
+  map.on('moveend', function(){
+    var z = map.getZoom(), bb = map.getBounds();
+    document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
+      var on = (b.dataset.area === 'all') ? (z >= 4.6 && z <= 6) : false;
+      if(!on && AREAS[b.dataset.area]){
+        var ll = L.latLng(AREAS[b.dataset.area][0], AREAS[b.dataset.area][1]);
+        on = bb.contains(ll) && z >= 10.5;
+      }
+      b.classList.toggle('active', on);
+    });
   });
 }
-function setGmap(q, z){
-  var f = document.getElementById('gmap'); if(!f) return;
-  f.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&z=' + z + '&hl=es&output=embed';
-  document.querySelectorAll('.map-btns button').forEach(function(b){ b.classList.toggle('active', b.dataset.mq === q); });
-}
-document.querySelectorAll('.map-btns button').forEach(function(b){
-  b.addEventListener('click', function(){ setGmap(b.dataset.mq, b.dataset.mz); });
+document.querySelectorAll('#capasBar .mbtn').forEach(function(b){
+  b.addEventListener('click', function(){ setBase(b.dataset.base); });
+});
+document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(b.dataset.area === 'all'){ map.fitBounds(JAPAN_B, {padding:[36,36]}); return; }
+    var a = AREAS[b.dataset.area];
+    map.flyTo([a[0], a[1]], a[2], {duration:1.1});
+  });
 });
 
 /* ============ POIS ============ */
@@ -796,7 +858,7 @@ POI_ORDER.forEach(function(cat){
     card.innerHTML = im + '<h3>' + p.f + ' ' + p.n + '</h3><p>' + p.d + '</p>' +
       '<div class="price">' + poiDist(p.lat, p.lng) + '</div>' +
       '<p class="why2">💡 ' + p.w + '</p>' +
-      '<div class="card-foot"><a class="maps" href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a></div>';
+      '<div class="card-foot">' + (p.h ? '<span class="tag">' + p.h + '</span>' : '') + '<a class="maps" href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a></div>';
     grid.appendChild(card);
   });
   wrap.appendChild(grid); poiBox.appendChild(wrap);
