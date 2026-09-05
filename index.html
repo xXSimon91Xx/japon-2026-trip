@@ -332,7 +332,7 @@ html,body{overflow-x:clip}
 <section id="tab-mapa" class="tab">
   <div class="tab-head">
     <h2>🗺️ Mapa del viaje</h2>
-    <p>Bases, restaurantes verificados, iluminaciones navideñas y spots de filmación. 32 puntos marcados.</p>
+    <p>2 casas (Osaka · Tokio) + 17 puntos de interés extra con su distancia desde la base más cercana. Los 32 spots de la ruta llevan su 📍 en cada tarjeta de día.</p>
   </div>
   <div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H</b> casas (Osaka · Tokio)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· pines de cerca a lejos · toca un pin para ver distancia y ruta</span></div>
 <div id="map"></div>
@@ -693,12 +693,12 @@ var DAY_MAPS = {"1": [], "2": [["Kuromon", 34.6659, 135.5056], ["Amerikamura", 3
 
 var rutaBox = document.getElementById('ruta-list');
 ROUTE.forEach(function(d){
-  var slot = function(icon, lbl, txt){ return '<div class="slot"><b>' + icon + ' ' + lbl + '</b>' + txt + '</div>'; };
+  var slot = function(icon, lbl, txt){ return '<div class="slot"><b>' + icon + ' ' + lbl + '</b>' + (locked ? '🔒 Oculto — abre la pestaña Cumple.' : txt) + '</div>'; };
   var badge = d.badge ? '<span class="badge">' + d.badge + '</span>' : '';
+  var locked = d.d === 1;
   var card = document.createElement('article');
-  card.className = 'day';
-  if(d.d === 1) card.className = 'day day-locked';
-  var lockCov = d.d === 1 ? '<div class="lock-cover"><b>🔒 Día 10 — plan sorpresa</b><p>El plan de este día está escondido (que Marc no lo vea). Se abre con contraseña en la pestaña Cumple.</p><button class="lock-go" onclick="goTab(\'cumple\')">🔑 Abrir plan del día 10</button></div>' : '';
+  card.className = locked ? 'day day-locked' : 'day';
+  var lockCov = locked ? '<div class="lock-cover"><b>🔒 Día 10 — plan sorpresa</b><p>Este día va en secreto hasta que lleguéis (que Marc no lo vea). Se abre con contraseña en la pestaña Cumple.</p><button class="lock-go" onclick="goTab(\'cumple\')">🔑 Abrir plan del día 10</button></div>' : '';
   card.innerHTML =
     '<div class="day-header"><span class="dnum">D' + d.d + '</span><div><h3>' + d.fecha + ' · <span class="city">' + d.city + '</span></h3><p>' + d.title + '</p></div>' + badge + '</div>' +
     '<div class="slots">' +
