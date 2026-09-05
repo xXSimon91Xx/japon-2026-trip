@@ -775,9 +775,9 @@ function satFallback(){
   else if(satTries === 2){ baseS.setUrl(T_OSM); map.removeLayer(lblS); }
 }
 function mkLayers(){
-  baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19});
-  baseS = L.tileLayer(T_GOOGLE, {attribution:'© Google Maps', subdomains:['mt0','mt1','mt2','mt3'], maxZoom:20});
-  lblS  = L.tileLayer(T_LB, {attribution:'© Esri', maxZoom:18});
+  baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19, referrerPolicy:'no-referrer'});
+  baseS = L.tileLayer(T_GOOGLE, {attribution:'© Google Maps', subdomains:['mt0','mt1','mt2','mt3'], maxZoom:20, referrerPolicy:'no-referrer'});
+  lblS  = L.tileLayer(T_LB, {attribution:'© Esri', maxZoom:18, referrerPolicy:'no-referrer'});
   baseM.on('tileerror', function(){ if(baseM._url === T_OSM) baseM.setUrl('https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); });
   baseS.on('tileerror', satFallback);
 }
