@@ -823,7 +823,10 @@ function initMap(){
       .bindPopup('<b>' + p.f + ' ' + p.n + '</b><br>' + poiDist(p.lat, p.lng) + '<br>' + (p.h ? p.h + '<br>' : '') + '<a href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a>');
   });
   JAPAN_B = L.latLngBounds(pts);
-  map.fitBounds(JAPAN_B, {padding:[36,36]});
+    setTimeout(function(){
+      map.invalidateSize();
+      map.fitBounds(JAPAN_B, {padding:[36,36]});
+    }, 350);
   map.on('moveend', function(){
     var z = map.getZoom(), bb = map.getBounds();
     document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
