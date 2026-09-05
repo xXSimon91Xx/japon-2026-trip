@@ -6,7 +6,6 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ff3b5c'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>⛩</text></svg>">
 <title>JAPÓN 2026 — La Misión de los 6</title>
 <meta name="description" content="Viaje de 21 días a Japón: Osaka · Kioto · Nara · Tokyo. 6 héroes, un país, una misión. 9 dic 2026 - 1 ene 2027.">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{
   --bg:#0b0e14; --bg2:#0f141d; --card:#141b28; --card2:#1a2332;
@@ -97,21 +96,15 @@ button{font-family:inherit;cursor:pointer}
 .meta b{color:var(--text)}
 
 /* ============ MAPA ============ */
-#map{height:520px;border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);z-index:1}
-.map-note{color:var(--muted);font-size:.78rem;margin-top:8px}
-.mm-pin{background:var(--card);border:2px solid var(--accent);border-radius:50% 50% 50% 0;transform:rotate(-45deg);width:26px;height:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.5)}
-.mm-pin span{transform:rotate(45deg);font-size:13px;line-height:1}
-.mm-pin.base{border-color:var(--gold)}
-.mm-pin.food{border-color:#ff5c5c}
-.mm-pin.light{border-color:#4dd7ff}
-.mm-pin.spot{border-color:#c084fc}
-.leaflet-popup-content-wrapper{background:var(--card);color:var(--text);border-radius:12px}
-.leaflet-popup-tip{background:var(--card)}
-.leaflet-popup-content{font-size:.83rem}
-.leaflet-container{background:var(--card2)}
+.map-wrap iframe{width:100%;height:520px;border:0;border-radius:18px;display:block}
 .pois h3{margin:28px 0 4px;font-size:1.25rem}
 .pois>p{color:var(--muted);font-size:.88rem;margin-bottom:16px}
 .poi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.poi-cat{margin:6px 0 20px}.poi-cat>.sec-title{margin:16px 0 10px}
+.map-note{color:var(--muted);font-size:.78rem;margin-top:8px}
+.map-btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.map-btns button{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.85rem;cursor:pointer}
+.map-btns button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .poi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;transition:.25s}
 .poi:hover{transform:translateY(-3px);border-color:var(--accent)}
 .poi h4{font-size:1rem;margin-bottom:6px}
@@ -233,7 +226,7 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
     <button class="tab-btn" data-tab="mapa">🗺️ Mapa</button>
     <button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button>
     <button class="tab-btn" data-tab="presupuesto">💰 Presupuesto</button>
-        <button class="tab-btn" data-tab="checklist">📝 Checklist</button>
+        <button class="tab-btn" data-tab="checklist">📝 Checklist</button><button class="tab-btn" data-tab="cumple">🔒 Cumple</button>
 
       </div>
   <div class="spacer"></div>
@@ -292,8 +285,15 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
     <h2>🗺️ Mapa del viaje</h2>
     <p>Bases, restaurantes verificados, iluminaciones navideñas y spots de filmación. 32 puntos marcados.</p>
   </div>
-  <div id="map"></div>
-  <p class="map-note">💡 Si el mapa no carga, revisa la conexión (Leaflet se carga desde CDN). Los marcadores: 🏠 bases · 🍜 comida · ✨ iluminaciones · 🗼 spots y templos.</p>
+  <div class="map-wrap"><iframe id="gmap" title="Mapa de Japón" src="https://maps.google.com/maps?q=Osaka,Kyoto,Nara,Tokyo,Japan&z=6&hl=es&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+  <div class="map-btns">
+    <button data-mq="Osaka,Kyoto,Nara,Tokyo,Japan" data-mz="6" class="active">🗾 Todo Japón</button>
+    <button data-mq="Osaka,Japan" data-mz="12">🏠 Osaka</button>
+    <button data-mq="Kyoto,Japan" data-mz="11">⛩️ Kioto</button>
+    <button data-mq="Nara,Japan" data-mz="12">🦌 Nara</button>
+    <button data-mq="Tokyo,Japan" data-mz="11">🗼 Tokio</button>
+  </div>
+  <p class="map-note">💡 Mapa de Google en español, sin claves. Toca una zona para centrarla. Los 32 spots de la ruta están en las tarjetas de cada día con su 📍 Cómo llegar.</p>
   <div class="pois">
     <h3>🌏 PUNTOS DE INTERÉS EXTRA</h3>
     <p>Sitios que NO están en el plan de 2026… pero que merecen mucho la pena (apuntados para la próxima misión).</p>
@@ -304,13 +304,14 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 <!-- ================= TAB PRESUPUESTO ================= -->
 <section id="tab-presupuesto" class="tab">
   <div class="tab-head">
-    <h2>💰 Presupuesto low-cost: 1.000 €</h2>
-    <p>Desglose total para 21 días (20 en destino). ≈ 7.850 ¥/día de gasto de bolsillo por persona.</p>
-  </div>
-  <div class="budget-wrap">
-    <div class="chart-box"><canvas id="budgetChart"></canvas></div>
-    <div class="budget-list" id="budget-list"></div>
-    <div class="total-line"><span>💶 TOTAL POR PERSONA</span><b>1.000 €</b></div>
+    <h2>💰 Presupuesto en destino</h2>
+        <p>Gasto de bolsillo 20 días · vuelos y hoteles aparte (ya reservados).</p>
+      </div>
+      <div class="budget-wrap">
+        <div class="chart-box"><canvas id="budgetChart"></canvas></div>
+        <div class="budget-list" id="budget-list"></div>
+        <div class="total-line"><span>💶 TOTAL EN DESTINO (20 días)</span><b id="budget-total">…</b></div>
+        <div class="note" id="budget-sub"></div>
   </div>
   <div class="tab-head" style="margin-top:30px"><h3>🧠 Tips low-cost</h3></div>
   <div class="tips-grid" id="tips-list"></div>
@@ -319,14 +320,14 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 <!-- ================= TAB CHECKLIST ================= -->
 <section id="tab-checklist" class="tab">
   <div class="tab-head">
-    <h2>📝 Checklist de reservas (13)</h2>
-    <p>Toca cada tarjeta para marcarla. El progreso se guarda en tu navegador.</p>
-  </div>
-  <div class="progress-wrap">
-    <div class="progress-head"><b id="prog-num">0 / 13 completadas</b><span id="prog-pct">0%</span></div>
+    <h2>📝 Checklist (<span id="check-total">…</span>)</h2>
+        <p>Toca cada tarjeta para marcarla. El progreso se guarda en tu navegador.</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-head"><b id="prog-num">…</b><span id="prog-pct">…</span></div>
     <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
   </div>
-  <div class="check-grid" id="check-list"></div>
+  <div id="check-list"></div>
   </section>
 
   <section id="tab-comida" class="tab">
@@ -338,24 +339,43 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
   <h3 class="sec-title">🍢 TRADICIONAL / EXPERIENCIAS</h3>
   <div class="grid g3"><div class="card"><img class="tf" src="img/web/c3b645ffa3.jpg" alt="🌶️ Mouko Tanmen Nakamoto" loading="lazy"><h3>🌶️ Mouko Tanmen Nakamoto</h3><p>Ramen picante nivel 9-10 "Hokkyoku" — challenge de llorar.</p><div class="price">900-1.200¥</div><div class="card-foot"><span class="tag">🕐 11:30-23:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6953,139.7137?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/1db1d7cf37.jpg" alt="🍢 Kushikatsu Daruma" loading="lazy"><h3>🍢 Kushikatsu Daruma</h3><p>Brochetas fritas — el clásico de Shinsekai.</p><div class="price">600-1.200¥</div><div class="card-foot"><span class="tag">🕐 11:00-21:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6515,135.506?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/9af1c2b962.jpg" alt="🥞 Okonomiyaki DIY" loading="lazy"><h3>🥞 Okonomiyaki DIY</h3><p>Te lo haces en la plancha — Dotonbori / Americamura.</p><div class="price">800-1.500¥</div><div class="card-foot"><span class="tag">🕐 11:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.669,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/821eae5272.jpg" alt="🍜 Kitsune udon" loading="lazy"><h3>🍜 Kitsune udon</h3><p>El udon del templo — día de Kioto.</p><div class="price">500-800¥</div><div class="card-foot"><span class="tag">🕐 10:00-17:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.9671,135.7727?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/66f5215c6a.jpg" alt="🐡 Fugu" loading="lazy"><h3>🐡 Fugu</h3><p>Pez globo en Dotonbori (con licencia).</p><div class="price">2.000-4.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6678,135.5015?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/a20fb33ce7.jpg" alt="🎂 Tarta FamilyMart cumple" loading="lazy"><h3>🎂 Tarta FamilyMart cumple</h3><p>La tarta + velas del Donki en el Airbnb.</p><div class="price">2.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
   <h3 class="sec-title">⭐ RESTAURANTES TOP — ★ = SI O SI</h3>
-  <div class="grid g2"><div class="card"><img class="tf" src="img/web/0cdfa9a1d1.jpg" alt="⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span></h3><p>Wagyu al carbón, tabla 7 arcos. Tabelog 3.6 · 100 TOP 2025.</p><div class="price">Saison 7.800¥ · wagyu 9.500¥ · Kobe 25.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6677,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6fced8ff10.jpg" alt="⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span></h3><p>Mejor yakiniku de Japón, Tabelog 3.80. Reserva 1 mes antes.</p><div class="price">8.000-12.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6731,139.7115?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/ac7cb41902.jpg" alt="⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span></h3><p>Teppanyaki Kobe 3.55, vista al río Kamo.</p><div class="price">8.000-9.999¥</div><div class="card-foot"><span class="tag">🕐 11:30-15:30 / 17:30-21:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Gyuu-don_001.jpg/500px-Gyuu-don_001.jpg" alt="⭐ Matsusakagyu M Hozenji" loading="lazy"><h3>⭐ Matsusakagyu M Hozenji</h3><p>Wagyu A5 Matsusaka — cena cumple Marc 10 dic 20:00.</p><div class="price">10-14k¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/4fb1e2bf86.jpg" alt="🍣 Sushi Yoshikawa Kaido" loading="lazy"><h3>🍣 Sushi Yoshikawa Kaido</h3><p>Omakase Ginza · Tabelog 3.55 · cena Navidad.</p><div class="price">10-15k¥</div><div class="card-foot"><span class="tag">🕐 12:00-14:30 / 17:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6704,139.7575?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Okonomiyaki_001.jpg/500px-Okonomiyaki_001.jpg" alt="🍝 OSTERIA IS -Gion-" loading="lazy"><h3>🍝 OSTERIA IS -Gion-</h3><p>Italiana en Gion · Tabelog 3.52. Cierra domingos.</p><div class="price">¥5.000-5.999</div><div class="card-foot"><span class="tag">🕐 11:30-14:00 / 17:30-21:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0027,135.7768?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
+  <div class="grid g2"><div class="card"><img class="tf" src="img/web/0cdfa9a1d1.jpg" alt="⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span></h3><p>Wagyu al carbón, tabla 7 arcos. Tabelog 3.6 · 100 TOP 2025.</p><div class="price">Saison 7.800¥ · wagyu 9.500¥ · Kobe 25.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6677,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6fced8ff10.jpg" alt="⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span></h3><p>Mejor yakiniku de Japón, Tabelog 3.80. Reserva 1 mes antes.</p><div class="price">8.000-12.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6731,139.7115?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/ac7cb41902.jpg" alt="⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span></h3><p>Teppanyaki Kobe 3.55, vista al río Kamo.</p><div class="price">8.000-9.999¥</div><div class="card-foot"><span class="tag">🕐 11:30-15:30 / 17:30-21:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/gyudon-local.jpg" alt="⭐ Matsusakagyu M Hozenji" loading="lazy"><h3>⭐ Matsusakagyu M Hozenji</h3><p>Wagyu A5 Matsusaka — cena cumple Marc 10 dic 20:00.</p><div class="price">10-14k¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/4fb1e2bf86.jpg" alt="🍣 Sushi Yoshikawa Kaido" loading="lazy"><h3>🍣 Sushi Yoshikawa Kaido</h3><p>Omakase Ginza · Tabelog 3.55 · cena Navidad.</p><div class="price">10-15k¥</div><div class="card-foot"><span class="tag">🕐 12:00-14:30 / 17:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6704,139.7575?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/okonomiyaki-local.jpg" alt="🍝 OSTERIA IS -Gion-" loading="lazy"><h3>🍝 OSTERIA IS -Gion-</h3><p>Italiana en Gion · Tabelog 3.52. Cierra domingos.</p><div class="price">¥5.000-5.999</div><div class="card-foot"><span class="tag">🕐 11:30-14:00 / 17:30-21:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0027,135.7768?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
   <div class="note">💡 Sin cenas de 10.000¥ a diario: conbini + cadenas + tabehoudai 2.980¥ (Rikimaru/Matchan) y los ★ solo en días clave. 🚇 Transporte: todo funciona con tarjeta Suica/ICOCA recargable (se compra en cualquier máquina de estación y vale para metro, tren y conbini).</div>
 </section>
 <section id="tab-actividades" class="tab">
   <div class="tab-head"><h2>🎆 Actividades</h2><p>Divididas por ciudad, con foto, horario y ruta desde vuestro alojamiento.</p></div>
-<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/0b069ff042.jpg" alt="♨️ Spa World (onsen)" loading="lazy"><h3>♨️ Spa World (onsen)</h3><p>24 zonas de baños + piscinas temáticas. Tatuajes parcialmente OK.</p><div class="price">1.200-2.400¥</div><div class="card-foot"><span class="tag">🕐 10:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🐙 Mercado Kuromon</h3><p>Desayuno callejero: uni, wagyu pincho, fresas.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 5:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5056?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🕹️ Den Den Town</h3><p>El Akihabara de Osaka: electrónica, anime, figuras.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 11:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5027?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/03d40c3628.jpg" alt="🍺 300BAR (ticket bar)" loading="lazy"><h3>🍺 300BAR (ticket bar)</h3><p>Billete de 1992: 990¥ = 3 bebidas.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🐒 Iwatayama Monkey Park</h3><p>Monos salvajes con vista a Kioto.</p><div class="price">600¥</div><div class="card-foot"><span class="tag">🕐 9:00-16:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0144,135.6691?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🥢 Nishiki Market</h3><p>El "mercado de Kioto": 400 años de puestos.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 9:00-17:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0044,135.7646?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🗼 TOKIO</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🛏️ Nine Hours Shinjuku</h3><p>Cápsula futurista nave espacial + sleep fitscan.</p><div class="price">4.900-7.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6848,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>💻 Gran Cyber Bagus</h3><p>BOX privado con llave + ducha + bebida libre.</p><div class="price">3.800¥ noche</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6939,139.7035?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🔞 M's Pop Life Akihabara</h3><p>8 plantas de tienda adulta — BLUR para cámara.</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 10:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6986,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6db3d1bcbc.jpg" alt="🕹️ Purikura + gachapon" loading="lazy"><h3>🕹️ Purikura + gachapon</h3><p>Fotomatones locos + máquinas de cápsulas.</p><div class="price">400¥ + 500¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.702,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6f767a1508.jpg" alt="👗 Maid Café AtHome" loading="lazy"><h3>👗 Maid Café AtHome</h3><p>"Okaeri gozaimasu, goshujin-sama!"</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.7021,139.7716?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/d71fb03624.jpg" alt="🛍️ Don Quijote 24h" loading="lazy"><h3>🛍️ Don Quijote 24h</h3><p>8 plantas de TODO — haul garantizado, tax free.</p><div class="price">3-5k¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🐟 Mercado de Toyosu</h3><p>La lonja que sustituyó a Tsukiji (visita, no compra).</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 5:00-14:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6437,139.7863?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🍜 Museo del Ramen</h3><p>8 ramens regionales bajo un techo (Shin-Yokohama).</p><div class="price">1.000-1.500¥</div><div class="card-foot"><span class="tag">🕐 11:00-21:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.511,139.604?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🍜 Cup Noodles Museum</h3><p>Haz tu propio cup ramen (Yokohama).</p><div class="price">500¥ + 300¥ extra</div><div class="card-foot"><span class="tag">🕐 10:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.3814,139.625?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/da81dc1435.jpg" alt="🌀 teamLab Planets" loading="lazy"><h3>🌀 teamLab Planets</h3><p>Arte digital inmersivo con agua.</p><div class="price">3.600¥</div><div class="card-foot"><span class="tag">🕐 10:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.648,139.79?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🐱 Cat café MOCHA</h3><p>Cafés con gatos por horas.</p><div class="price">1.100¥/h</div><div class="card-foot"><span class="tag">🕐 10:00-20:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>💈 Barbería Shoji 1870</h3><p>Primera barbería de Japón con poste — navaja recta ASMR.</p><div class="price">4.000¥</div><div class="card-foot"><span class="tag">🕐 9:00-19:00 · LUN cerrado</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6938,139.7034?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🤪 EXPERIENCIAS RARAS</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🥤 Máquinas expendedoras</h3><p>Las famosas vending machines — hay 1 por cada 24 personas.</p><div class="price">100-400¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5017?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>♨️ Normas de onsen/sento</h3><p>Tatuajes, protocolo y japonés básico — guía antes de entrar.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 según local</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
+<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/0b069ff042.jpg" alt="♨️ Spa World (onsen)" loading="lazy"><h3>♨️ Spa World (onsen)</h3><p>24 zonas de baños + piscinas temáticas. Tatuajes parcialmente OK.</p><div class="price">1.200-2.400¥</div><div class="card-foot"><span class="tag">🕐 10:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/kuromon.jpg" alt="🐙 Mercado Kuromon" loading="lazy"><h3>🐙 Mercado Kuromon</h3><p>Desayuno callejero: uni, wagyu pincho, fresas.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 5:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5056?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/denden.jpg" alt="🕹️ Den Den Town" loading="lazy"><h3>🕹️ Den Den Town</h3><p>El Akihabara de Osaka: electrónica, anime, figuras.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 11:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5027?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/03d40c3628.jpg" alt="🍺 300BAR (ticket bar)" loading="lazy"><h3>🍺 300BAR (ticket bar)</h3><p>Billete de 1992: 990¥ = 3 bebidas.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/monkey.jpg" alt="🐒 Iwatayama Monkey Park" loading="lazy"><h3>🐒 Iwatayama Monkey Park</h3><p>Monos salvajes con vista a Kioto.</p><div class="price">600¥</div><div class="card-foot"><span class="tag">🕐 9:00-16:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0144,135.6691?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/nishiki.jpg" alt="🥢 Nishiki Market" loading="lazy"><h3>🥢 Nishiki Market</h3><p>El "mercado de Kioto": 400 años de puestos.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 9:00-17:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0044,135.7646?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🗼 TOKIO</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/ninehours.jpg" alt="🛏️ Nine Hours Shinjuku" loading="lazy"><h3>🛏️ Nine Hours Shinjuku</h3><p>Cápsula futurista nave espacial + sleep fitscan.</p><div class="price">4.900-7.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6848,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/cyberbagus.jpg" alt="💻 Gran Cyber Bagus" loading="lazy"><h3>💻 Gran Cyber Bagus</h3><p>BOX privado con llave + ducha + bebida libre.</p><div class="price">3.800¥ noche</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6939,139.7035?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/mspop.jpg" alt="🔞 M's Pop Life Akihabara" loading="lazy"><h3>🔞 M's Pop Life Akihabara</h3><p>8 plantas de tienda adulta — BLUR para cámara.</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 10:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6986,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6db3d1bcbc.jpg" alt="🕹️ Purikura + gachapon" loading="lazy"><h3>🕹️ Purikura + gachapon</h3><p>Fotomatones locos + máquinas de cápsulas.</p><div class="price">400¥ + 500¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.702,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6f767a1508.jpg" alt="👗 Maid Café AtHome" loading="lazy"><h3>👗 Maid Café AtHome</h3><p>"Okaeri gozaimasu, goshujin-sama!"</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.7021,139.7716?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/d71fb03624.jpg" alt="🛍️ Don Quijote 24h" loading="lazy"><h3>🛍️ Don Quijote 24h</h3><p>8 plantas de TODO — haul garantizado, tax free.</p><div class="price">3-5k¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/toyosu.jpg" alt="🐟 Mercado de Toyosu" loading="lazy"><h3>🐟 Mercado de Toyosu</h3><p>La lonja que sustituyó a Tsukiji (visita, no compra).</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 5:00-14:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6437,139.7863?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/ramenmuseum.jpg" alt="🍜 Museo del Ramen" loading="lazy"><h3>🍜 Museo del Ramen</h3><p>8 ramens regionales bajo un techo (Shin-Yokohama).</p><div class="price">1.000-1.500¥</div><div class="card-foot"><span class="tag">🕐 11:00-21:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.511,139.604?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/cupnoodles.jpg" alt="🍜 Cup Noodles Museum" loading="lazy"><h3>🍜 Cup Noodles Museum</h3><p>Haz tu propio cup ramen (Yokohama).</p><div class="price">500¥ + 300¥ extra</div><div class="card-foot"><span class="tag">🕐 10:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.3814,139.625?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/da81dc1435.jpg" alt="🌀 teamLab Planets" loading="lazy"><h3>🌀 teamLab Planets</h3><p>Arte digital inmersivo con agua.</p><div class="price">3.600¥</div><div class="card-foot"><span class="tag">🕐 10:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.648,139.79?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/catcafe.jpg" alt="🐱 Cat café MOCHA" loading="lazy"><h3>🐱 Cat café MOCHA</h3><p>Cafés con gatos por horas.</p><div class="price">1.100¥/h</div><div class="card-foot"><span class="tag">🕐 10:00-20:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/barberia.jpg" alt="💈 Barbería Shoji 1870" loading="lazy"><h3>💈 Barbería Shoji 1870</h3><p>Primera barbería de Japón con poste — navaja recta ASMR.</p><div class="price">4.000¥</div><div class="card-foot"><span class="tag">🕐 9:00-19:00 · LUN cerrado</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6938,139.7034?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🤪 EXPERIENCIAS RARAS</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/vending.jpg" alt="🥤 Máquinas expendedoras" loading="lazy"><h3>🥤 Máquinas expendedoras</h3><p>Las famosas vending machines — hay 1 por cada 24 personas.</p><div class="price">100-400¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5017?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/onseninfo.jpg" alt="♨️ Normas de onsen/sento" loading="lazy"><h3>♨️ Normas de onsen/sento</h3><p>Tatuajes, protocolo y japonés básico — guía antes de entrar.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 según local</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
 <section id="tab-fiesta" class="tab">
   <div class="tab-head"><h2>🌃 Fiesta y vida nocturna</h2><p>Locales ABIERTOS verificados (Robot Restaurant y ageHa cerrados — fuera). Horario + ruta desde el piso.</p></div>
-<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🎤 Karaoke Kan Namba</h3><p>Sala 6 pax + nomihodai — el cumple de Marc.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h · cierra 5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Kyushu_Jangara_Ramen%2C_Akihabara_-_customers_hanging_on_the_very_tight_bar_counter_%282006-07-08_17.03.31_by_Marufish%29.jpg/500px-Kyushu_Jangara_Ramen%2C_Akihabara_-_customers_hanging_on_the_very_tight_bar_counter_%282006-07-08_17.03.31_by_Marufish%29.jpg" alt="🍺 300BAR + DJ" loading="lazy"><h3>🍺 300BAR + DJ</h3><p>Ticket bar con sets DJ.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/0e0ace189d.jpg" alt="🍶 Tachinomi (de pie)" loading="lazy"><h3>🍶 Tachinomi (de pie)</h3><p>Bares diminutos de sake/cerveza a 300¥.</p><div class="price">300¥</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6d63367e8c.jpg" alt="🍢 Izakaya nocturna" loading="lazy"><h3>🍢 Izakaya nocturna</h3><p>Tapas japonesas — cualquiera en Namba vale.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6665,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🍻 Ura-Namba bar hopping</h3><p>Callejones secretos: tachinomi + izakayas + música.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Kyushu_Jangara_Ramen%2C_Akihabara_-_customers_hanging_on_the_very_tight_bar_counter_%282006-07-08_17.03.31_by_Marufish%29.jpg/500px-Kyushu_Jangara_Ramen%2C_Akihabara_-_customers_hanging_on_the_very_tight_bar_counter_%282006-07-08_17.03.31_by_Marufish%29.jpg" alt="🦒 Giraffe" loading="lazy"><h3>🦒 Giraffe</h3><p>Club de 6 plantas en Shinsaibashi, techno/house.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.671,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Eihire_-_stingray_meat_-_Japanese_pub_food_-_September_2014.jpg/500px-Eihire_-_stingray_meat_-_Japanese_pub_food_-_September_2014.jpg" alt="🥃 Bar Yeso" loading="lazy"><h3>🥃 Bar Yeso</h3><p>Bar de whisky con cubitos de hielo gigantes.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-1:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.504?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🌃 TOKIO</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🍶 Golden Gai (Shinjuku)</h3><p>200 bares diminutos en 6 callejones.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-4:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/af851c6c1d.jpg" alt="🍢 Omoide Yokocho" loading="lazy"><h3>🍢 Omoide Yokocho</h3><p>Callejón del yakitori con humo y luces.</p><div class="price">1.000-2.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6931,139.6998?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🎤 Karaoke Big Echo 24h</h3><p>Abierto toda la noche, salas baratas.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🌀 WOMB Shibuya</h3><p>La discoteca más famosa de Tokio — 4 plantas.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 22:00-4:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.661,139.698?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>⚡ WARP Shinjuku</h3><p>Discoteca grande 4 plantas + terrace.</p><div class="price">2.000-3.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6957,139.7077?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>⚛️ Atom Tokyo</h3><p>Electrónica underground en Shibuya.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.666,139.706?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><div class="tf emoji">🍽️</div><h3>🟠 SEL Octagon</h3><p>Club underground de techno en Shibuya.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.66,139.7?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><div class="tf emoji">🍽️</div><h3>🏮 Pontocho / Kiyamachi</h3><p>Callejones de bares junto al río Kamo.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0045,135.772?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Eihire_-_stingray_meat_-_Japanese_pub_food_-_September_2014.jpg/500px-Eihire_-_stingray_meat_-_Japanese_pub_food_-_September_2014.jpg" alt="💤 Consejo nocturno Kioto" loading="lazy"><h3>💤 Consejo nocturno Kioto</h3><p>Kioto cierra pronto — metro hasta 23:30, planificar vuelta.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 hasta 23:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
+<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/karaokekan.jpg" alt="🎤 Karaoke Kan Namba" loading="lazy"><h3>🎤 Karaoke Kan Namba</h3><p>Sala 6 pax + nomihodai — el cumple de Marc.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h · cierra 5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/ramenbar-local.jpg" alt="🍺 300BAR + DJ" loading="lazy"><h3>🍺 300BAR + DJ</h3><p>Ticket bar con sets DJ.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/0e0ace189d.jpg" alt="🍶 Tachinomi (de pie)" loading="lazy"><h3>🍶 Tachinomi (de pie)</h3><p>Bares diminutos de sake/cerveza a 300¥.</p><div class="price">300¥</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/6d63367e8c.jpg" alt="🍢 Izakaya nocturna" loading="lazy"><h3>🍢 Izakaya nocturna</h3><p>Tapas japonesas — cualquiera en Namba vale.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6665,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/uranamba.jpg" alt="🍻 Ura-Namba bar hopping" loading="lazy"><h3>🍻 Ura-Namba bar hopping</h3><p>Callejones secretos: tachinomi + izakayas + música.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/ramenbar-local.jpg" alt="🦒 Giraffe" loading="lazy"><h3>🦒 Giraffe</h3><p>Club de 6 plantas en Shinsaibashi, techno/house.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.671,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/eihire-local.jpg" alt="🥃 Bar Yeso" loading="lazy"><h3>🥃 Bar Yeso</h3><p>Bar de whisky con cubitos de hielo gigantes.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-1:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.504?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🌃 TOKIO</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/goldengai.jpg" alt="🍶 Golden Gai (Shinjuku)" loading="lazy"><h3>🍶 Golden Gai (Shinjuku)</h3><p>200 bares diminutos en 6 callejones.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-4:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/af851c6c1d.jpg" alt="🍢 Omoide Yokocho" loading="lazy"><h3>🍢 Omoide Yokocho</h3><p>Callejón del yakitori con humo y luces.</p><div class="price">1.000-2.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6931,139.6998?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/bigego.jpg" alt="🎤 Karaoke Big Echo 24h" loading="lazy"><h3>🎤 Karaoke Big Echo 24h</h3><p>Abierto toda la noche, salas baratas.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/womb.jpg" alt="🌀 WOMB Shibuya" loading="lazy"><h3>🌀 WOMB Shibuya</h3><p>La discoteca más famosa de Tokio — 4 plantas.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 22:00-4:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.661,139.698?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/warp.jpg" alt="⚡ WARP Shinjuku" loading="lazy"><h3>⚡ WARP Shinjuku</h3><p>Discoteca grande 4 plantas + terrace.</p><div class="price">2.000-3.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6957,139.7077?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/atom.jpg" alt="⚛️ Atom Tokyo" loading="lazy"><h3>⚛️ Atom Tokyo</h3><p>Electrónica underground en Shibuya.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.666,139.706?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/seloctagon.jpg" alt="🟠 SEL Octagon" loading="lazy"><h3>🟠 SEL Octagon</h3><p>Club underground de techno en Shibuya.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.66,139.7?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><img class="tf" src="img/web/pontocho.jpg" alt="🏮 Pontocho / Kiyamachi" loading="lazy"><h3>🏮 Pontocho / Kiyamachi</h3><p>Callejones de bares junto al río Kamo.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0045,135.772?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img class="tf" src="img/web/eihire-local.jpg" alt="💤 Consejo nocturno Kioto" loading="lazy"><h3>💤 Consejo nocturno Kioto</h3><p>Kioto cierra pronto — metro hasta 23:30, planificar vuelta.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 hasta 23:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
 <section id="tab-videos" class="tab">
   <div class="tab-head"><h2>🎥 Ideas de vídeo para el canal</h2><p>Formato Ray-Ban POV. Marca ✓ al grabar (se guarda). Cada idea con 📍 cómo llegar y 🎬 ejemplo parecido.</p></div>
   <div id="videosGrid" class="grid g2"></div>
 </section>
+<section id="tab-cumple" class="tab">
+  <div class="tab-head"><h2>🔒 Cumpleaños · Día 10</h2><p>Zona privada. Solo Simon.</p></div>
+  <div id="bday-gate" class="card" style="max-width:420px">
+    <h3>🔑 Acceso privado</h3>
+    <p class="muted">Escribe la contraseña para ver el plan sorpresa.</p>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <input id="bday-pass" type="password" placeholder="Contraseña" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text)">
+      <button onclick="checkBday()" style="padding:10px 18px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:800;cursor:pointer">Entrar</button>
+    </div>
+    <p id="bday-err" class="muted" style="display:none;margin-top:8px">❌ Contraseña incorrecta.</p>
+  </div>
+  <div id="bday-content" style="display:none">
+    <div class="note">🤫 Plan sorpresa para Marc — que no lo vea. Día 10 DIC (llegada + cumple).</div>
+    <div class="grid g2">
+      <div class="card"><h3>🥩 Cena Matsusakagyu M Hozenji · 20:00</h3><p>Wagyu A5 Matsusaka, reserva 6 pax. La sorpresa gorda del día.</p><div class="price">10-14k¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎤 Karaoke Kan Namba · después</h3><p>Sala 6 pax + nomihodai. Tarta FamilyMart + velas del Donki en el Airbnb antes de salir.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎁 Ideas de regalo</h3><p>Figura de Akihabara a su gusto, funda Ray-Ban grabada, o entrada sorpresa teamLab.</p><div class="price">—</div></div>
+    </div>
+  </div>
+</section>
 </main>
 
-<footer>Hecho con 💜 por la tripulación · Vuelos ZH (PNR QJ8B3P) · Bases Osaka/Tokyo · 1.000 € low-cost · shinkansen Nozomi 14.720¥ · Tabelog verificado — ¡nos vemos en Japón! ⛩️</footer>
+<footer>Hecho con 💜 por la tripulación · Vuelos ZH (PNR QJ8B3P) · Bases Osaka/Tokyo · 620 € en destino · shinkansen Nozomi 14.720¥ · Tabelog verificado — ¡nos vemos en Japón! ⛩️</footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 /* ============================================================
@@ -389,11 +409,11 @@ var POIS = [
  {f:'🏝️', n:'Okinawa', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', lat:26.2124, lng:127.6809},
  {f:'⛩️', n:'Takayama', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', lat:36.1462, lng:137.2521},
  {f:'⛴️', n:'Hiroshima + Miyajima', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', lat:34.2956, lng:132.3198},
- {f:'🏔️', n:'Nikko', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (incluido el cállate mono), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', lat:36.7586, lng:139.5990},
+ {f:'🏔️', n:'Nikko', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', lat:36.7586, lng:139.5990},
  {f:'♨️', n:'Hakone Onsen', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', lat:35.2325, lng:139.1069},
  {f:'🎬', n:'Ghibli Museum', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', lat:35.6962, lng:139.5702},
  {f:'🎡', n:'Tokyo DisneySea', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', lat:35.6273, lng:139.8889},
- {f:'🍭', n:'Kawaii Monster Cafe', cat:'Naturaleza', d:'El lado psicodélico de Harajuku: color, criaturas y shows kawaii — ⚠️ cerrado desde 2020, no lo busquéis.', w:'Era una experiencia visual única que no existía en ningún otro sitio; queda el recuerdo para la próxima vida.', lat:35.6695, lng:139.7030},
+ {f:'🍭', n:'Kawaii Monster Cafe', cat:'Ciudad y ocio', d:'El lado psicodélico de Harajuku: color, criaturas y shows kawaii — ⚠️ cerrado desde 2020, no lo busquéis.', w:'Era una experiencia visual única que no existía en ningún otro sitio; queda el recuerdo para la próxima vida.', lat:35.6695, lng:139.7030},
  {f:'🌉', n:'Shibuya Crossing', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', lat:35.6595, lng:139.7005},
  {f:'⛩️', n:'Senso-ji Asakusa', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', lat:35.7148, lng:139.7967},
  {f:'🗼', n:'Tokyo Skytree', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', lat:35.7101, lng:139.8107},
@@ -402,7 +422,7 @@ var POIS = [
  {f:'🐟', n:'Mercado de Toyosu', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', lat:35.6437, lng:139.7863},
  {f:'⛩️', n:'Fushimi Inari', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', lat:34.9671, lng:135.7727},
  {f:'🎋', n:'Bosque de bambú de Arashiyama', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', lat:35.0173, lng:135.6725},
- {f:'🏯', n:'Castillo de Osaka', cat:'Ciudad y ocio', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', lat:34.6873, lng:135.5262},
+ {f:'🏯', n:'Castillo de Osaka', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', lat:34.6873, lng:135.5262},
  {f:'🦌', n:'Todai-ji (Nara)', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', lat:34.6887, lng:135.8398}
 ];
 
@@ -480,20 +500,25 @@ function renderCheck(){
   var box = document.getElementById('check-list'); if(!box) return;
   var html = '', total = 0, done = 0;
   CHECK.forEach(function(cat){
-    html += '<h3 class="sec-title">'+cat[0]+'</h3>';
+    html += '<div class="check-cat"><h3 class="sec-title">'+cat[0]+'</h3><div class="check-grid">';
     cat[1].forEach(function(c, j){
       var key = cat[0] + '_' + j;
       var st = checkCat[key] === undefined ? c[4] : checkCat[key];
       total++; if(st) done++;
       html += '<div class="check-item'+(st?' done':'')+'" onclick="toggleCheck(\''+cat[0]+'\','+j+')"><div class="check-box">'+(st?'✓':'')+'</div><div><h4>'+(c[0]||'')+' '+(c[1]||'')+'</h4><p>'+(c[2]||'')+'</p><span class="price">'+(c[3]||'')+'</span></div></div>';
     });
+    html += '</div></div>';
   });
   box.innerHTML = html;
   var pct = total ? Math.round(done/total*100) : 0;
   var pb = document.getElementById('prog-bar'); if(pb) pb.style.width = pct + '%';
   var pn = document.getElementById('prog-num'); if(pn) pn.textContent = done + ' / ' + total + ' completadas';
   var pp = document.getElementById('prog-pct'); if(pp) pp.textContent = pct + '%';
+  var ct = document.getElementById('check-total'); if(ct) ct.textContent = total + ' puntos';
 }
+document.getElementById('check-list').addEventListener('click', function(e){
+  if(e.target.closest('a')) e.stopPropagation();
+}, true);
 function toggleCheck(cat, j){
   var key = cat + '_' + j;
   var cur = checkCat[key] === undefined ? (function(){ for(var i=0;i<CHECK.length;i++){ if(CHECK[i][0]===cat) return CHECK[i][1][j][4]; } return false; })() : checkCat[key];
@@ -502,15 +527,12 @@ function toggleCheck(cat, j){
 
 /* ============ THEME ============ */
 var themeBtn = document.getElementById('themeToggle');
-function mapDark(on){
-  var pane = document.querySelector('.leaflet-tile-pane');
-  if (pane) pane.style.filter = on ? 'invert(1) hue-rotate(180deg) saturate(0.7) brightness(0.92) contrast(0.9)' : '';
-}
+function mapDark(on){ /* sin leaflet: nada que filtrar */ }
 function setTheme(t){
   document.documentElement.dataset.theme = t;
   try{localStorage.setItem('japon-theme', t);}catch(e){}
   themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
-  if (window.tileLayer){ tileLayer.setUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); mapDark(t === 'dark'); }
+  /* mapa google: sin tiles que cambiar */
   initChart();
 }
 themeBtn.addEventListener('click', function(){
@@ -522,7 +544,7 @@ function goTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
   document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('active', s.id === 'tab-' + name); });
   window.scrollTo(0,0);
-  if(name==='mapa'){ setTimeout(function(){ if(window.map){ map.invalidateSize(); } else { initMap(); } }, 150); }
+  if(name==='mapa'){ /* iframe google: nada que iniciar */ }
   if(name==='videos') renderVideos();
   if(name==='checklist'){ renderCheck(); }
   if(name==='presupuesto'){ try{ initChart(); }catch(e){} }
@@ -681,46 +703,35 @@ var MAPS = [
  {n:'🤖 Unicorn Gundam Odaiba', d:'Estatua transformable · 27 dic', c:[35.6246,139.7758], t:'spot'},
  {n:'🎌 Ueno + Ameyoko', d:'Mercadillo caótico · 27 dic', c:[35.7106,139.7747], t:'spot'}
 ];
-var map = null, tileLayer = null;
-function initMap(){
-  var el = document.getElementById('map');
-  if (!el || !window.L) return;
-  if (map){ map.remove(); map = null; }
-  var dark = document.documentElement.dataset.theme === 'dark';
-  map = L.map('map').setView([35.5, 137.5], 5);
-  tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {attribution:'© OpenStreetMap · © CARTO', subdomains:'abcd', maxZoom:19}).addTo(map);
-  var fallbackOnce = false;
-  tileLayer.on('tileerror', function(){
-    if (fallbackOnce) return; fallbackOnce = true;
-    tileLayer.setUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}');
-  });
-  mapDark(dark);
-  MAPS.forEach(function(m){
-    var ic = L.divIcon({className:'mm-pin ' + m.t, html:'<span>' + m.n.charAt(0) + '</span>', iconSize:[26,26], iconAnchor:[13,26], popupAnchor:[0,-24]});
-    L.marker(m.c, {icon: ic}).addTo(map).bindPopup('<b>' + m.n + '</b><br>' + m.d);
-  });
-  map.fitBounds(L.latLngBounds(MAPS.map(function(m){ return m.c; })).pad(0.12));
+function setGmap(q, z){
+  var f = document.getElementById('gmap'); if(!f) return;
+  f.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(q) + '&z=' + z + '&hl=es&output=embed';
+  document.querySelectorAll('.map-btns button').forEach(function(b){ b.classList.toggle('active', b.dataset.mq === q); });
 }
+document.querySelectorAll('.map-btns button').forEach(function(b){
+  b.addEventListener('click', function(){ setGmap(b.dataset.mq, b.dataset.mz); });
+});
 
 /* ============ POIS ============ */
 var poiBox = document.getElementById('poi-list');
 var POI_ORDER = ['Ciudad y ocio','Naturaleza','Cultura','Museos y parques'];
-function poiCat(p){ return p.cat || 'Naturaleza'; }
 var POI_CATS = {};
-POIS.forEach(function(p){ (POI_CATS[poiCat(p)] = POI_CATS[poiCat(p)] || []).push(p); });
+POIS.forEach(function(p){ var c = p.cat || 'Naturaleza'; (POI_CATS[c] = POI_CATS[c] || []).push(p); });
+var __poiFlat = [];
 POI_ORDER.forEach(function(cat){
   if(!POI_CATS[cat] || !POI_CATS[cat].length) return;
-  var hd = document.createElement('h3');
-  hd.className = 'sec-title';
-  hd.textContent = cat;
-  poiBox.appendChild(hd);
-  POI_CATS[cat].forEach(function(p, i){
+  var wrap = document.createElement('div'); wrap.className = 'poi-cat';
+  var hd = document.createElement('h3'); hd.className = 'sec-title'; hd.textContent = cat; wrap.appendChild(hd);
+  var grid = document.createElement('div'); grid.className = 'poi-grid';
+  POI_CATS[cat].forEach(function(p){
+    var idx = __poiFlat.length; __poiFlat.push(p);
     var card = document.createElement('div');
     card.className = 'poi clk';
-    card.setAttribute('onclick', 'openPoi(' + (window.__poiIdx = (window.__poiIdx||0)+1) + ')');
+    card.setAttribute('onclick', 'openPoi(' + idx + ')');
     card.innerHTML = '<h4><span class="flag">' + p.f + '</span>' + p.n + '</h4><p>' + p.d + '</p><span class="why">💡 ' + p.w + '</span><span class="poi-go">📲 Cómo llegar (Google Maps)</span>';
-    poiBox.appendChild(card);
+    grid.appendChild(card);
   });
+  wrap.appendChild(grid); poiBox.appendChild(wrap);
 });
 function dirLink(lat, lng){
   var b = (lat < 35.6 ? '34.6686,135.5017' : '35.7013,139.6935');
@@ -729,9 +740,7 @@ function dirLink(lat, lng){
   return 'https://www.google.com/maps/dir/' + b + '/' + lat + ',' + lng + '?travelmode=' + mode;
 }
 function openPoi(idx){
-  var order = [];
-  POI_ORDER.forEach(function(c){ if(POI_CATS[c]) POI_CATS[c].forEach(function(p){ order.push(p); }); });
-  var p = order[idx-1]; if(!p) return;
+  var p = __poiFlat[idx]; if(!p) return;
   var box = document.getElementById('poiModalBody');
   if(!box) return;
   box.innerHTML = '<h3>' + p.f + ' ' + p.n + '</h3><p>' + p.d + '</p><span class="why">💡 ' + p.w + '</span>' +
@@ -740,6 +749,7 @@ function openPoi(idx){
   document.getElementById('poiModal').style.display = 'flex';
 }
 
+
 /* ============ PRESUPUESTO ============ */
 var budgetChart = null;
 function initChart(){
@@ -747,26 +757,31 @@ function initChart(){
   if (!cv || !window.Chart) return;
   if (budgetChart) budgetChart.destroy();
   var dark = document.documentElement.dataset.theme === 'dark';
+  var YEN = 156, BTOT = BUDGET.reduce(function(a,b){ return a + b[1]; }, 0);
   budgetChart = new Chart(cv, {
-    type:'bar',
-    data:{labels:BUDGET.map(function(b){return b[0];}), datasets:[{data:BUDGET.map(function(b){return b[1];}), backgroundColor:BUDGET.map(function(b){return b[2];}), borderRadius:8, barThickness:26}]},
+    type:'doughnut',
+    data:{labels:BUDGET.map(function(b){ return b[0] + ' · ' + b[1] + ' €'; }), datasets:[{data:BUDGET.map(function(b){return b[1];}), backgroundColor:BUDGET.map(function(b){return b[2];}), borderWidth:2, borderColor:dark?'#141b28':'#ffffff'}]},
     options:{
-      indexAxis:'y', responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(c){ return ' ' + c.parsed.x + ' €'; }}}},
-      scales:{
-        x:{grid:{color:dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.08)'}, ticks:{color:dark?'#94a0b5':'#5c6779', callback:function(v){ return v + ' €'; }}},
-        y:{grid:{display:false}, ticks:{color:dark?'#e8ecf4':'#131a28', font:{size:11}}}
-      }
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{legend:{position:'bottom', labels:{color:dark?'#e8ecf4':'#131a28', font:{size:11}, padding:14, boxWidth:12}},
+        tooltip:{callbacks:{label:function(c){ var v = c.parsed; return ' ' + v + ' € (≈' + Math.round(v*YEN).toLocaleString('es-ES') + '¥ · ' + Math.round(v/BTOT*100) + '%)'; }}}}
     }
   });
 }
 var budgetBox = document.getElementById('budget-list');
+var YEN2 = 156, BTOT2 = BUDGET.reduce(function(a,b){ return a + b[1]; }, 0);
 BUDGET.forEach(function(b){
   var line = document.createElement('div');
   line.className = 'b-line';
-  line.innerHTML = '<div class="key">' + b[0] + '</div><div class="val" style="color:' + b[2] + '">' + b[1] + ' €</div>';
+  line.innerHTML = '<div class="key">' + b[0] + '</div><div class="val" style="color:' + b[2] + '">' + b[1] + ' €</div><div class="sub">≈' + Math.round(b[1]*YEN2).toLocaleString('es-ES') + '¥ · ' + Math.round(b[1]/BTOT2*100) + '%</div>';
   budgetBox.appendChild(line);
 });
+(function(){
+  var t = document.getElementById('budget-total');
+  if(t) t.textContent = BTOT2 + ' € ≈ ' + Math.round(BTOT2*YEN2).toLocaleString('es-ES') + '¥';
+  var s = document.getElementById('budget-sub');
+  if(s) s.textContent = '💡 ≈' + Math.round(BTOT2*YEN2/20).toLocaleString('es-ES') + ' ¥/día por persona (20 días). Vuelos y hoteles aparte, ya reservados.';
+})();
 var tipsBox = document.getElementById('tips-list');
 TIPS.forEach(function(t){
   var tip = document.createElement('div');
@@ -819,6 +834,21 @@ function toggleVid(i){ vidDone[i] = !vidDone[i]; try{ localStorage.setItem('japo
 
 /* ============ FIESTA ============ */
 
+var BDAY_HASH = '719eb782f9af462110edfa21d9c7f0fd477c9307b61bd01ccc9d73349fca260f';
+function checkBday(){
+  var v = (document.getElementById('bday-pass').value || '');
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(function(buf){
+    var hex = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    if(hex === BDAY_HASH){
+      document.getElementById('bday-gate').style.display = 'none';
+      document.getElementById('bday-content').style.display = 'block';
+      try{ sessionStorage.setItem('bday','1'); }catch(e){}
+    } else {
+      document.getElementById('bday-err').style.display = 'block';
+    }
+  });
+}
+(function(){ try{ if(sessionStorage.getItem('bday')==='1'){ var g=document.getElementById('bday-gate'),c=document.getElementById('bday-content'); if(g&&c){ g.style.display='none'; c.style.display='block'; } } }catch(e){} })();
 /* ============ INIT ============ */
 
 renderCheck();
