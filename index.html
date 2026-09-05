@@ -212,6 +212,22 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
 .note{background:var(--tag);border-left:3px solid var(--accent);padding:9px 13px;border-radius:0 10px 10px 0;font-size:.85rem;margin:12px 0}
 .chk-row{display:flex;align-items:center;gap:8px;padding:5px 11px;border:1px solid var(--border);border-radius:999px;background:var(--card);cursor:pointer;font-size:.78rem}
 .chk-row input{accent-color:var(--accent)}
+/* ===== ESCALA TIPOGRAFICA UNICA v16 ===== */
+.sec-title{font-size:1.15rem}
+.card h3,.card h4,.vid h3,.act h3,.fiesta h3,.rest-head h3,.check-item h4,.poi h4,.tip b{font-size:1rem}
+#tab-comida .grid.g2 .card h3{font-size:1.1rem}
+.card p,.vid p,.act p,.fiesta p,.rest p,.tip,.check-item p,.poi p,.b-line .key{font-size:.86rem}
+.card .price,.act .price,.fiesta .price,.check-item .price,.b-line .val{font-size:.95rem;font-weight:800}
+.tag,.chip,.chk-row,.card-foot .maps,.res-link,.meta span,.b-line .sub{font-size:.78rem}
+.card .why2,.poi .why,.note,.map-note,.cheap-table,.slot{font-size:.8rem}
+#poi-list{display:block}
+.grid.g2>.card,.grid.g3>.card,.poi-grid>.poi,.check-grid>.check-item{height:100%}
+.card{display:flex;flex-direction:column}
+.card-foot{margin-top:auto;padding-top:10px}
+.map-pins{width:100%;border-radius:18px;display:block;margin-bottom:6px}
+.map-legend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;font-size:.8rem;color:var(--muted)}
+.map-legend b{color:var(--text)}
+.dotk{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:baseline}
 </style>
 <script>
 (function(){try{var t=localStorage.getItem('japon-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}})();
@@ -286,7 +302,9 @@ footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;co
     <h2>🗺️ Mapa del viaje</h2>
     <p>Bases, restaurantes verificados, iluminaciones navideñas y spots de filmación. 32 puntos marcados.</p>
   </div>
-  <div class="map-wrap"><iframe id="gmap" title="Mapa de Japón" src="https://maps.google.com/maps?q=Osaka,Kyoto,Nara,Tokyo,Japan&z=6&hl=es&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+  <img class="map-pins" src="img/web/mapa-pines.jpg" alt="Mapa de Japón con la casa y los 17 puntos de interés extra">
+<div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H Casa Osaka</b> (checkpoint)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· abajo, de cerca a lejos</span></div>
+<div class="map-wrap"><iframe id="gmap" title="Mapa de Japón" src="https://maps.google.com/maps?q=Osaka,Kyoto,Nara,Tokyo,Japan&z=6&hl=es&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
   <div class="map-btns">
     <button data-mq="Osaka,Kyoto,Nara,Tokyo,Japan" data-mz="6" class="active">🗾 Todo Japón</button>
     <button data-mq="Osaka,Japan" data-mz="12">🏠 Osaka</button>
@@ -717,14 +735,18 @@ var poiBox = document.getElementById('poi-list');
 var POI_ORDER = ['Ciudad y ocio','Naturaleza','Cultura','Museos y parques'];
 var POI_CATS = {};
 POIS.forEach(function(p){ var c = p.cat || 'Naturaleza'; (POI_CATS[c] = POI_CATS[c] || []).push(p); });
-function poiDist(lat, lng){
+function poiDistKm(lat, lng){
   var R = 6371, la1 = 34.6686*Math.PI/180, la2 = lat*Math.PI/180;
   var dLa = (lat-34.6686)*Math.PI/180, dLn = (lng-135.5017)*Math.PI/180;
   var a = Math.sin(dLa/2)*Math.sin(dLa/2) + Math.cos(la1)*Math.cos(la2)*Math.sin(dLn/2)*Math.sin(dLn/2);
-  var km = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function poiDist(lat, lng){
+  var km = poiDistKm(lat, lng);
   var modo = km < 60 ? 'escapada' : (km < 450 ? 'shinkansen' : 'vuelo');
   return '&#128205; ~' + Math.round(km).toLocaleString('es-ES') + ' km de la casa · ' + modo;
 }
+Object.keys(POI_CATS).forEach(function(c){ POI_CATS[c].sort(function(a, b){ return poiDistKm(a.lat, a.lng) - poiDistKm(b.lat, b.lng); }); });
 function dirLink(lat, lng){
   var b = (lat < 35.6 ? '34.6686,135.5017' : '35.7013,139.6935');
   var d = Math.hypot(lat - (lat < 35.6 ? 34.6686 : 35.7013), lng - (lat < 35.6 ? 135.5017 : 139.6935));
