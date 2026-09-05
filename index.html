@@ -761,24 +761,31 @@ var map = null, curBase = 'sat';
 var PIN_COL = {'base':'#ff3b5c','Ciudad y ocio':'#00c2ff','Naturaleza':'#3ddc84','Cultura':'#f5c518','Museos y parques':'#a13dff'};
 var baseM = null, baseS = null, lblS = null, JAPAN_B = null;
 var T_OSM = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+var T_GOOGLE = 'https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
 var T_IM  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 var T_LB  = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
 function pinIcon(html, color, big){
   var s = big ? 36 : 28;
   return L.divIcon({className:'', html:'<div class="mm-pin2" style="width:'+s+'px;height:'+s+'px;border-color:'+color+'"><span>'+html+'</span></div>', iconSize:[s,s], iconAnchor:[s/2,s], popupAnchor:[0,-s]});
 }
+var satTries = 0;
+function satFallback(){
+  satTries++;
+  if(satTries === 1){ baseS.setUrl(T_IM); map.addLayer(lblS); }
+  else if(satTries === 2){ baseS.setUrl(T_OSM); map.removeLayer(lblS); }
+}
 function mkLayers(){
   baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19});
-  baseS = L.tileLayer(T_IM, {attribution:'© Esri · Maxar', maxZoom:18});
+  baseS = L.tileLayer(T_GOOGLE, {attribution:'© Google Maps', subdomains:['mt0','mt1','mt2','mt3'], maxZoom:20});
   lblS  = L.tileLayer(T_LB, {attribution:'© Esri', maxZoom:18});
   baseM.on('tileerror', function(){ if(baseM._url === T_OSM) baseM.setUrl('https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); });
-  baseS.on('tileerror', function(){ if(baseS._url === T_IM) baseS.setUrl(T_OSM); });
+  baseS.on('tileerror', satFallback);
 }
 function setBase(mode){
   curBase = mode;
   if(!baseM) mkLayers();
   map.removeLayer(baseM); map.removeLayer(baseS); map.removeLayer(lblS);
-  if(mode === 'sat'){ map.addLayer(baseS); map.addLayer(lblS); }
+  if(mode === 'sat'){ map.addLayer(baseS); if(baseS._url === T_IM) map.addLayer(lblS); }
   else { map.addLayer(baseM); }
   mapDark(mode === 'map' && document.documentElement.dataset.theme === 'dark');
   document.querySelectorAll('#capasBar .mbtn').forEach(function(b){ b.classList.toggle('active', b.dataset.base === mode); });
