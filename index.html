@@ -768,12 +768,28 @@ function pinIcon(html, color, big){
   var s = big ? 36 : 28;
   return L.divIcon({className:'', html:'<div class="mm-pin2" style="width:'+s+'px;height:'+s+'px;border-color:'+color+'"><span>'+html+'</span></div>', iconSize:[s,s], iconAnchor:[s/2,s], popupAnchor:[0,-s]});
 }
-var satTries = 0;
+var satTries = 0, lastSatTry = 0;
 function satFallback(){
   satTries++;
   if(satTries === 1){ baseS.setUrl(T_IM); map.addLayer(lblS); }
   else if(satTries === 2){ baseS.setUrl(T_OSM); map.removeLayer(lblS); }
+  else { satTries = 0; baseS.setUrl(T_IM); map.addLayer(lblS); }
 }
+setInterval(function(){
+  if(curBase !== 'sat' || !map) return;
+  if(Date.now() - lastSatTry < 10000) return;
+  var sizes = [];
+  document.querySelectorAll('#map .leaflet-tile-pane img').forEach(function(im){
+    var src = im.src || '';
+    if(src.indexOf('arcgisonline') < 0) return;
+    var e = (window.performance && performance.getEntriesByName) ? performance.getEntriesByName(src) : null;
+    if(e && e.length && e[0].transferSize > 0) sizes.push(e[0].transferSize);
+  });
+  if(sizes.length < 3) return;
+  var sorted = sizes.slice().sort(function(a,b){ return a-b; });
+  var med = sorted[Math.floor(sorted.length/2)];
+  if(med < 7000){ lastSatTry = Date.now(); satFallback(); }
+}, 4000);
 function mkLayers(){
   baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19, referrerPolicy:'no-referrer'});
   baseS = L.tileLayer(T_GOOGLE, {attribution:'© Google Maps', subdomains:['mt0','mt1','mt2','mt3'], maxZoom:20, referrerPolicy:'no-referrer'});
@@ -783,6 +799,7 @@ function mkLayers(){
 }
 function setBase(mode){
   curBase = mode;
+  if(mode === 'sat') satTries = 0;
   if(!baseM) mkLayers();
   map.removeLayer(baseM); map.removeLayer(baseS); map.removeLayer(lblS);
   if(mode === 'sat'){ map.addLayer(baseS); if(baseS._url === T_IM) map.addLayer(lblS); }
