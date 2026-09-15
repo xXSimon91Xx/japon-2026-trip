@@ -1528,6 +1528,10 @@ try{
   } else { (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0); }
 }catch(e){ console.warn('lenis off', e); }
 
+
+</script>
+
+<script>
 /* ══════════════════════════════════════════════════════════════
    TILT 3D AL CURSOR (la "animación del cursor")
    - Interpola hacia un objetivo con UN temporizador por tarjeta.
@@ -1535,8 +1539,14 @@ try{
    - El tilt vive en .tilt-in (interior): no pelea con GSAP.
    ══════════════════════════════════════════════════════════════ */
 (function(){
-  if (matchMedia('(hover: none)').matches) return;            // táctil: fuera
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  window.__tiltEstado = 'iniciando';
+  // fuera solo si es un táctil puro (sin ningún puntero con hover) o si el usuario pide menos movimiento
+  try{
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var __punteroFino = matchMedia('(any-pointer: fine)').matches || matchMedia('(pointer: fine)').matches;
+    var __algunHover  = matchMedia('(any-hover: hover)').matches || matchMedia('(hover: hover)').matches;
+    if (!__punteroFino && !__algunHover) return;   // móvil/tablet táctil de verdad
+  }catch(e){}
 
   const MAX = 5.5;          // grados máximos (sutil, como pidió Simon)
   const SEL = '.dia, .poi, .vid, .tarjeta, .comida, .fiesta';
@@ -1626,8 +1636,8 @@ try{
     new MutationObserver(function(){ revisar(); }).observe(document.body, {childList:true, subtree:true});
   }catch(e){}
   window.__tilt = {revisar: revisar, max: MAX};
+  window.__tiltEstado = 'activo';
 })();
 </script>
-
 </body>
 </html>
