@@ -1658,8 +1658,11 @@ try{
 
 /* ══ SUELO pulido (refleja) + rejilla neón tenue ══ */
 (function(){
-  if (!window.__escena3d || !window.__escena3d.escena) return;
+  // ⬅️ antes salía sin reintentar y el suelo nunca aparecía
+  if (!window.__escena3d || !window.__escena3d.escena || !window.__THREE__) { setTimeout(arguments.callee, 400); return; }
+  const THREE = window.__THREE__;
   const esc = window.__escena3d.escena;
+  if (window.__suelo) return;
   const mat = new THREE.MeshStandardMaterial({color:0x070910, roughness:0.18, metalness:0.95, transparent:true, opacity:0.9});
   mat.onBeforeCompile = function(sh){
     sh.fragmentShader = sh.fragmentShader
