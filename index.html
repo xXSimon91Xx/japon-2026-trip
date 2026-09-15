@@ -1908,6 +1908,16 @@ try{
           o.position.z += 6.2 - fila * 2.6;          // +6.2, +3.6, +1.0  (la camara esta en z=9)
           o.position.y += (fila === 0 ? 1.7 : fila === 1 ? -0.4 : 2.0);
           o.userData.nombre = c.n;
+          // ★ BUG: al escalar/mover el objeto, su bounding sphere NO se recalcula y Three.js
+          // lo descarta por frustum culling (visible=true pero no se dibuja). Se desactiva
+          // el culling para estos 6 objetos y se recalculan sus esferas.
+          o.frustumCulled = false;
+          o.traverse(function(hijo){
+            if (hijo.isMesh && hijo.geometry){
+              try{ hijo.geometry.computeBoundingSphere(); hijo.geometry.computeBoundingBox(); }catch(e){}
+              hijo.frustumCulled = false;
+            }
+          });
           aplicarRim(o, THREE);
           esc.add(o);
           window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d, girando:true});
