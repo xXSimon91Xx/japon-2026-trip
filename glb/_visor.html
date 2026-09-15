@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+body{margin:0;background:#0b0e14;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;height:100vh}
+.c{position:relative;background:#11141d;border-radius:8px;overflow:hidden}
+.c b{position:absolute;top:6px;left:10px;color:#f5c518;font:600 13px system-ui;z-index:2}
+canvas{display:block}
+</style></head><body>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+const nombres = ['torii','castillo','tarta','linterna','buda','ramen'];
+const loader = new GLTFLoader();
+const draco = new DRACOLoader();
+draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+loader.setDRACOLoader(draco);
+window.__listo = 0;
+for (const n of nombres){
+  const div = document.createElement('div');
+  div.className = 'c';
+  div.innerHTML = '<b>'+n+'</b>';
+  document.body.appendChild(div);
+  const W = div.clientWidth||420, H = div.clientHeight||300;
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setSize(W,H); renderer.setPixelRatio(1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  div.appendChild(renderer.domElement);
+  const escena = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(38, W/H, 0.1, 100);
+  escena.add(new THREE.HemisphereLight(0x99bbff, 0x221133, 1.4));
+  const key = new THREE.DirectionalLight(0xffffff, 2.3); key.position.set(3,5,4); escena.add(key);
+  const rim = new THREE.DirectionalLight(0xff3b5c, 3.0); rim.position.set(-4,2,-4); escena.add(rim);
+  const rim2 = new THREE.DirectionalLight(0x3ddcff, 2.2); rim2.position.set(4,-1,-5); escena.add(rim2);
+  loader.load('./'+n+'.glb', g=>{
+    const o = g.scene;
+    const box = new THREE.Box3().setFromObject(o);
+    const c = box.getCenter(new THREE.Vector3());
+    const s = box.getSize(new THREE.Vector3());
+    const radio = Math.max(s.x,s.y,s.z);
+    o.position.sub(c);
+    escena.add(o);
+    cam.position.set(radio*0.15, radio*0.35, radio*2.0);
+    cam.lookAt(0,0,0);
+    renderer.render(escena, cam);
+    window.__listo++;
+  }, undefined, e=>{ console.error(n, e); div.querySelector('b').textContent = n+' ERROR'; });
+}
+window.__capturas = ()=>{ return window.__listo; };
+</script></body></html>

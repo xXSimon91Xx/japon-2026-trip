@@ -467,7 +467,9 @@ h2.big em{font-style:normal; color:var(--neon)}
 
 <script type="module">
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';;
 
 /* ══════════════════════════════════════════════════════════════
    MOTOR 3D INMERSIVO — un solo canvas que acompaña todo el scroll
@@ -491,7 +493,21 @@ cam.position.set(0, 1.1, 9);
 const movil = innerWidth < 820;
 
 /* ── LUCES ── */
-escena.add(new THREE.HemisphereLight(0x9fd0ff, 0x120a14, 0.55));
+escena.add(new THREE.HemisphereLight(0x9fd0ff, 0x120a14, 0.55))
+// ★★ ILUMINACIÓN DE 3 PUNTOS (key + fill + rim) — el look "low key backlight"
+const __clave = new THREE.DirectionalLight(0xffffff, 2.3); __clave.position.set(4, 7, 6); escena.add(__clave);
+const __relleno = new THREE.DirectionalLight(0x8fb6ff, 0.8); __relleno.position.set(-5, 2, 4); escena.add(__relleno);
+const __rimA = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5, 3, -6); escena.add(__rimA);
+const __rimB = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7); escena.add(__rimB);
+const __rimC = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3); escena.add(__rimC);
+window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};
+// ★★ ILUMINACIÓN 3 PUNTOS + RIM LIGHTS (look "low key backlight")
+const __clave   = new THREE.DirectionalLight(0xffffff, 2.3); __clave.position.set(4, 7, 6);   escena.add(__clave);
+const __relleno = new THREE.DirectionalLight(0x8fb6ff, 0.8); __relleno.position.set(-5, 2, 4); escena.add(__relleno);
+const __rimA    = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5, 3, -6);   escena.add(__rimA);
+const __rimB    = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7);   escena.add(__rimB);
+const __rimC    = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3);   escena.add(__rimC);
+window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};;
 const key = new THREE.DirectionalLight(0xfff0de, 1.5); key.position.set(5, 9, 6); escena.add(key);
 const ne = new THREE.PointLight(0xff3b5c, 3.2, 34); ne.position.set(-6, 2.4, -3); escena.add(ne);
 const ne2 = new THREE.PointLight(0x7c5cff, 2.6, 34); ne2.position.set(7, -1.4, -6); escena.add(ne2);
@@ -889,6 +905,9 @@ setInterval(()=>{
 
 window.__setSeccion = setSeccion;
 window.__escena3d = {escena, cam, avion, estado};
+window.__THREE__ = THREE;
+window.__THREE__.GLTFLoader = GLTFLoader;
+window.__THREE__.DRACOLoader = DRACOLoader;
 
 window.__frames = 0;
 let __ultimoFrame = performance.now();
@@ -1514,7 +1533,7 @@ try{
 
 </script>
 
-<script type="importmap">{"imports":{"lenis":"https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs"}}</script>
+<script type="importmap">{"imports":{"lenis":"https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs","three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
 import Lenis from 'lenis';
 try{
@@ -1639,5 +1658,128 @@ try{
   window.__tiltEstado = 'activo';
 })();
 </script>
-</body>
+
+/* ══ SUELO pulido (refleja) + rejilla neón tenue ══ */
+(function(){
+  if (!window.__escena3d || !window.__escena3d.escena) return;
+  const esc = window.__escena3d.escena;
+  const mat = new THREE.MeshStandardMaterial({color:0x070910, roughness:0.18, metalness:0.95, transparent:true, opacity:0.9});
+  mat.onBeforeCompile = function(sh){
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform float uFade;')
+      .replace('#include <dithering_fragment>',
+        '#include <dithering_fragment>\n' +
+        '  float __d = length(vViewPosition);\n' +
+        '  float __f = smoothstep(4.0, 36.0, __d);\n' +
+        '  gl_FragColor.rgb *= mix(1.0, 0.22, __f);\n' +
+        '  gl_FragColor.a *= mix(0.94, 0.0, __f);\n');
+  };
+  const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
+  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -3.3;
+  esc.add(sueloMesh);
+  const grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
+  grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
+  esc.add(grid);
+  window.__suelo = {plano: sueloMesh, rejilla: grid};
+})();
+</script>
+/* ══════════════════════════════════════════════════════════════════════
+   RIM LIGHT (Fresnel) + GALERÍA 3D INTERACTIVA con los 6 modelos
+   generados por IA (TripoSR). Se pueden rotar con el ratón.
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+  const CUADROS = [
+    {f:'torii.glb',    n:'Torii',            d:'La puerta sagrada de los santuarios sintoístas'},
+    {f:'castillo.glb', n:'Castillo',         d:'El Osaka-jo, la fortaleza de la ciudad'},
+    {f:'buda.glb',     n:'Gran Buda',        d:'El Daibutsu del Todai-ji en Nara'},
+    {f:'linterna.glb', n:'Chochin',          d:'La linterna de papel de los izakayas'},
+    {f:'tarta.glb',    n:'Tarta',            d:'El cumpleaños de Marc, día 10 del viaje'},
+    {f:'ramen.glb',    n:'Ramen',            d:'El plato que vamos a comer 20 veces'},
+  ];
+  let listo = 0;
+  window.__galeria3d = {total: CUADROS.length, listos: 0, modelos: []};
+
+  function esperar(){
+    if (!window.__escena3d || !window.__escena3d.escena) { setTimeout(esperar, 400); return; }
+    montar();
+  }
+  function montar(){
+    const THREE = window.__THREE__;
+    if (!THREE || !THREE.GLTFLoader) { setTimeout(esperar, 400); return; }
+    const esc = window.__escena3d.escena;
+
+    // ── RIM LIGHT: inyectar el contorno luminoso en TODOS los materiales estándar ──
+    function aplicarRim(raiz){
+      let n = 0;
+      raiz.traverse(function(ob){
+        if (!ob.isMesh) return;
+        const mats = Array.isArray(ob.material) ? ob.material : [ob.material];
+        mats.forEach(function(mat){
+          if (!mat || mat.__rimListo) return;
+          if (!mat.isMeshStandardMaterial && !mat.isMeshPhysicalMaterial) return;
+          mat.__rimListo = true;
+          mat.onBeforeCompile = function(sh){
+            sh.uniforms.uRimInt = {value: 0.62};
+            sh.uniforms.uRimPow = {value: 2.5};
+            sh.uniforms.uRimCol = {value: new THREE.Color(0x6fd6ff)};
+            sh.uniforms.uRimCol2 = {value: new THREE.Color(0xff6b86)};
+            sh.fragmentShader = sh.fragmentShader
+              .replace('#include <common>', '#include <common>\nuniform float uRimInt; uniform float uRimPow; uniform vec3 uRimCol; uniform vec3 uRimCol2;')
+              .replace('#include <dithering_fragment>',
+                '#include <dithering_fragment>\n' +
+                '  vec3 __n = normalize(vNormal);\n' +
+                '  vec3 __v = normalize(vViewPosition);\n' +
+                '  float __f = 1.0 - clamp(dot(__n, __v), 0.0, 1.0);\n' +
+                '  float __rim = pow(__f, uRimPow) * uRimInt;\n' +
+                '  vec3 __c = mix(uRimCol2, uRimCol, clamp(__f, 0.0, 1.0));\n' +
+                '  gl_FragColor.rgb += __c * __rim;\n');
+            mat.userData.__sh = sh;
+          };
+          mat.needsUpdate = true; n++;
+        });
+      });
+      return n;
+    }
+    window.__aplicarRim = aplicarRim;
+    window.__rim = {aplicados: aplicarRim(esc)};
+    console.log('[rim] materiales con contorno:', window.__rim.aplicados);
+
+    // ── GALERÍA: cargar los 6 GLB ──
+    const loader = new THREE.GLTFLoader();
+    if (THREE.DRACOLoader){
+      const d = new THREE.DRACOLoader();
+      d.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+      loader.setDRACOLoader(d);
+    }
+    CUADROS.forEach(function(c, i){
+      loader.load('glb/' + c.f, function(g){
+        const o = g.scene;
+        // normalizar tamaño y centrar
+        const box = new THREE.Box3().setFromObject(o);
+        const size = box.getSize(new THREE.Vector3());
+        const centro = box.getCenter(new THREE.Vector3());
+        const max = Math.max(size.x, size.y, size.z) || 1;
+        const escala = 1.5 / max;
+        o.position.sub(centro.multiplyScalar(escala));
+        o.scale.setScalar(escala);
+        o.userData.girando = true;
+        o.userData.nombre = c.n;
+        aplicarRim(o);
+        // colocar en un arco detrás de la escena, repartidos
+        const ang = (i / CUADROS.length) * Math.PI * 2;
+        const radio = 5.2;
+        o.position.x += Math.cos(ang) * radio;
+        o.position.z += -7 + Math.sin(ang) * 2.4;
+        o.position.y += 0.4 + (i % 2) * 0.9;
+        o.visible = false;   // se muestran en la sección de POIs
+        esc.add(o);
+        window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d});
+        window.__galeria3d.listos = ++listo;
+        if (listo === CUADROS.length) console.log('[galeria3d] 6/6 modelos cargados');
+      }, undefined, function(e){ console.warn('[galeria3d] fallo', c.f, String(e).slice(0,80)); });
+    });
+  }
+  esperar();
+})();
+</script></body>
 </html>
