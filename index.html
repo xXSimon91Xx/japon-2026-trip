@@ -1203,6 +1203,55 @@ initChart();
     });
     _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
   }
+  // ══════ ★ MOTOR CINEMATOGRAFICO 3D (v3.0): todo avanza en 3D al bajar ══════
+  (function(){
+    function esReducido(){
+      try{ return document.documentElement.classList.contains('no-motion') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; }
+    }
+    if(!window.gsap || !window.ScrollTrigger){ console.warn('cine: falta gsap/ScrollTrigger'); window.__CINE={ok:false}; return; }
+    gsap.registerPlugin(ScrollTrigger);
+    if(esReducido()){ window.__CINE={ok:false, reducido:true}; return; }
+
+    var pj = document.getElementById('cinePetals');
+    if(pj){
+      var nP = innerWidth < 820 ? 12 : 26, frag = '';
+      for(var i=0;i<nP;i++){
+        var dur = 9 + Math.random()*11, dx = (Math.random()*180-90).toFixed(0);
+        frag += '<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+(Math.random()*dur).toFixed(1)+'s;--dx:'+dx+'px;transform:scale('+(0.6+Math.random()*0.9).toFixed(2)+')"></i>';
+      }
+      pj.innerHTML = frag;
+    }
+    var fl = document.getElementById('cineFloor');
+    if(fl){
+      gsap.to('#cineFloor', { yPercent: 6, opacity: 0.28, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'bottom bottom', scrub: 1.2 } });
+    }
+    function bloquesDe(scope){
+      var out = [];
+      [].forEach.call(scope.querySelectorAll('main > section.tab > *'), function(el){
+        if(el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return;
+        if(el.closest('#bday-content')) return;
+        if(!el.offsetParent) return;
+        out.push(el);
+      });
+      return out;
+    }
+    var bloques = bloquesDe(document);
+    bloques.forEach(function(el, idx){
+      el.classList.add('cine-block');
+      gsap.fromTo(el,
+        { opacity: 0, y: 110, z: -520, rotateX: 14, rotateY: (idx%2 ? 9 : -9), scale: 0.90 },
+        { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 58%', scrub: 0.9 } });
+      gsap.to(el,
+        { opacity: 0.30, y: -70, z: 240, rotateX: -6, scale: 1.03, ease: 'power2.in',
+          scrollTrigger: { trigger: el, start: 'bottom 62%', end: 'bottom 6%', scrub: 1.0 } });
+    });
+    addEventListener('load', function(){ setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 400); });
+    setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 1500);
+    window.__CINE = { ok:true, bloques: bloques.length };
+  })();
+
   // ★ Red de seguridad (revelado garantizado, no depende de transiciones ni observers):
   function _blindaje(){
     document.querySelectorAll('.card, .slide, .slot, .sec-title').forEach(function(el){
