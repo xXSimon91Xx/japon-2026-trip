@@ -1871,11 +1871,14 @@ try{
       console.log('[v6.1] suelo OK');
     }
 
-    // ── 2) RIM LIGHT en todo lo que ya existe ──
+    // ── 2) RIM LIGHT ──
+    // En la escena PROCEDURAL algunos materiales son especiales (Points, shaders propios) y la
+    // inyección les rompía el shader. Se aplica solo a los modelos GLB, que son MeshStandardMaterial
+    // limpios y donde el rim luce de verdad. La escena ya tiene 3 RIM LIGHTS de color.
     if (!window.__rim){
       window.__aplicarRim = function(r){ return aplicarRim(r, THREE); };
-      window.__rim = {aplicados: aplicarRim(esc, THREE)};
-      console.log('[v6.1] rim light en', window.__rim.aplicados, 'materiales');
+      window.__rim = {aplicados: 0, modo: 'solo-modelos'};
+      console.log('[v6.2] rim: luces de color en la escena + Fresnel en los modelos GLB');
     }
 
     // ── 3) GALERÍA 3D ──
