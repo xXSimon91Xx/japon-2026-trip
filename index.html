@@ -1656,7 +1656,7 @@ try{
 })();
 </script>
 
-/* ══ SUELO pulido (refleja) + rejilla neón tenue ══ */
+/* (suelo v6.1 -> reescrito abajo) */
 (function(){
   // ⬅️ antes salía sin reintentar y el suelo nunca aparecía
   if (!window.__escena3d || !window.__escena3d.escena || !window.__THREE__) { setTimeout(arguments.callee, 400); return; }
@@ -1784,5 +1784,134 @@ try{
   }
   esperar();
 })();
-</script></body>
+</script><script>
+/* ══════════════════════════════════════════════════════════════════════════
+   v6.1 — SUELO + RIM LIGHT (Fresnel) + GALERÍA 3D con los modelos de IA
+   Todo en un bloque con espera ROBUSTA: los scripts clásicos se ejecutan
+   antes de que el módulo ES cree la escena, así que hay que reintentar.
+   ══════════════════════════════════════════════════════════════════════════ */
+(function(){
+  var intentos = 0;
+  var CUADROS = [
+    {f:'torii.glb',    n:'Torii',     d:'La puerta sagrada de los santuarios sintoístas'},
+    {f:'castillo.glb', n:'Castillo',  d:'El Osaka-jo, la fortaleza de la ciudad'},
+    {f:'buda.glb',     n:'Gran Buda', d:'El Daibutsu del Todai-ji en Nara'},
+    {f:'linterna.glb', n:'Chochin',   d:'La linterna de papel de los izakayas'},
+    {f:'tarta.glb',    n:'Tarta',     d:'El cumpleaños de Marc, día 10 del viaje'},
+    {f:'ramen.glb',    n:'Ramen',     d:'El plato que vamos a comer 20 veces'}
+  ];
+
+  function listo(){
+    return !!(window.__escena3d && window.__escena3d.escena && window.__THREE__ && window.__THREE__.GLTFLoader);
+  }
+
+  function aplicarRim(raiz, THREE){
+    var n = 0;
+    raiz.traverse(function(ob){
+      if (!ob.isMesh) return;
+      var mats = Array.isArray(ob.material) ? ob.material : [ob.material];
+      mats.forEach(function(mat){
+        if (!mat || mat.__rimListo) return;
+        if (!mat.isMeshStandardMaterial && !mat.isMeshPhysicalMaterial) return;
+        mat.__rimListo = true;
+        mat.onBeforeCompile = function(sh){
+          sh.uniforms.uRimInt  = {value: 0.62};
+          sh.uniforms.uRimPow  = {value: 2.5};
+          sh.uniforms.uRimCol  = {value: new THREE.Color(0x6fd6ff)};
+          sh.uniforms.uRimCol2 = {value: new THREE.Color(0xff6b86)};
+          sh.fragmentShader = sh.fragmentShader
+            .replace('#include <common>', '#include <common>\nuniform float uRimInt; uniform float uRimPow; uniform vec3 uRimCol; uniform vec3 uRimCol2;')
+            .replace('#include <dithering_fragment>',
+              '#include <dithering_fragment>\n' +
+              '  vec3 __n = normalize(vNormal);\n' +
+              '  vec3 __v = normalize(vViewPosition);\n' +
+              '  float __f = 1.0 - clamp(dot(__n, __v), 0.0, 1.0);\n' +
+              '  float __r = pow(__f, uRimPow) * uRimInt;\n' +
+              '  gl_FragColor.rgb += mix(uRimCol2, uRimCol, clamp(__f,0.0,1.0)) * __r;\n');
+          mat.userData.__sh = sh;
+        };
+        mat.needsUpdate = true; n++;
+      });
+    });
+    return n;
+  }
+
+  function montar(){
+    var THREE = window.__THREE__, esc = window.__escena3d.escena;
+
+    // ── 1) SUELO pulido (refleja) ──
+    if (!window.__suelo){
+      var mat = new THREE.MeshStandardMaterial({color:0x070910, roughness:0.18, metalness:0.95, transparent:true, opacity:0.9});
+      mat.onBeforeCompile = function(sh){
+        sh.fragmentShader = sh.fragmentShader
+          .replace('#include <common>', '#include <common>\nuniform float uFade;')
+          .replace('#include <dithering_fragment>',
+            '#include <dithering_fragment>\n' +
+            '  float __d = length(vViewPosition);\n' +
+            '  float __fa = smoothstep(4.0, 36.0, __d);\n' +
+            '  gl_FragColor.rgb *= mix(1.0, 0.22, __fa);\n' +
+            '  gl_FragColor.a *= mix(0.94, 0.0, __fa);\n');
+      };
+      var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
+      plano.rotation.x = -Math.PI/2; plano.position.y = -3.3;
+      esc.add(plano);
+      var grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
+      grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
+      esc.add(grid);
+      window.__suelo = {plano:plano, rejilla:grid};
+      console.log('[v6.1] suelo OK');
+    }
+
+    // ── 2) RIM LIGHT en todo lo que ya existe ──
+    if (!window.__rim){
+      window.__aplicarRim = function(r){ return aplicarRim(r, THREE); };
+      window.__rim = {aplicados: aplicarRim(esc, THREE)};
+      console.log('[v6.1] rim light en', window.__rim.aplicados, 'materiales');
+    }
+
+    // ── 3) GALERÍA 3D ──
+    if (!window.__galeria3d){
+      window.__galeria3d = {total: CUADROS.length, listos: 0, modelos: []};
+      var loader = new THREE.GLTFLoader();
+      if (THREE.DRACOLoader){
+        var d = new THREE.DRACOLoader();
+        d.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+        loader.setDRACOLoader(d);
+      }
+      CUADROS.forEach(function(c, i){
+        loader.load('glb/' + c.f, function(g){
+          var o = g.scene;
+          var box = new THREE.Box3().setFromObject(o);
+          var size = box.getSize(new THREE.Vector3());
+          var centro = box.getCenter(new THREE.Vector3());
+          var max = Math.max(size.x, size.y, size.z) || 1;
+          var k = 1.5 / max;
+          o.scale.setScalar(k);
+          centro.multiplyScalar(k);
+          o.position.sub(centro);
+          var ang = (i / CUADROS.length) * Math.PI * 2;
+          o.position.x += Math.cos(ang) * 5.2;
+          o.position.z += -7 + Math.sin(ang) * 2.4;
+          o.position.y += 0.4 + (i % 2) * 0.9;
+          o.userData.nombre = c.n;
+          aplicarRim(o, THREE);
+          esc.add(o);
+          window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d, girando:true});
+          window.__galeria3d.listos++;
+          if (window.__galeria3d.listos === CUADROS.length) console.log('[v6.1] 6/6 modelos 3D cargados');
+        }, undefined, function(e){ console.warn('[v6.1] fallo al cargar', c.f, String(e).slice(0,90)); });
+      });
+    }
+  }
+
+  function intentar(){
+    if (listo()) { try{ montar(); }catch(e){ console.warn('[v6.1] error al montar:', e.message); } return; }
+    if (++intentos < 60) setTimeout(intentar, 350);   // hasta ~21 s
+  }
+  intentar();
+  // por si la escena se recrea más tarde
+  window.__montar61 = intentar;
+})();
+</script>
+</body>
 </html>
