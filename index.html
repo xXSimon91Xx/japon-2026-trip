@@ -1670,9 +1670,9 @@ try{
       .replace('#include <dithering_fragment>',
         '#include <dithering_fragment>\n' +
         '  float fadeD = length(vViewPosition);\n' +
-        '  float __f = smoothstep(4.0, 36.0, __d);\n' +
-        '  gl_FragColor.rgb *= mix(1.0, 0.22, __f);\n' +
-        '  gl_FragColor.a *= mix(0.94, 0.0, __f);\n');
+        '  float fadeA = smoothstep(4.0, 36.0, fadeD);\n' +
+        '  gl_FragColor.rgb *= mix(1.0, 0.22, fadeA);\n' +
+        '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
   sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -3.3;
@@ -1733,9 +1733,9 @@ try{
                 '  vec3 rimN = normalize(vNormal);\n' +
                 '  vec3 rimV = normalize(vViewPosition);\n' +
                 '  float rimF = 1.0 - clamp(dot(rimN, rimV), 0.0, 1.0);\n' +
-                '  float __rim = pow(__f, uRimPow) * uRimInt;\n' +
-                '  vec3 __c = mix(uRimCol2, uRimCol, clamp(__f, 0.0, 1.0));\n' +
-                '  gl_FragColor.rgb += __c * __rim;\n');
+                '  float rimR2 = pow(rimF, uRimPow) * uRimInt;\n' +
+                '  vec3 rimC2 = mix(uRimCol2, uRimCol, clamp(rimF, 0.0, 1.0));\n' +
+                '  gl_FragColor.rgb += rimC2 * rimR2;\n');
             mat.userData.__sh = sh;
           };
           mat.needsUpdate = true; n++;
