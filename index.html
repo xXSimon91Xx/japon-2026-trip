@@ -1663,7 +1663,7 @@ try{
   const THREE = window.__THREE__;
   const esc = window.__escena3d.escena;
   if (window.__suelo) return;
-  const mat = new THREE.MeshStandardMaterial({color:0x070910, roughness:0.18, metalness:0.95, transparent:true, opacity:0.9});
+  const mat = new THREE.MeshStandardMaterial({color:0x141a28, roughness:0.42, metalness:0.55, transparent:true, opacity:0.85});
   mat.onBeforeCompile = function(sh){
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform float uFade;')
@@ -1677,8 +1677,8 @@ try{
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
   sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.9;
   esc.add(sueloMesh);
-  const grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
-  grid.position.y = -1.88; grid.material.transparent = true; grid.material.opacity = 0.45;
+  const grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
+  grid.position.y = -1.88; grid.material.transparent = true; grid.material.opacity = 0.62;
   esc.add(grid);
   window.__suelo = {plano: sueloMesh, rejilla: grid};
 })();
@@ -1863,8 +1863,8 @@ try{
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
       plano.rotation.x = -Math.PI/2; plano.position.y = -1.9;
       esc.add(plano);
-      var grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
-      grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
+      var grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
+      grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.62;
       esc.add(grid);
       plano.userData.__sinRim = true; grid.userData.__sinRim = true;
       window.__suelo = {plano:plano, rejilla:grid};
