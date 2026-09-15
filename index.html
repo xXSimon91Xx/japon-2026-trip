@@ -894,7 +894,7 @@ setInterval(()=>{
   grupoTarta.visible  = act.tarta  > 0.02;  grupoTarta.scale.setScalar(0.85*act.tarta + 0.05);
   rej.material.opacity = act.rej; rej.scale.setScalar(0.7 + act.rej*0.3);
   avion.visible = act.avion > 0.03;
-  const o = 0.95 - estado.prog*0.25;
+  const o = 0.72 - estado.prog*0.15;
   pMat.opacity = Math.max(0.25, o); sakura.material.opacity = Math.max(0.2, o);
 }, 40);
 
@@ -1675,10 +1675,10 @@ try{
         '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
-  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -3.3;
+  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -2.3;
   esc.add(sueloMesh);
   const grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
-  grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
+  grid.position.y = -2.28; grid.material.transparent = true; grid.material.opacity = 0.45;
   esc.add(grid);
   window.__suelo = {plano: sueloMesh, rejilla: grid};
 })();
@@ -1772,8 +1772,8 @@ try{
         const ang = (i / CUADROS.length) * Math.PI * 2;
         const radio = 5.2;
         o.position.x += Math.cos(ang) * radio;
-        o.position.z += -7 + Math.sin(ang) * 2.4;
-        o.position.y += 0.4 + (i % 2) * 0.9;
+        o.position.z += -5.2 + Math.sin(ang) * 2.0;
+        o.position.y += 0.2 + (i % 2) * 0.7;
         o.visible = false;   // se muestran en la sección de POIs
         esc.add(o);
         window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d});
@@ -1861,7 +1861,7 @@ try{
             '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
-      plano.rotation.x = -Math.PI/2; plano.position.y = -3.3;
+      plano.rotation.x = -Math.PI/2; plano.position.y = -2.3;
       esc.add(plano);
       var grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
       grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
@@ -1897,14 +1897,14 @@ try{
           var size = box.getSize(new THREE.Vector3());
           var centro = box.getCenter(new THREE.Vector3());
           var max = Math.max(size.x, size.y, size.z) || 1;
-          var k = 1.5 / max;
+          var k = 1.9 / max;
           o.scale.setScalar(k);
           centro.multiplyScalar(k);
           o.position.sub(centro);
           var ang = (i / CUADROS.length) * Math.PI * 2;
-          o.position.x += Math.cos(ang) * 5.2;
-          o.position.z += -7 + Math.sin(ang) * 2.4;
-          o.position.y += 0.4 + (i % 2) * 0.9;
+          o.position.x += Math.cos(ang) * 3.6;
+          o.position.z += -5.2 + Math.sin(ang) * 2.0;
+          o.position.y += 0.2 + (i % 2) * 0.7;
           o.userData.nombre = c.n;
           aplicarRim(o, THREE);
           esc.add(o);
