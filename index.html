@@ -784,6 +784,19 @@ function loop(now){
   window.__frames = (window.__frames||0) + 1; __ultimoFrame = now;
   const dt = Math.min((now - ultimo)/1000, 0.05); ultimo = now;
   estado.t += dt;
+  // ★★ los 6 modelos de IA giran sobre sí mismos y flotan (antes estaban marcados como
+  //    'girando' pero NINGÚN código los movía: se quedaban congelados).
+  if (window.__galeria3d && window.__galeria3d.modelos && window.__galeria3d.modelos.length){
+    for (var __gi = 0; __gi < window.__galeria3d.modelos.length; __gi++){
+      var __gm = window.__galeria3d.modelos[__gi];
+      var __go = __gm.nodo;
+      if (!__go) continue;
+      if (__gm.baseY === undefined) __gm.baseY = __go.position.y;
+      __gm.baseEje = __gm.baseEje === undefined ? (__go.rotation.y || 0) : __gm.baseEje;
+      __go.rotation.y = __gm.baseEje + estado.t * (0.26 + (__gi % 3) * 0.06);
+      __go.position.y = __gm.baseY + Math.sin(estado.t * 0.85 + __gi * 1.25) * 0.13;
+    }
+  }
   // ★ prog también aquí: el evento scroll puede no dispararse si el scroll lo mueve Lenis
   try{
     const __h = document.documentElement;
