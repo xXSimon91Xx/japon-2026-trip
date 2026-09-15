@@ -1271,9 +1271,11 @@ const CIUDAD_Q = {
   const nodos = ORDEN.map(id => document.getElementById(id)).filter(Boolean);
   let activa = '';
   function calcular(){
-    const y = (window.scrollY || document.documentElement.scrollTop || 0) + innerHeight*0.42;
+    const sy = window.scrollY || document.documentElement.scrollTop || 0;
+    const y = sy + innerHeight*0.45;                     // 45% del viewport
     let id = ORDEN[0];
-    nodos.forEach(n => { if (n.offsetTop <= y) id = n.id; });
+    // posicion ABSOLUTA real (offsetTop es relativo al offsetParent y fallaba)
+    nodos.forEach(n => { const top = n.getBoundingClientRect().top + sy; if (top <= y) id = n.id; });
     if (id !== activa){
       activa = id;
       if (window.__setSeccion) window.__setSeccion(id);
