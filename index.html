@@ -422,6 +422,46 @@ const rej = new THREE.GridHelper(420, 150, 0x2a1a26, 0x161d2c);
 rej.position.y = -5.4;
 escena.add(rej);
 
+/* ── AMBIENTE JAPONÉS: linternas 3D y kanjis flotando ── */
+const grupoAmbiente = new THREE.Group(); escena.add(grupoAmbiente);
+function linterna(x,y,z,color){
+  const g = new THREE.Group();
+  const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.30,0.30,0.62,16,1,true),
+    new THREE.MeshStandardMaterial({color:color, emissive:color, emissiveIntensity:1.15, transparent:true, opacity:0.92, side:THREE.DoubleSide}));
+  g.add(cuerpo);
+  const tapa = new THREE.MeshStandardMaterial({color:0x1a1e28, metalness:0.6, roughness:0.4});
+  [0.32,-0.32].forEach(dy=>{ const t = new THREE.Mesh(new THREE.CylinderGeometry(0.19,0.19,0.07,14), tapa); t.position.y=dy; g.add(t); });
+  g.position.set(x,y,z);
+  g.userData.base = y; g.userData.fase = Math.random()*6.28;
+  return g;
+}
+function kanji(txt, color){
+  const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+  const c = cv.getContext('2d');
+  c.font = 'bold 170px serif'; c.fillStyle = color; c.textAlign='center'; c.textBaseline='middle';
+  c.shadowColor = color; c.shadowBlur = 30;
+  c.fillText(txt, 128, 138);
+  const tex = new THREE.CanvasTexture(cv);
+  if (THREE.SRGBColorSpace && tex.colorSpace !== undefined) tex.colorSpace = THREE.SRGBColorSpace;
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:tex, transparent:true, depthWrite:false, opacity:0.85}));
+  return spr;
+}
+const ambiente = [];
+// linternas a los lados de la "avenida"
+[[-5.5,0.6,2,0xff3b5c],[-4.2,2.6,-3,0xf5c518],[5.5,1.2,1,0xff6b86],[4.6,-0.4,-5,0x3ddcff],
+ [-6.2,2.0,-9,0x7c5cff],[6.0,2.4,-8,0xf5c518]].forEach(p=>{
+  const l = linterna(p[0],p[1],p[2],p[3]); grupoAmbiente.add(l); ambiente.push(l);
+});
+// kanjis flotantes (japonés real: 日本 = Japón)
+const KJ = [['日','#ff8fa3'],['本','#f5c518'],['旅','#7c5cff'],['神','#3ddcff']];
+KJ.forEach((k,i)=>{
+  const s = kanji(k[0], k[1]);
+  s.scale.set(1.5,1.5,1);
+  s.position.set(-9 + i*6.2, 4.6 + (i%2)*1.6, -6 - i*3.4);
+  s.userData.fase = Math.random()*6.28;
+  grupoAmbiente.add(s); ambiente.push(s);
+});
+
 /* ── ESTRELLAS / PARTÍCULAS ── */
 const N_P = movil ? 420 : 1400;
 const pGeo = new THREE.BufferGeometry();
@@ -504,12 +544,12 @@ escena.add(estela);
 /* ── ARCO DE RUTA España -> Japón ── */
 /* recorrido del avión: arranca DELANTE de la cámara (bien visible) y se aleja hacia Japón */
 const curva = new THREE.CatmullRomCurve3([
-  new THREE.Vector3( 6.2, 1.4,  3.0),
-  new THREE.Vector3( 4.4, 2.6, -1.5),
-  new THREE.Vector3( 1.2, 3.4, -7.0),
-  new THREE.Vector3(-2.6, 2.6, -13.0),
-  new THREE.Vector3(-6.0, 1.2, -19.0),
-  new THREE.Vector3(-8.5, 0.2, -25.0),
+  new THREE.Vector3( 3.6, 1.5,  3.6),
+  new THREE.Vector3( 3.0, 2.5, -0.5),
+  new THREE.Vector3( 1.4, 3.2, -6.0),
+  new THREE.Vector3(-1.4, 2.6, -12.0),
+  new THREE.Vector3(-4.4, 1.4, -18.0),
+  new THREE.Vector3(-7.0, 0.4, -24.0),
 ]);
 const puntosRuta = new THREE.Points(
   new THREE.BufferGeometry().setFromPoints(curva.getPoints(140)),
@@ -627,7 +667,7 @@ addEventListener('resize', ()=>{
 
 /* posiciones de cámara por sección */
 const CAM = {
-  hero:        {p:[1.2,1.5,7.5],  look:[0.6,1.6,-2]},
+  hero:        {p:[0.2,1.7,8.4],  look:[1.2,1.7,-1.2]},
   ruta:        {p:[0,-2.2,8],     look:[0,-2.6,-12]},
   mapa:        {p:[0,7.5,10],     look:[0,-1.5,-8]},
   comida:      {p:[0,0.4,7],      look:[0,0.2,-8]},
@@ -703,6 +743,13 @@ function loop(now){
   // velas de la tarta
   grupoTarta.children.forEach(c=>{
     if(c.userData.f !== undefined){ c.scale.setScalar(0.85 + Math.sin(estado.t*6 + c.userData.f)*0.28); }
+  });
+  // ambiente japonés: linternas y kanjis flotan
+  ambiente.forEach((a,i)=>{
+    a.userData.fase = a.userData.fase || 0;
+    if (a.userData.base !== undefined) a.position.y = a.userData.base + Math.sin(estado.t*0.9 + a.userData.fase)*0.35;
+    else a.position.y += Math.sin(estado.t*0.7 + a.userData.fase)*0.004;
+    a.rotation.y = Math.sin(estado.t*0.5 + a.userData.fase)*0.4;
   });
   // luces
   ne.intensity  = 2.6 + Math.sin(estado.t*1.3)*1.0;
