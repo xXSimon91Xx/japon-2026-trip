@@ -1918,7 +1918,7 @@ try{
               hijo.frustumCulled = false;
             }
           });
-          aplicarRim(o, THREE);
+          // aplicarRim(o, THREE);  // ⛔ rompía el shader de los GLB (Shader Error 0) -> las 3 rim lights de color hacen el trabajo
           esc.add(o);
           window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d, girando:true});
           window.__galeria3d.listos++;
