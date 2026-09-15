@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRUEBA postprocessing</title>
+<style>html,body{margin:0;height:100%;background:#05060a;overflow:hidden}canvas{display:block}#out{position:fixed;top:8px;left:8px;color:#0f0;font:12px monospace;background:rgba(0,0,0,.7);padding:6px;z-index:9;white-space:pre}</style>
+<script type="importmap">
+{"imports":{
+"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+"postprocessing":"https://cdn.jsdelivr.net/npm/postprocessing@6.36.4/build/index.js"
+}}
+</script>
+</head>
+<body>
+<div id="out">boot...</div>
+<script type="module">
+import * as THREE from 'three';
+const out = document.getElementById('out');
+const log = (m) => { out.textContent += '\n' + m; document.title = out.textContent.slice(0, 200); };
+window.addEventListener('error', (e) => { log('JSERROR: ' + e.message); try { fetch('http://127.0.0.1:8901/r?' + new URLSearchParams({ modo: 'unknown', txt: 'JSERROR: ' + e.message }), { mode: 'no-cors' }); } catch (_) {} });
+const modo = new URLSearchParams(location.search).get('modo') || 'pmndrs';
+
+const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05060a);
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(0, 0.6, 6);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+dir.position.set(3, 5, 4);
+scene.add(dir);
+
+// Objeto emisivo (debe brillar con bloom selectivo)
+const knot = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(0.9, 0.28, 180, 24),
+  new THREE.MeshStandardMaterial({ color: 0x220a00, emissive: 0xff4400, emissiveIntensity: 3.0, roughness: 0.4 })
+);
+knot.position.x = -1.3;
+scene.add(knot);
+// Esferas normales (NO deben brillar con bloom selectivo)
+const sphMat = new THREE.MeshStandardMaterial({ color: 0x8a93a6, roughness: 0.5, metalness: 0.4 });
+[[-0.1, -0.9, 0], [1.5, 0.4, -0.6], [2.2, -0.8, 0.4]].forEach((p, i) => {
+  const s = new THREE.Mesh(new THREE.SphereGeometry(0.42 - i * 0.07, 48, 32), sphMat);
+  s.position.set(...p);
+  if (i === 0) window.__sph0 = s;
+  scene.add(s);
+});
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30),
+  new THREE.MeshStandardMaterial({ color: 0x11141c, roughness: 0.9 }));
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -1.5;
+scene.add(ground);
+
+let composer = null, tick = null;
+if (modo === 'pmndrs') {
+  const { EffectComposer, RenderPass, EffectPass, SelectiveBloomEffect, VignetteEffect,
+    NoiseEffect, SMAAEffect, ToneMappingEffect, ToneMappingMode, BlendFunction } = await import('postprocessing');
+  log('pmndrs lib OK v' + (await import('postprocessing')).VERSION || 'pmndrs lib OK');
+  renderer.toneMapping = THREE.NoToneMapping;
+  composer = new EffectComposer(renderer, { frameBufferType: THREE.HalfFloatType });
+  composer.addPass(new RenderPass(scene, camera));
+  const sel = new SelectiveBloomEffect(scene, camera, {
+    intensity: 1.4, luminanceThreshold: 0.15, luminanceSmoothing: 0.25, mipmapBlur: true, radius: 0.75
+  });
+  sel.selection.add(knot);
+  sel.ignoreBackground = true;
+  const vig = new VignetteEffect({ offset: 0.22, darkness: 0.62 });
+  const grain = new NoiseEffect({ blendFunction: BlendFunction.OVERLAY });
+  try { grain.blendMode.opacity.value = 0.12; } catch (e) { log('grain opacity warn: ' + e.message); }
+  const tm = new ToneMappingEffect({ mode: ToneMappingMode.ACES_FILMIC });
+  composer.addPass(new EffectPass(camera, sel, vig, grain, tm));
+  composer.addPass(new EffectPass(camera, new SMAAEffect()));
+  tick = (dt) => composer.render(dt);
+  log('SEL_COUNT=' + sel.selection.size);
+} else {
+  const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
+  const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
+  const { ShaderPass } = await import('three/addons/postprocessing/ShaderPass.js');
+  const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.18;
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.42, 0.85, 0.72));
+  const CineShader = {
+    uniforms: { tDiffuse: { value: null }, uTime: { value: 0 } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform sampler2D tDiffuse; uniform float uTime; varying vec2 vUv; float rnd(vec2 c){ return fract(sin(dot(c, vec2(12.9898,78.233))) * 43758.5453); } void main(){ vec4 c = texture2D(tDiffuse, vUv); float d = distance(vUv, vec2(0.5)); c.rgb *= smoothstep(0.95, 0.35, d * 1.05); c.rgb += (rnd(vUv * (500.0 + fract(uTime) * 10.0)) - 0.5) * 0.07; gl_FragColor = c; }'
+  };
+  const cine = new ShaderPass(CineShader);
+  composer.addPass(cine);
+  const t0 = performance.now();
+  tick = () => { cine.uniforms.uTime.value = (performance.now() - t0) / 1000; composer.render(); };
+}
+log('MODO=' + modo + ' composer OK');
+
+// Mide FPS durante 3 s tras 1 s de calentamiento
+let frames = 0;
+const clock = new THREE.Clock();
+function loop() {
+  requestAnimationFrame(loop);
+  knot.rotation.y += 0.01; knot.rotation.x += 0.004;
+  tick(clock.getDelta());
+  frames++;
+}
+loop();
+const tStart = performance.now() + 1000;
+setTimeout(() => {
+  frames = 0;
+  const t1 = performance.now();
+  setTimeout(() => {
+    const dt = (performance.now() - t1) / 1000;
+    const fps = (frames / dt).toFixed(1);
+    log('FPS_' + modo.toUpperCase() + '=' + fps + ' (' + frames + 'f/' + dt.toFixed(2) + 's)');
+    // Verificacion objetiva: luminosidad sobre el nudo emisivo vs esfera gris
+    try {
+      const px = (obj) => {
+        const v = obj.position.clone().project(camera);
+        return [(v.x * 0.5 + 0.5) * innerWidth, (-v.y * 0.5 + 0.5) * innerHeight];
+      };
+      const c2 = document.createElement('canvas');
+      c2.width = innerWidth; c2.height = innerHeight;
+      const g = c2.getContext('2d', { willReadFrequently: true });
+      g.drawImage(renderer.domElement, 0, 0);
+      const lum = (x, y) => {
+        const d = g.getImageData(x | 0, y | 0, 5, 5).data;
+        let s = 0; for (let i = 0; i < d.length; i += 4) s += (d[i] + d[i + 1] + d[i + 2]) / 3;
+        return (s / (d.length / 4)).toFixed(1);
+      };
+      const [kx, ky] = px(knot);
+      const [sx, sy] = px(window.__sph0);
+      const lumKnot = lum(kx, ky), lumSph = lum(sx, sy), lumBg = lum(innerWidth * 0.5, innerHeight * 0.06);
+      log('LUM_KNOT=' + lumKnot + ' LUM_SPH=' + lumSph + ' LUM_BG=' + lumBg);
+    } catch (e) { log('LUM_ERR=' + e.message); }
+    log('DONE');
+    try { fetch('http://127.0.0.1:8901/r?' + new URLSearchParams({ modo, txt: out.textContent.slice(0, 900) }), { mode: 'no-cors' }); } catch (e) {}
+  }, 3000);
+}, tStart - performance.now());
+</script>
+</body>
+</html>

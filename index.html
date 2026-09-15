@@ -1186,7 +1186,7 @@ const VIS = {
   cumple:      {ciudad:0, comida:0, fiesta:0.2, tarta:1, rej:0.2, avion:0},
 };
 const act = {ciudad:0, comida:0, fiesta:0, tarta:0, rej:1, avion:1};
-export function setSeccion(nombre){
+function setSeccion(nombre){
   const v = VIS[nombre] || VIS.hero;
   estado.seccion = nombre;
   objetivo.p.set(...(CAM[nombre]||CAM.hero).p);
