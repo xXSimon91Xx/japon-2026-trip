@@ -2129,9 +2129,8 @@ try{
   if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
   gsap.registerPlugin(ScrollTrigger);
 
-  var prog = document.getElementById('cineProg');
-  var ficha = document.getElementById('cineFicha');
-  var barra = document.getElementById('cineBarra');
+  // ★ el contador se inserta DESPUES de este script -> hay que buscarlo en cada uso
+  var el = function(id){ return document.getElementById(id); };
   var hero = document.getElementById('hero');
   if (!hero) return;
 
@@ -2146,21 +2145,26 @@ try{
     onUpdate: function(self){
       var p = self.progress;
       window.__cineP = p;
+      var prog = el('cineProg');
       if (prog){
         prog.classList.add('on');
-        prog.querySelector('b').textContent = Math.round(p * 100);
+        var bp = prog.querySelector('b');
+        if (bp) bp.textContent = Math.round(p * 100);
       }
+      var barra = el('cineBarra');
       if (barra){
         barra.classList.add('on');
         barra.style.width = (p * 100).toFixed(1) + '%';
       }
+      var ficha = el('cineFicha');
       if (ficha) ficha.classList.toggle('on', p > 0.42);
     },
     onLeave: function(){
       window.__cineP = undefined;
-      if (prog) prog.classList.remove('on');
-      if (barra) barra.classList.remove('on');
-      if (ficha) ficha.classList.remove('on');
+      var pg = el('cineProg'), br = el('cineBarra'), fi = el('cineFicha');
+      if (pg) pg.classList.remove('on');
+      if (br) br.classList.remove('on');
+      if (fi) fi.classList.remove('on');
     },
     onEnterBack: function(){
       window.__cineP = 0;
