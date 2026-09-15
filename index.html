@@ -35,6 +35,7 @@ body{
 #velo{position:fixed; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(180deg, transparent 0%, rgba(8,9,15,.35) 35%, rgba(8,9,15,.72) 100%)}
 :root[data-tema="dia"] #navlinks a{color:#38445c; border-color:rgba(56,68,92,.22)}
+[data-tema="dia"] #navlinks a.on{color:#0b0e14; background:var(--neon); border-color:var(--neon)}
 [data-tema="dia"] #navlinks a:hover{color:#0b0e14; background:rgba(11,14,20,.07)}
 [data-tema="dia"] #btnTema{color:#38445c; border-color:rgba(56,68,92,.22)}
 [data-tema="dia"] .panel .sub, [data-tema="dia"] .panel p{color:#a9b4c6}
@@ -299,6 +300,16 @@ h2.big em{font-style:normal; color:var(--neon)}
 }
 /* en táctil no hay cursor: fuera */
 @media (hover: none){ .tilt-in{transform:none !important} .tilt-glare{display:none} }
+
+/* ★ el .tilt-in es un grid-item dentro de article.dia (display:grid): sin esto
+   ocupaba UNA columna y medía 74px en vez de 362px, rompiendo el layout. */
+.dia > .tilt-in, .poi > .tilt-in, .vid > .tilt-in, .tarjeta > .tilt-in{
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+}
+/* y el .tilt-in nunca puede provocar scroll horizontal */
+.tilt-in{max-width:100%; box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -969,21 +980,21 @@ var ROUTE = [
 var POIS = [
  {f:'🏝️', n:'Okinawa', img:'8e62a96bd5.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', h:'🕐 castillo 8:30-17:00 · playas 24h', lat:26.2124, lng:127.6809},
  {f:'⛩️', n:'Takayama', img:'84f0cbdefd.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', h:'🕐 calles y museos 9:00-17:00', lat:36.1462, lng:137.2521},
- {f:'⛴️', n:'Hiroshima + Miyajima', img:'pontocho.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
+ {f:'⛴️', n:'Hiroshima + Miyajima', img:'8e62a96bd5.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
  {f:'🏔️', n:'Nikko', img:'6fced8ff10.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', h:'🕐 Toshogu 8:00-17:00 (cierra 16:00 en invierno)', lat:36.7586, lng:139.5990},
  {f:'♨️', n:'Hakone Onsen', img:'4fb1e2bf86.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', h:'🕐 onsen 10:00-20:00 · lago 24h', lat:35.2325, lng:139.1069},
  {f:'🎬', n:'Ghibli Museum', img:'c21d5851ba.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', h:'🕐 10:00-18:00 · cerrado los martes', lat:35.6962, lng:139.5702},
  {f:'🎡', n:'Tokyo DisneySea', img:'c1ed8f3d3c.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', h:'🕐 8:00-22:00 (varía por día)', lat:35.6273, lng:139.8889},
- {f:'🌉', n:'Shibuya Crossing', img:'0e2924b736.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
- {f:'⛩️', n:'Senso-ji Asakusa', img:'warp.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
+ {f:'🌉', n:'Shibuya Crossing', img:'warp.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
+ {f:'⛩️', n:'Senso-ji Asakusa', img:'pontocho.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
  {f:'🗼', n:'Tokyo Skytree', img:'6d63367e8c.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', h:'🕐 10:00-21:00 (última subida 20:00)', lat:35.7101, lng:139.8107},
- {f:'🎮', n:'Akihabara', img:'atom.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
+ {f:'🎮', n:'Akihabara', img:'uranamba.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
  {f:'🥃', n:'Golden Gai (Shinjuku)', img:'goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', h:'🕐 18:00-4:00 (bares)', lat:35.6920, lng:139.7009},
  {f:'🐟', n:'Mercado de Toyosu', img:'0e0ace189d.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', h:'🕐 lonja 5:00-14:00 · zona gourmet 7:00-17:00', lat:35.6437, lng:139.7863},
- {f:'⛩️', n:'Fushimi Inari', img:'uranamba.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
+ {f:'⛩️', n:'Fushimi Inari', img:'84f0cbdefd.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
  {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'d921d6cf95.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', h:'🕐 24h · mejor antes de las 9:00', lat:35.0173, lng:135.6725},
  {f:'🏯', n:'Castillo de Osaka', img:'af851c6c1d.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', h:'🕐 9:00-17:00 · parque 24h', lat:34.6873, lng:135.5262},
- {f:'🦌', n:'Todai-ji (Nara)', img:'bigego.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
+ {f:'🦌', n:'Todai-ji (Nara)', img:'6fced8ff10.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
 ];
 
 var POI_ORDER = ['Ciudad y ocio','Naturaleza','Cultura','Museos y parques'];
@@ -1486,6 +1497,16 @@ const CIUDAD_Q = {
   calcular();
 
   ScrollTrigger.refresh();
+// ★ controles de Leaflet en español (el zoom seguía en inglés)
+(function(){
+  function traducir(){
+    var zi = document.querySelector('.leaflet-control-zoom-in');
+    var zo = document.querySelector('.leaflet-control-zoom-out');
+    if (zi){ zi.setAttribute('aria-label','Acercar'); zi.setAttribute('title','Acercar'); }
+    if (zo){ zo.setAttribute('aria-label','Alejar');  zo.setAttribute('title','Alejar'); }
+  }
+  traducir(); setTimeout(traducir, 1500); setTimeout(traducir, 4000);
+})();
 // ★ el mapa ahora tiene altura propia: recalcular al cargar, al redimensionar y al cambiar de sección
 (function(){
   function ajustar(){ try{ if(window.__mapa && window.__mapa.invalidateSize) window.__mapa.invalidateSize(); }catch(e){} }
