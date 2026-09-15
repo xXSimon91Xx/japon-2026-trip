@@ -1116,14 +1116,25 @@ function loop(now){
     //     position (-0.67, 1.8, 5.2)  lookAt (0, 1.7, -7.0)
     //   Pose del cine: position (0, 0.75+, 9.0-)  lookAt (0, 1.05+, -1.0)
     //   Sin esto la camara saltaba 3.8 unidades hacia atrás de golpe al entrar.
-    const mezcla = Math.min(1, p / 0.15);          // 0 = pose del hero, 1 = pose del cine
-    const HX = -0.67, HY = 1.8, HZ = 5.2;          // donde acabo el hero
-    const HLy = 1.7, HLz = -7.0;                   // a donde miraba el hero
+    const mezcla = Math.min(1, p / 0.15);          // 0 = pose de entrada, 1 = pose del cine
+    // ★ v14.1 — capturar la pose REAL de la camara en el primer frame del cine.
+    //   Medido: el hero acaba en z=9.00 (no en 5.2 como asumi) -> con constantes
+    //   inventadas el blend daba un salto de 1.9. Asi el salto es 0 siempre.
+    if (!window.__poseEntrada){
+      const dir = new THREE.Vector3();
+      cam.getWorldDirection(dir);
+      window.__poseEntrada = {
+        p: cam.position.clone(),
+        // un punto de mira a 10 unidades por delante: sirve como lookAt equivalente
+        l: cam.position.clone().add(dir.multiplyScalar(10))
+      };
+    }
+    const P0 = window.__poseEntrada.p, L0 = window.__poseEntrada.l;
     const CX = 0, CY = 0.75 + suave*0.30, CZ = 9.0 - suave*3.6;
     const CLy = 1.05 + suave*0.25, CLz = -1.0;
     const e = mezcla*mezcla*(3 - 2*mezcla);        // smoothstep: entrada/salida suaves
-    cam.position.set(HX + (CX - HX)*e, HY + (CY - HY)*e, HZ + (CZ - HZ)*e);
-    cam.lookAt(0, HLy + (CLy - HLy)*e, HLz + (CLz - HLz)*e);
+    cam.position.set(P0.x + (CX - P0.x)*e, P0.y + (CY - P0.y)*e, P0.z + (CZ - P0.z)*e);
+    cam.lookAt(0, L0.y + (CLy - L0.y)*e, L0.z + (CLz - L0.z)*e);
 
     // el anillo aparece al principio y se desvanece al acercarse
     if (window.__anilloCine){
@@ -2649,6 +2660,7 @@ try{
     },
     onLeave: function(){
       window.__cine2P = undefined;
+      window.__poseEntrada = null;   // v14.1 — la proxima entrada vuelve a capturar la pose
       document.body.classList.remove('cine-puro');
       sec.className = 'f3';
     },
