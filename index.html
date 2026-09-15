@@ -900,9 +900,11 @@ setInterval(()=>{
 
 window.__setSeccion = setSeccion;
 window.__escena3d = {escena, cam, avion, estado};
-window.__THREE__ = THREE;
+// los namespace de modulo son INMUTABLES: hay que copiar a un objeto propio para poder añadir los loaders
+window.__THREE__ = Object.assign({}, THREE);
 window.__THREE__.GLTFLoader = GLTFLoader;
 window.__THREE__.DRACOLoader = DRACOLoader;
+window.__loaders3d = { GLTFLoader: GLTFLoader, DRACOLoader: DRACOLoader };
 
 window.__frames = 0;
 let __ultimoFrame = performance.now();
@@ -1700,7 +1702,10 @@ try{
   }
   function montar(){
     const THREE = window.__THREE__;
-    if (!THREE || !THREE.GLTFLoader) { setTimeout(esperar, 400); return; }
+    const LG = (THREE && THREE.GLTFLoader) ? THREE : null;
+    const loaderCls = (LG && LG.GLTFLoader) || (window.__loaders3d && window.__loaders3d.GLTFLoader);
+    const dracoCls  = (LG && LG.DRACOLoader) || (window.__loaders3d && window.__loaders3d.DRACOLoader);
+    if (!THREE || !loaderCls) { setTimeout(esperar, 400); return; }
     const esc = window.__escena3d.escena;
 
     // ── RIM LIGHT: inyectar el contorno luminoso en TODOS los materiales estándar ──
@@ -1740,9 +1745,9 @@ try{
     console.log('[rim] materiales con contorno:', window.__rim.aplicados);
 
     // ── GALERÍA: cargar los 6 GLB ──
-    const loader = new THREE.GLTFLoader();
-    if (THREE.DRACOLoader){
-      const d = new THREE.DRACOLoader();
+    const loader = new loaderCls();
+    if (dracoCls){
+      const d = new dracoCls();
       d.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
       loader.setDRACOLoader(d);
     }
