@@ -14,13 +14,9 @@
 <meta name="description" content="Viaje de 21 días a Japón: Osaka · Kioto · Nara · Tokyo. 6 héroes, un país, una misión. 12 - 30 dic 2026.">
 <style>
 /* ═══ 3D INTERACTIVO (15-sep-2026): tilt con raton + profundidad al scroll ═══ */
-#fx-bar{position:fixed;left:12px;bottom:12px;z-index:60;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:8px 10px;display:flex;gap:8px;align-items:center;font-size:.8rem;box-shadow:0 10px 30px rgba(0,0,0,.45)}
-#fx-bar b{color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
-#fx-bar button{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:999px;padding:3px 9px;cursor:pointer;font-weight:700;font-size:.75rem}
-#fx-bar button.on{background:var(--accent);color:#0b0e14;border-color:transparent}
 #fx-warn{position:fixed;left:12px;bottom:64px;z-index:61;max-width:330px;background:#2a1a05;border:1px solid #f5c518;color:#ffd97a;border-radius:12px;padding:10px 12px;font-size:.8rem;line-height:1.35;display:none}
 #fx-warn button{margin-top:6px;background:#f5c518;color:#1a1204;border:0;border-radius:8px;padding:5px 10px;font-weight:800;cursor:pointer}
-@media(max-width:600px){#fx-bar{left:8px;bottom:8px;font-size:.72rem}#fx-warn{left:8px;right:8px;bottom:58px;max-width:none}}
+@media(max-width:600px){#fx-warn{left:8px;right:8px;bottom:14px;max-width:none}}
 /* Reveal por CSS (GSAP se peleaba con el tilt: borraba el transform). Solo actua si html.js-anim */
 html.js-anim .card,html.js-anim .slide,html.js-anim .slot,html.js-anim .sec-title{
   opacity:0;transform:translateY(36px) rotateX(-13deg) translateZ(-60px);transform-origin:50% 100%;
@@ -1078,39 +1074,10 @@ initChart();
       location.reload();
     });
   }
-  if(rm && !FORCE){ document.documentElement.classList.add('no-motion'); aviso(); montarBarra(false); return; }
-  if(!window.gsap){ document.documentElement.classList.add('no-motion'); montarBarra(false); return; }
+  if(rm && !FORCE){ document.documentElement.classList.add('no-motion'); aviso(); return; }
+  if(!window.gsap){ document.documentElement.classList.add('no-motion'); return; }
 
   // ── Barra de intensidad del 3D (se guarda y se recuerda) ──
-  var NIVELES = { mini: {deg: 3.5, lift: 8}, suave: {deg: 6, lift: 14}, normal: {deg: 12, lift: 26}, bestia: {deg: 20, lift: 42} };
-  window.__FX = NIVELES.suave;
-  function montarBarra(activo){
-    var b = document.createElement('div'); b.id = 'fx-bar';
-    b.innerHTML = '<b>3D</b>' + ['mini','suave','normal','bestia'].map(function(n){
-      return '<button data-fx="'+n+'">'+n+'</button>';
-    }).join('') + '<button data-fx="off" title="Desactivar">✕</button>';
-    document.body.appendChild(b);
-    var pref = 'suave';
-    try{ pref = localStorage.getItem('jpfx') || 'suave'; }catch(e){}
-    function setUI(n){
-      b.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x.dataset.fx === n); });
-    }
-    b.addEventListener('click', function(e){
-      var n = e.target && e.target.dataset ? e.target.dataset.fx : null;
-      if(!n) return;
-      try{ localStorage.setItem('jpfx', n); }catch(e){}
-      if(n === 'off'){ try{ localStorage.setItem('jp3d','off'); }catch(e){} location.reload(); return; }
-      window.__FX = NIVELES[n] || NIVELES.normal;
-      if(window.__applyFX) window.__applyFX(window.__FX);
-      setUI(n);
-    });
-    if(activo) setUI(pref);
-    try{
-      var p = localStorage.getItem('jpfx');
-      if(activo && p && NIVELES[p]) window.__FX = NIVELES[p];
-    }catch(e){}
-  }
-
   // ── Lenis: scroll sedoso (se apaga solo si prefiere menos movimiento)
   var lenis = null;
   function initLenis(){
@@ -1188,9 +1155,8 @@ initChart();
   // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
   var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
   if(hoverOK){
-    var MAXD = (window.__FX && window.__FX.deg) || 6, LIFT = (window.__FX && window.__FX.lift) || 14;
+    var MAXD = 3.5, LIFT = 8;   // modo MINI fijo (peticion de Simon: sin selector)
     var cur = null, raf = 0, lastEv = null, lastT = 0;
-    window.__applyFX = function(fx){ MAXD = fx.deg; LIFT = fx.lift; };
     function glareOf(el){
       var g = el.querySelector(':scope > .glare');
       if(!g){ g = document.createElement('div'); g.className = 'glare'; el.appendChild(g); }
@@ -1248,7 +1214,6 @@ initChart();
     }catch(_e){}
   }, { passive: true });
 
-  montarBarra(true);
   // ── Entrada del hero (primer tab visible)
   var hero = document.querySelector('.tab.active .tab-head, .tab.active h1');
   if(hero){ gsap.fromTo(hero, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: 'power2.out' }); }
