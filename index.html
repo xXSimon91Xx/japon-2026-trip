@@ -1059,7 +1059,7 @@ function loop(now){
           o.position.lerp(new THREE.Vector3(0, -0.05, -0.4), 0.08);
           o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
           o.rotation.y = estado.t * 0.16;
-          if (m._tumbado) o.rotation.x = -Math.PI / 2;   // v10.3 — no perder el enderezado
+          o.rotation.x = -Math.PI / 2;                   // v10.4 — el Buda siempre de pie en el cine
         } else if (m.cineGuardado){
           o.position.copy(m.cineGuardado);
           o.scale.setScalar(m.cineEscala);
@@ -2323,8 +2323,10 @@ try{
           // Box3.setFromObject ya lo hace bien.
           var box = new THREE.Box3().setFromObject(o);
           var size = box.getSize(new THREE.Vector3());
-          // v10.3 — los escaneos vienen con Z hacia arriba: si Y es el eje MAS FINO, esta TUMBADO
-          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8);
+          // v10.4 — enderezar DETERMINISTA por nombre: la deteccion por bbox no se dispara
+          // con los GLB cuantizados. El Gran Buda del Smithsonian viene con Z hacia arriba.
+          var nom = (c.n || '') + ' ' + (c.f || '');
+          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8) || /buda/i.test(nom);
           if (tumbado){
             o.rotation.x = -Math.PI / 2;
             o.updateMatrixWorld(true);
