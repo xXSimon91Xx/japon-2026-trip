@@ -310,6 +310,42 @@ h2.big em{font-style:normal; color:var(--neon)}
 }
 /* y el .tilt-in nunca puede provocar scroll horizontal */
 .tilt-in{max-width:100%; box-sizing:border-box}
+
+/* ══ v8.0 — CINE: contador de progreso + ficha técnica del viaje ══ */
+#cineProg{
+  position:fixed; left:26px; bottom:24px; z-index:60;
+  font:600 12.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing:.14em; color:var(--neon);
+  background:rgba(11,14,20,.62); border:1px solid rgba(255,59,92,.30);
+  padding:8px 12px; border-radius:999px; backdrop-filter:blur(10px);
+  opacity:0; transition:opacity .5s ease; pointer-events:none;
+}
+#cineProg.on{opacity:1}
+#cineProg b{color:#fff; font-weight:700}
+/* ficha técnica que aparece al avanzar (como el short del museo) */
+#cineFicha{
+  position:absolute; left:0; right:0; bottom:12%; z-index:5;
+  display:flex; gap:34px; justify-content:center; flex-wrap:wrap;
+  opacity:0; transition:opacity .4s ease; pointer-events:none;
+}
+#cineFicha.on{opacity:1}
+#cineFicha div{min-width:120px; text-align:center}
+#cineFicha b{
+  display:block; font:800 clamp(26px,3.4vw,52px)/1 ui-sans-serif,system-ui;
+  color:#fff; letter-spacing:-.02em;
+}
+#cineFicha span{
+  display:block; margin-top:7px; font:600 10.5px/1.4 ui-monospace,monospace;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--neon);
+}
+#cineFicha i{width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); margin:0 0 12px}
+/* linea de progreso del hero mientras está pinneado */
+#cineBarra{
+  position:absolute; left:0; bottom:0; height:2px; width:0%;
+  background:linear-gradient(90deg,var(--neon),var(--acento2,#f5c518));
+  z-index:6; opacity:0; transition:opacity .4s ease;
+}
+#cineBarra.on{opacity:1}
 </style>
 </head>
 <body>
@@ -345,6 +381,15 @@ h2.big em{font-style:normal; color:var(--neon)}
 
 <!-- ══════════════ HERO ══════════════ -->
 <section id="hero">
+  <div id="cineBarra" aria-hidden="true"></div>
+  <div id="cineFicha" aria-hidden="true">
+    <i></i>
+    <div><b>21</b><span>Días</span></div>
+    <div><b>4</b><span>Ciudades</span></div>
+    <div><b>10.400</b><span>Kilómetros</span></div>
+    <div><b>6</b><span>Viajeros</span></div>
+    <div><b>620 €</b><span>Presupuesto</span></div>
+  </div>
   <div class="wrap capa">
     <div class="kicker">9 DIC — 1 ENE · La Misión de los 6</div>
     <h1><span>JAPÓN</span><span class="r">2026</span></h1>
@@ -481,7 +526,11 @@ h2.big em{font-style:normal; color:var(--neon)}
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';;
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';;
 
 /* ══════════════════════════════════════════════════════════════
    MOTOR 3D INMERSIVO — un solo canvas que acompaña todo el scroll
@@ -795,6 +844,23 @@ function loop(now){
   window.__frames = (window.__frames||0) + 1; __ultimoFrame = now;
   const dt = Math.min((now - ultimo)/1000, 0.05); ultimo = now;
   estado.t += dt;
+  if (cinePass) cinePass.uniforms.uTime.value = estado.t;
+  // ★ v8.0 — el scroll dirige la escena del hero (pin + scrub)
+  if (window.__cineP !== undefined && estado.seccion === 'hero'){
+    const p = window.__cineP;
+    // dolly-in + pequeño giro: la cámara se acerca a la escena mientras bajas
+    cam.position.z = 10.6 - p * 5.4;
+    cam.position.y = 1.8 + Math.sin(p * Math.PI) * 0.85;
+    cam.position.x = Math.sin(p * Math.PI * 1.4) * 0.7;
+    cam.lookAt(0, 1.35 + p * 0.35, -4.0 - p * 3.0);
+    // los modelos se abren hacia fuera conforme avanza
+    if (window.__galeria3d && window.__galeria3d.modelos){
+      window.__galeria3d.modelos.forEach(function(m, i){
+        if (!m.nodo || m.offsetBase === undefined) return;
+        m.nodo.position.z = m.offsetBase + p * 1.6;
+      });
+    }
+  }
   // ★★ los 6 modelos de IA giran sobre sí mismos y flotan (antes estaban marcados como
   //    'girando' pero NINGÚN código los movía: se quedaban congelados).
   if (window.__galeria3d && window.__galeria3d.modelos && window.__galeria3d.modelos.length){
@@ -883,7 +949,7 @@ function loop(now){
   cam.lookAt(objetivo.look);
   cam.position.y += Math.sin(estado.t*0.55)*0.03;
 
-  renderer.render(escena, cam);
+  if (composer) composer.render(); else renderer.render(escena, cam);;
   if (window.__frames % 2 === 0) requestAnimationFrame(__tick0);   // rAF cuando está disponible
 }
 function __tick0(t){ __ultimoFrame = t; __tick(true); }
@@ -929,6 +995,87 @@ window.__THREE__ = Object.assign({}, THREE);
 window.__THREE__.GLTFLoader = GLTFLoader;
 window.__THREE__.DRACOLoader = DRACOLoader;
 window.__loaders3d = { GLTFLoader: GLTFLoader, DRACOLoader: DRACOLoader };
+
+// ══════════════════════════════════════════════════════════════════════
+// v8.0 — POSTPROCESADO CINEMATOGRÁFICO
+// Orden correcto (foro oficial de Three.js):
+//   Bloom → Chromatic Aberration → Vignette → Tone Mapping → FILM GRAIN
+// Todo lo no-bloom va en UN SOLO pase para no perder rendimiento.
+// ══════════════════════════════════════════════════════════════════════
+const CineShader = {
+  uniforms: {
+    tDiffuse:   {value: null},
+    uTime:      {value: 0},
+    uVignette:  {value: 1.05},   // fuerza de la viñeta
+    uGrano:     {value: 0.055},  // intensidad del grano fílmico
+    uAberr:     {value: 0.0016}, // aberración cromática (fringing de lente)
+    uSat:       {value: 1.06},   // saturación
+    uContraste: {value: 1.04}
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+  `,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float uTime, uVignette, uGrano, uAberr, uSat, uContraste;
+    varying vec2 vUv;
+
+    // ruido pseudoaleatorio estable (grano fílmico)
+    float ruido(vec2 co){
+      return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+    }
+
+    void main(){
+      vec2 uv = vUv;
+      vec2 centro = uv - 0.5;
+      float d = length(centro);
+
+      // ── aberración cromática: los canales se separan hacia los bordes ──
+      vec2 off = centro * d * uAberr * 12.0;
+      float r = texture2D(tDiffuse, uv + off).r;
+      float g = texture2D(tDiffuse, uv).g;
+      float b = texture2D(tDiffuse, uv - off).b;
+      vec3 col = vec3(r, g, b);
+
+      // ── contraste y saturación ──
+      col = (col - 0.5) * uContraste + 0.5;
+      float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      col = mix(vec3(lum), col, uSat);
+
+      // ── viñeta ──
+      float vig = smoothstep(0.92, 0.28, d * uVignette);
+      col *= mix(0.72, 1.0, vig);
+
+      // ── grano fílmico animado ──
+      float gr = ruido(uv * 900.0 + fract(uTime) * 91.7) - 0.5;
+      col += gr * uGrano;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `
+};
+
+let composer = null, cinePass = null, bloomPass = null;
+const esMovil = innerWidth < 860;
+try{
+  composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(escena, cam));
+  if (!esMovil){
+    bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.42, 0.85, 0.72);
+    composer.addPass(bloomPass);
+  }
+  cinePass = new ShaderPass(CineShader);
+  composer.addPass(cinePass);
+  composer.setSize(innerWidth, innerHeight);
+  console.log('[v8.0] postprocesado listo | bloom:', !esMovil);
+}catch(e){
+  console.warn('[v8.0] postprocesado no disponible:', e.message);
+  composer = null;
+}
+window.__composer = composer;
+window.__cinePass = cinePass;
+window.__bloomPass = bloomPass;
 
 window.__frames = 0;
 let __ultimoFrame = performance.now();
@@ -1940,6 +2087,7 @@ try{
           o.position.z += 6.2 - fila * 2.6;          // +6.2, +3.6, +1.0  (la camara esta en z=9)
           o.position.y += (fila === 0 ? 1.7 : fila === 1 ? -0.4 : 2.0);
           o.userData.nombre = c.n;
+          o.userData.offsetBase = o.position.z;
           // ★ BUG: al escalar/mover el objeto, su bounding sphere NO se recalcula y Three.js
           // lo descarta por frustum culling (visible=true pero no se dibuja). Se desactiva
           // el culling para estos 6 objetos y se recalculan sus esferas.
@@ -1969,5 +2117,58 @@ try{
   window.__montar61 = intentar;
 })();
 </script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   v8.0 — HERO PINNEADO: el scroll es el director de la escena.
+   Técnica de los shorts de referencia (Pixel Grid UI / foro de Three.js):
+     trigger + start 'top top' + end '+=2200' + pin:true + scrub:1
+   Mientras el hero está pinneado, __cineP (0→1) mueve la cámara.
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  var prog = document.getElementById('cineProg');
+  var ficha = document.getElementById('cineFicha');
+  var barra = document.getElementById('cineBarra');
+  var hero = document.getElementById('hero');
+  if (!hero) return;
+
+  ScrollTrigger.create({
+    trigger: hero,
+    start: 'top top',
+    end: '+=2100',                 // 2100px de recorrido cinematográfico
+    pin: true,
+    pinSpacing: true,
+    scrub: 1,                      // suaviza el seguimiento
+    anticipatePin: 1,
+    onUpdate: function(self){
+      var p = self.progress;
+      window.__cineP = p;
+      if (prog){
+        prog.classList.add('on');
+        prog.querySelector('b').textContent = Math.round(p * 100);
+      }
+      if (barra){
+        barra.classList.add('on');
+        barra.style.width = (p * 100).toFixed(1) + '%';
+      }
+      if (ficha) ficha.classList.toggle('on', p > 0.42);
+    },
+    onLeave: function(){
+      window.__cineP = undefined;
+      if (prog) prog.classList.remove('on');
+      if (barra) barra.classList.remove('on');
+      if (ficha) ficha.classList.remove('on');
+    },
+    onEnterBack: function(){
+      window.__cineP = 0;
+    }
+  });
+  console.log('[v8.0] hero pinneado (2100px) — el scroll dirige la escena');
+})();
+</script>
+<div id="cineProg" aria-hidden="true"><b>0</b>% RECORRIDO</div>
 </body>
 </html>
