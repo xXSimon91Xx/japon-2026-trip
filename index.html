@@ -1227,61 +1227,90 @@ initChart();
     });
     _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
   }
-  // ══════ ★ MOTOR CINEMATOGRAFICO 3D (v3.0): todo avanza en 3D al bajar ══════
+  // ══════ ★ MOTOR CINEMATOGRAFICO 3D (v3.1) — montado por seccion ══════
   (function(){
     function esReducido(){
       try{ return document.documentElement.classList.contains('no-motion') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; }
     }
-    if(!window.gsap || !window.ScrollTrigger){ console.warn('cine: falta gsap/ScrollTrigger'); window.__CINE={ok:false}; return; }
+    if(!window.gsap || !window.ScrollTrigger){ window.__CINE={ok:false, error:'sin gsap'}; return; }
     gsap.registerPlugin(ScrollTrigger);
     if(esReducido()){ window.__CINE={ok:false, reducido:true}; return; }
 
+    // petalos
     var pj = document.getElementById('cinePetals');
     if(pj){
       var nP = innerWidth < 820 ? 12 : 26, frag = '';
       for(var i=0;i<nP;i++){
         var dur = 9 + Math.random()*11, dx = (Math.random()*180-90).toFixed(0);
-        frag += '<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+(Math.random()*dur).toFixed(1)+'s;--dx:'+dx+'px;transform:scale('+(0.6+Math.random()*0.9).toFixed(2)+')"></i>';
+        frag += '<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;--dx:'+dx+'px;transform:scale('+(0.6+Math.random()*0.9).toFixed(2)+')"></i>';
       }
       pj.innerHTML = frag;
-      // animacion de caida (por JS: no depende de keyframes externos)
-      [].forEach.call(pj.querySelectorAll('i'), function(el, k){
-        var dur = (9 + Math.random()*11);
-        var dx = (Math.random()*180-90);
+      [].forEach.call(pj.querySelectorAll('i'), function(el){
+        var dur = 9 + Math.random()*11, dx = Math.random()*180-90;
         gsap.fromTo(el, { y: '-10vh', x: 0, rotate: 0, opacity: 0 },
-          { y: '112vh', x: dx, rotate: 540, opacity: 0.5, duration: dur, repeat: -1, ease: 'none', delay: -Math.random()*dur,
-            onUpdate: function(){ if(this.progress() > 0.86) this.targets()[0].style.opacity = (1-this.progress())*3.4; } });
+          { y: '112vh', x: dx, rotate: 540, opacity: 0.5, duration: dur, repeat: -1, ease: 'none',
+            delay: -Math.random()*dur });
       });
     }
-    var fl = document.getElementById('cineFloor');
-    if(fl){
-      gsap.to('#cineFloor', { yPercent: 6, opacity: 0.28, ease:'none',
+    // suelo cinematografico
+    if(document.getElementById('cineFloor')){
+      gsap.to('#cineFloor', { yPercent: 7, opacity: 0.26, ease:'none',
         scrollTrigger:{ trigger: document.body, start:'top top', end:'bottom bottom', scrub: 1.2 } });
     }
-    function bloquesDe(scope){
-      var out = [];
-      [].forEach.call(scope.querySelectorAll('main > section.tab > *'), function(el){
-        if(el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return;
-        if(el.closest('#bday-content')) return;
-        if(!el.offsetParent) return;
-        out.push(el);
+
+    // ★ monta la animacion 3D de UNA seccion (sus bloques de contenido)
+    window.__montarCine = function(sec){
+      if(!sec || sec.dataset && sec.dataset.cineListo) return 0;
+      var hijos = [].filter.call(sec.children, function(el){
+        if(el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return false;
+        if(el.id && /cineFloor|cinePetals/.test(el.id)) return false;
+        if(el.closest && el.closest('#bday-content')) return false;
+        return true;
       });
-      return out;
-    }
-    var bloques = bloquesDe(document);
-    bloques.forEach(function(el, idx){
-      el.classList.add('cine-block');
-      gsap.fromTo(el,
-        { opacity: 0, y: 110, z: -520, rotateX: 14, rotateY: (idx%2 ? 9 : -9), scale: 0.90 },
-        { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 58%', scrub: 0.9 } });
-      gsap.to(el,
-        { opacity: 0.30, y: -70, z: 240, rotateX: -6, scale: 1.03, ease: 'power2.in',
-          scrollTrigger: { trigger: el, start: 'bottom 62%', end: 'bottom 6%', scrub: 1.0 } });
+      hijos.forEach(function(el, idx){
+        el.classList.add('cine-block');
+        // entrada: llega desde el fondo, girada y pequena -> se coloca delante
+        gsap.fromTo(el,
+          { opacity: 0, y: 120, z: -560, rotateX: 16, rotateY: (idx%2 ? 10 : -10), scale: 0.88 },
+          { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 97%', end: 'top 55%', scrub: 0.85 } });
+        // salida: la atravesamos (se acerca y se desvanece)
+        gsap.to(el,
+          { opacity: 0.22, y: -80, z: 300, rotateX: -7, scale: 1.04, ease: 'power2.in',
+            scrollTrigger: { trigger: el, start: 'bottom 60%', end: 'bottom 2%', scrub: 1.0 } });
+      });
+      if(sec.dataset) sec.dataset.cineListo = '1';
+      try{ ScrollTrigger.refresh(); }catch(e){}
+      return hijos.length;
+    };
+
+    var total = 0;
+    document.querySelectorAll('main > section.tab').forEach(function(sec){
+      if(sec.classList.contains('active')) total += window.__montarCine(sec);
     });
+    if(!total){ total += window.__montarCine(document.querySelector('.tab.active')); }
+    window.__CINE = { ok:true, bloques: total };
+
+    // al cambiar de pestana se monta la nueva escena (con un fundido 3D de entrada)
+    var _go = window.goTab;
+    if(typeof _go === 'function'){
+      window.goTab = function(n){
+        var r = _go.apply(this, arguments);
+        var sec = document.getElementById('tab-' + n);
+        if(sec){
+          setTimeout(function(){
+            var m = window.__montarCine(sec);
+            gsap.fromTo(sec, { opacity: 0.25, rotateY: -10, y: 70, z: -430 },
+              { opacity: 1, rotateY: 0, y: 0, z: 0, duration: 0.9, ease: 'power3.out' });
+            try{ ScrollTrigger.refresh(); }catch(e){}
+            window.__CINE.bloques = (window.__CINE.bloques||0) + m;
+          }, 70);
+        }
+        return r;
+      };
+    }
     addEventListener('load', function(){ setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 400); });
-    setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 1500);
-    window.__CINE = { ok:true, bloques: bloques.length };
+    setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 1600);
   })();
 
   // ★ Red de seguridad (revelado garantizado, no depende de transiciones ni observers):
