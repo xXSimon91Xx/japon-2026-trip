@@ -352,6 +352,12 @@ h2.big em{font-style:normal; color:var(--neon)}
 #hero .big{text-shadow:0 8px 40px rgba(0,0,0,.55)}
 /* un velo un poco más marcado para que el texto siempre gane al fondo 3D */
 [data-tema="noche"] #velo{background:linear-gradient(180deg, rgba(11,14,20,.10) 0%, rgba(11,14,20,.42) 55%, rgba(11,14,20,.80) 100%)}
+
+/* ══ v8.2 — una sola ficha: la fila compacta desaparece cuando entra la grande ══ */
+#hero .metricas, #hero .stats, #hero .datos{transition:opacity .45s ease}
+body.cine-ficha #hero .metricas,
+body.cine-ficha #hero .stats,
+body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
 </style>
 </head>
 <body>
@@ -544,6 +550,11 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
    ══════════════════════════════════════════════════════════════ */
 const canvasHost = document.getElementById('bg3d');
 const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+// ★★ v8.2 — SOMBRAS: sin esto los objetos no tienen volumen ni contacto con el suelo
+try{
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+}catch(e){}
 renderer.setPixelRatio(Math.min(devicePixelRatio||1, 1.6));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -606,8 +617,7 @@ function kanji(txt, color){
 }
 const ambiente = [];
 // linternas a los lados de la "avenida"
-[[-4.4,0.5,1.0,0xff3b5c],[-3.6,2.8,-3,0xf5c518],[4.6,2.6,-1.5,0xff6b86],[3.9,-0.7,-4,0x3ddcff],
- [-4.8,1.9,-8,0x7c5cff],[4.4,1.4,-7,0xf5c518],[-5.4,-0.4,-5,0xff6b86],[5.2,3.0,-6,0x3ddcff]].forEach(p=>{
+[[-4.6,2.6,-3,0xf5c518],[4.8,2.4,-2,0xff6b86],[-5.0,0.4,-6,0x3ddcff],[5.0,1.2,-6.5,0x7c5cff]].forEach(p=>{
   const l = linterna(p[0],p[1],p[2],p[3]); grupoAmbiente.add(l); ambiente.push(l);
 });
 // kanjis flotantes (japonés real: 日本 = Japón)
@@ -1049,13 +1059,18 @@ const CineShader = {
       float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
       col = mix(vec3(lum), col, uSat);
 
-      // ── viñeta ──
-      float vig = smoothstep(0.92, 0.28, d * uVignette);
-      col *= mix(0.48, 1.0, vig);
+      // ── viñeta elíptica (más ancha que alta), como una lente real ──
+      vec2 vc = vec2(centro.x * 1.06, centro.y * 0.92);
+      float dv = length(vc);
+      float vig = smoothstep(0.86, 0.20, dv * uVignette);
+      col *= mix(0.34, 1.0, vig);
 
-      // ── grano fílmico animado ──
-      float gr = ruido(uv * 900.0 + fract(uTime) * 91.7) - 0.5;
-      col += gr * uGrano;
+      // ── grano fílmico modulado por luminancia (más en medios/sombras, casi nada en luces)
+      float lumG = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      float pesoGrano = uGrano * (1.0 - smoothstep(0.55, 1.0, lumG)) * (0.55 + 0.45 * (1.0 - abs(lumG - 0.35) * 1.6));
+      float gr = ruido(uv * 950.0 + fract(uTime * 1.7) * 137.3) - 0.5;
+      float gr2 = ruido(uv * 2100.0 + fract(uTime * 2.3) * 71.1) - 0.5;
+      col += (gr * 0.72 + gr2 * 0.28) * max(0.0, pesoGrano);
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -1861,7 +1876,7 @@ try{
         '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
-  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.9;
+  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.9; sueloMesh.receiveShadow = true;
   esc.add(sueloMesh);
   const grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
   grid.position.y = -1.88; grid.material.transparent = true; grid.material.opacity = 0.62;
@@ -2046,7 +2061,7 @@ try{
             '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
-      plano.rotation.x = -Math.PI/2; plano.position.y = -1.9;
+      plano.rotation.x = -Math.PI/2; plano.position.y = -1.9; plano.receiveShadow = true;
       esc.add(plano);
       var grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
       grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.62;
@@ -2098,6 +2113,7 @@ try{
           // lo descarta por frustum culling (visible=true pero no se dibuja). Se desactiva
           // el culling para estos 6 objetos y se recalculan sus esferas.
           o.frustumCulled = false;
+          o.traverse(function(mm){ if (mm.isMesh){ mm.castShadow = true; mm.receiveShadow = true; } });
           o.traverse(function(hijo){
             if (hijo.isMesh && hijo.geometry){
               try{ hijo.geometry.computeBoundingSphere(); hijo.geometry.computeBoundingBox(); }catch(e){}
@@ -2158,12 +2174,20 @@ try{
         if (bp) bp.textContent = Math.round(p * 100);
       }
       var barra = el('cineBarra');
+      var barra = el('cineBarra');
       if (barra){
         barra.classList.add('on');
         barra.style.width = (p * 100).toFixed(1) + '%';
       }
+      // ★ la barra de progreso de la PÁGINA también sigue el cine mientras dura el pin,
+      //   así los dos indicadores nunca dicen cosas distintas (era 25% vs 50%)
+      try{
+        var pgbar = document.getElementById('progress') || document.querySelector('.progress, #progreso');
+        if (pgbar) pgbar.style.width = (p * 100).toFixed(1) + '%';
+      }catch(e){}
       var ficha = el('cineFicha');
       if (ficha) ficha.classList.toggle('on', p > 0.42);
+      document.body.classList.toggle('cine-ficha', p > 0.42);   // ← oculta la fila duplicada
     },
     onLeave: function(){
       window.__cineP = undefined;
