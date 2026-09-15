@@ -65,7 +65,7 @@ main{ perspective: 1900px; perspective-origin: 50% 42%; }
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
 }
 #cinePetals{ position: fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden }
-#cinePetals i{ position:absolute; display:block; width:9px; height:9px; border-radius:60% 40% 55% 45%;
+#cinePetals i{ position:absolute; display:block; width:13px; height:10px; border-radius:70% 8% 70% 8%;
   background: linear-gradient(135deg,#ff6b86,#ff3b5c 55%,#f5c518); opacity:.5; }
 html.no-motion #cineFloor, html.no-motion #cinePetals{ display:none }
 html.no-motion .cine-block{ transform:none !important; opacity:1 !important }
@@ -1303,10 +1303,10 @@ initChart();
         gsap.fromTo(el,
           { opacity: 0, y: 90, z: -520, rotateX: 15, rotateY: (idx%2 ? 10 : -10), scale: 0.9 },
           { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 101%', end: 'top 76%', scrub: 0.7 } });
+            scrollTrigger: { trigger: el, start: 'top 100%', end: 'top 88%', scrub: 0.45 } });
         // salida SUTIL: se acerca un poco (profundidad) pero SIN perder legibilidad
         gsap.to(el,
-          { opacity: 0.88, y: -18, z: 90, rotateX: -3, scale: 1.012, ease: 'power2.in',
+          { opacity: 0.94, y: -12, z: 60, rotateX: -2, scale: 1.008, ease: 'power2.in',
             scrollTrigger: { trigger: el, start: 'bottom 74%', end: 'bottom 40%', scrub: 0.8 } });
       });
       if(sec.dataset) sec.dataset.cineListo = '1';
