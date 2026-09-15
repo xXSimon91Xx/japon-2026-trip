@@ -386,6 +386,77 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
 #hero .avionInfo, #avionInfo{opacity:.85}
 /* el brillo del titular, más contenido */
 #hero .big em{text-shadow:0 0 26px rgba(255,59,92,.42)}
+
+/* ══════════════════════════════════════════════════════════════════════
+   v9.0 — SECCIÓN CINEMATOGRÁFICA
+   Pantalla completa SOLO para el 3D. Sin nav, sin métricas, sin botones.
+   Es el "hero de museo" de los shorts: el objeto es el protagonista.
+   ══════════════════════════════════════════════════════════════════════ */
+#cine{
+  position:relative; min-height:100vh; display:flex;
+  align-items:center; justify-content:center;
+  background:transparent; overflow:hidden;
+}
+/* durante esta sección, fuera la interfaz: solo el objeto */
+body.cine-puro #navlinks,
+body.cine-puro #btnTema,
+body.cine-puro .logo,
+body.cine-puro #velo,
+body.cine-puro #progreso,
+body.cine-puro #cineProg,
+body.cine-puro #cineFicha,
+body.cine-puro #cineBarra{opacity:0 !important; pointer-events:none !important; transition:opacity .5s ease}
+body.cine-puro .nav{background:transparent !important; border-color:transparent !important; backdrop-filter:none !important}
+body.cine-puro #bg3d{background:#000}
+
+/* el texto de la sección: mínimo y elegante, como una ficha de museo */
+#cineTexto{
+  position:relative; z-index:4; text-align:center; max-width:820px;
+  padding:0 26px; pointer-events:none;
+}
+#cineTexto .eye{
+  font:700 10.5px/1 ui-monospace,monospace; letter-spacing:.34em;
+  text-transform:uppercase; color:var(--neon); opacity:0;
+  transition:opacity .6s ease, transform .6s ease; transform:translateY(14px);
+}
+#cineTexto h2{
+  margin:16px 0 0; font:800 clamp(40px,7.6vw,118px)/.94 ui-sans-serif,system-ui;
+  letter-spacing:-.035em; color:#fff; opacity:0;
+  transition:opacity .7s ease, transform .7s ease; transform:translateY(20px);
+  text-shadow:0 10px 60px rgba(0,0,0,.75);
+}
+#cineTexto h2 em{font-style:normal; color:var(--neon)}
+#cineTexto .sub{
+  margin:18px auto 0; max-width:560px; font:500 clamp(14px,1.5vw,17px)/1.65 ui-sans-serif,system-ui;
+  color:#aab5c8; opacity:0; transition:opacity .7s ease .1s, transform .7s ease .1s;
+  transform:translateY(16px);
+}
+#cineTexto .ficha{
+  display:flex; gap:30px; justify-content:center; flex-wrap:wrap;
+  margin-top:34px; opacity:0; transition:opacity .7s ease .2s;
+}
+#cineTexto .ficha div{min-width:92px}
+#cineTexto .ficha b{display:block; font:800 clamp(20px,2.6vw,38px)/1 ui-sans-serif,system-ui; color:#fff}
+#cineTexto .ficha span{
+  display:block; margin-top:6px; font:600 9.5px/1.4 ui-monospace,monospace;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--neon);
+}
+/* estados que activa el scroll */
+#cine.f0 .eye, #cine.f1 .eye, #cine.f2 .eye, #cine.f3 .eye{opacity:1; transform:none}
+#cine.f1 h2, #cine.f2 h2, #cine.f3 h2{opacity:1; transform:none}
+#cine.f2 .sub, #cine.f3 .sub{opacity:1; transform:none}
+#cine.f3 .ficha{opacity:1}
+/* indicador de scroll propio de la sección */
+#cineHint{
+  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+  z-index:4; font:600 10px/1 ui-monospace,monospace; letter-spacing:.3em;
+  text-transform:uppercase; color:#5d6a80; opacity:0; transition:opacity .6s ease;
+}
+#cine.f0 #cineHint{opacity:1}
+@media (max-width:640px){
+  #cineTexto .ficha{gap:18px}
+  #cineTexto .ficha div{min-width:74px}
+}
 </style>
 </head>
 <body>
@@ -448,6 +519,24 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
 </section>
 
 <!-- ══════════════ RUTA 21 DÍAS ══════════════ -->
+<section id="cine">
+  <!-- ══════════════════════════════════════════════════════════════
+       v9.0 — SECCIÓN CINEMATOGRÁFICA (el objeto es el protagonista)
+       ══════════════════════════════════════════════════════════════ -->
+  <div id="cineHint">Sigue bajando</div>
+  <div id="cineTexto">
+    <div class="eye">Nara · Tōdai-ji</div>
+    <h2>El <em>Gran Buda</em><br>de bronce</h2>
+    <p class="sub">15 metros de altura y 500 toneladas, dentro del mayor edificio de madera del mundo. Lleva ahí desde el año 752.</p>
+    <div class="ficha">
+      <div><b>15 m</b><span>Altura</span></div>
+      <div><b>500 t</b><span>Peso</span></div>
+      <div><b>752</b><span>Año</span></div>
+      <div><b>Día 6</b><span>Del viaje</span></div>
+    </div>
+  </div>
+</section>
+
 <section id="ruta">
   <div class="wrap">
     <div class="eye">Día a día</div>
@@ -607,6 +696,21 @@ const __rimA = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5
 const __rimB = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7); escena.add(__rimB);
 const __rimC = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3); escena.add(__rimC);
 window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};
+
+// ★★ v9.1 — ANILLO DE LUZ de la sección cinematográfica (el del short del museo)
+const anilloCine = new THREE.Mesh(
+  new THREE.TorusGeometry(2.15, 0.035, 16, 160),
+  new THREE.MeshBasicMaterial({color:0xfff2e6, transparent:true, opacity:0})
+);
+anilloCine.position.set(0, 0.45, -2.6);
+escena.add(anilloCine);
+const anilloGlow = new THREE.Mesh(
+  new THREE.TorusGeometry(2.15, 0.16, 16, 160),
+  new THREE.MeshBasicMaterial({color:0xffd9b0, transparent:true, opacity:0, blending:THREE.AdditiveBlending, depthWrite:false})
+);
+anilloGlow.position.copy(anilloCine.position);
+escena.add(anilloGlow);
+window.__anilloCine = {aro:anilloCine, glow:anilloGlow};
 ;
 const key = new THREE.DirectionalLight(0xfff0de, 1.5); key.position.set(5, 9, 6); escena.add(key);
 const ne = new THREE.PointLight(0xff3b5c, 3.2, 34); ne.position.set(-6, 2.4, -3); escena.add(ne);
@@ -915,19 +1019,63 @@ function loop(now){
     console.log('[v8.3] sombras activadas en', __hechas, 'luces + todos los meshes');
   }
   if (cinePass) cinePass.uniforms.uTime.value = estado.t;
+  // ★★ v9.1 — SECCIÓN CINEMATOGRÁFICA: aquí el objeto es el protagonista
+  if (window.__cine2P !== undefined){
+    const p = window.__cine2P;
+    const suave = p*p*(3-2*p);                       // smoothstep
+
+    // el Gran Buda al centro y grande
+    if (window.__galeria3d && window.__galeria3d.modelos){
+      const buda = window.__galeria3d.modelos.filter(function(m){ return /buda/i.test(m.nombre); })[0];
+      window.__galeria3d.modelos.forEach(function(m){
+        const esBuda = (m === buda);
+        const o = m.nodo;
+        if (!o) return;
+        o.visible = esBuda;                          // solo el buda durante esta sección
+        if (esBuda){
+          if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = o.scale.x; }
+          o.position.lerp(new THREE.Vector3(0, -0.05, -0.4), 0.08);
+          o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
+          o.rotation.y = estado.t * 0.16;
+        } else if (m.cineGuardado){
+          o.position.copy(m.cineGuardado);
+          o.scale.setScalar(m.cineEscala);
+          m.cineGuardado = null;
+        }
+      });
+    }
+
+    // dolly-in de la cámara hacia el buda
+    cam.position.set(0, 0.75 + suave*0.35, 8.6 - suave*5.0);
+    cam.lookAt(0, 0.35 + suave*0.25, -1.0);
+
+    // el anillo aparece al principio y se desvanece al acercarse
+    if (window.__anilloCine){
+      const entrada = Math.min(1, p*4), salida = 1 - Math.max(0, (p-0.55)/0.45);
+      const op = entrada * salida;
+      window.__anilloCine.aro.material.opacity = op * 0.95;
+      window.__anilloCine.glow.material.opacity = op * 0.30;
+      const esc = 1 + p*0.55;
+      window.__anilloCine.aro.scale.setScalar(esc);
+      window.__anilloCine.glow.scale.setScalar(esc);
+    }
+  } else if (window.__anilloCine && window.__anilloCine.aro.material.opacity !== 0){
+    window.__anilloCine.aro.material.opacity = 0;
+    window.__anilloCine.glow.material.opacity = 0;
+  }
+  if (window.__cineP !== undefined && estado.seccion === 'hero'){
   // ★ v8.0 — el scroll dirige la escena del hero (pin + scrub)
   if (window.__cineP !== undefined && estado.seccion === 'hero'){
     const p = window.__cineP;
-    // dolly-in + pequeño giro: la cámara se acerca a la escena mientras bajas
     cam.position.z = 10.6 - p * 5.4;
     cam.position.y = 1.8 + Math.sin(p * Math.PI) * 0.85;
     cam.position.x = Math.sin(p * Math.PI * 1.4) * 0.7;
     cam.lookAt(0, 1.35 + p * 0.35, -4.0 - p * 3.0);
-    // los modelos se abren hacia fuera conforme avanza
     if (window.__galeria3d && window.__galeria3d.modelos){
       window.__galeria3d.modelos.forEach(function(m, i){
         if (!m.nodo || m.offsetBase === undefined) return;
         m.nodo.position.z = m.offsetBase + p * 1.6;
+        m.nodo.visible = true;
       });
     }
   }
@@ -2259,5 +2407,57 @@ try{
 })();
 </script>
 <div id="cineProg" aria-hidden="true"><b>0</b>% RECORRIDO</div>
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   v9.2 — SCROLLTRIGGER de la sección cinematográfica.
+   Patrón de los sitios de referencia:
+       trigger + start 'top top' + end '+=2600' + pin:true + scrub:1
+   El scroll es el director: dolly-in, rotación y revelado del texto.
+   Mientras dura, body.cine-puro oculta TODA la interfaz (solo el objeto).
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    console.warn('[v9.2] GSAP o ScrollTrigger no disponibles');
+    return;
+  }
+  var sec = document.getElementById('cine');
+  if (!sec){ console.warn('[v9.2] no hay #cine'); return; }
+
+  function fase(p){
+    var f = p < 0.10 ? 'f0' : (p < 0.38 ? 'f1' : (p < 0.68 ? 'f2' : 'f3'));
+    if (sec.dataset.fase !== f){ sec.dataset.fase = f; sec.className = f; }
+  }
+
+  ScrollTrigger.create({
+    trigger: sec,
+    start: 'top top',
+    end: '+=2600',
+    pin: true,
+    pinSpacing: true,
+    scrub: 1,
+    anticipatePin: 1,
+    onUpdate: function(self){
+      window.__cine2P = self.progress;
+      fase(self.progress);
+      document.body.classList.add('cine-puro');
+    },
+    onLeave: function(){
+      window.__cine2P = undefined;
+      document.body.classList.remove('cine-puro');
+      sec.className = 'f3';
+    },
+    onLeaveBack: function(){
+      window.__cine2P = undefined;
+      document.body.classList.remove('cine-puro');
+      sec.className = 'f0';
+    },
+    onEnterBack: function(){
+      window.__cine2P = 0;
+      document.body.classList.add('cine-puro');
+    }
+  });
+  console.log('[v9.2] seccion cinematografica lista (2600px)');
+})();
+</script>
 </body>
 </html>
