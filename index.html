@@ -417,6 +417,16 @@ body.cine-puro #bg3d{background:#000}
   position:relative; z-index:4; text-align:center; max-width:820px;
   padding:0 26px; pointer-events:none;
 }
+/* ★ v17.0 — en DÍA el velo claro lavaba el fondo y el texto blanco quedaba
+   ilegible (medido en píxeles: h2 2.63:1, .sub 1.04:1, .ficha 1.75:1).
+   Se pone un scrim oscuro detrás del bloque SOLO en modo día. */
+[data-tema="dia"] #cineTexto{
+  background:radial-gradient(120% 130% at 50% 55%, rgba(6,8,14,.86) 0%, rgba(6,8,14,.72) 55%, rgba(6,8,14,0) 100%);
+  border-radius:20px;
+}
+[data-tema="dia"] #cineTexto h2{color:#fff; text-shadow:0 2px 22px rgba(0,0,0,.9)}
+[data-tema="dia"] #cineTexto .sub{color:#d7dfec}
+[data-tema="dia"] #cineTexto .ficha b{color:#fff}
 #cineTexto .eye{
   font:700 10.5px/1 ui-monospace,monospace; letter-spacing:.34em;
   text-transform:uppercase; color:var(--neon); opacity:0;
@@ -485,6 +495,49 @@ body.cine-puro #bg3d{background:#000}
 [data-tema="dia"] section .eye span{ color:#b3123a !important }
 [data-tema="dia"] #comida .poi .precio::before,
 [data-tema="dia"] #fiesta .poi .precio::before{ opacity:.9 }
+
+/* ★ v17.0 — red de seguridad: con reduced-motion NADA puede quedarse invisible.
+   Los reveals son de GSAP (inline styles), así que si por lo que sea no se
+   limpian, esta regla los devuelve a la vida. */
+@media (prefers-reduced-motion: reduce){
+  #rutaLista .dia, .poi, .panel, .vid, .grupo, h2.big{
+    opacity:1 !important; transform:none !important; filter:none !important;
+  }
+  *{scroll-behavior:auto !important}
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ★ v17.1 — ÁREAS TÁCTILES (auditoría móvil: 156/161 interactivos por
+   debajo de 44x44 px, el mínimo de WCAG 2.5.5). Se agrandan SIN cambiar
+   el aspecto: en puntero táctil se sube el padding y el alto mínimo.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (pointer: coarse), (max-width: 820px){
+  #navlinks a{ min-height:44px; display:inline-flex; align-items:center; padding:10px 14px }
+  #btnTema{ min-width:44px; min-height:44px }
+  .leaflet-control-zoom-in, .leaflet-control-zoom-out{
+    width:44px !important; height:44px !important; line-height:44px !important; font-size:22px !important;
+  }
+  a.gmap{ min-height:44px; min-width:44px; display:inline-flex; align-items:center; justify-content:center }
+  .chk{ min-height:44px; display:flex; align-items:center }
+  .chk input[type=checkbox]{ width:22px; height:22px; flex:0 0 auto }
+  #navlinks{ -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity }
+  #navlinks a{ scroll-snap-align:center }
+}
+/* en táctil el nav largo necesita una pista de que se desliza */
+@media (max-width: 820px){
+  #navlinks{
+    mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 26px), transparent 100%);
+    -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 26px), transparent 100%);
+  }
+}
+
+/* ★ v17.1 — 95 nodos por debajo de 12px eran ilegibles en móvil.
+   Se sube el suelo de las etiquetas más pequeñas en pantallas táctiles. */
+@media (pointer: coarse), (max-width: 820px){
+  .stat b + span, .stats span, .hint, .scrollcue, #cineTexto .ficha span,
+  .city, .badge, .bl span, .eye, .kicker{ font-size:max(11.5px, .78rem) !important }
+  #cineTexto .ficha span{ font-size:11.5px !important }
+}
 </style>
 </head>
 <body>
@@ -665,7 +718,7 @@ body.cine-puro #bg3d{background:#000}
         <input type="password" id="passCumple" placeholder="Contraseña" aria-label="Contraseña de la zona privada" autocomplete="off">
         <button class="cta" id="btnCumple" style="padding:13px 24px">Abrir 🎁</button>
       </div>
-      <div id="cumpleError" class="err"></div>
+      <div id="cumpleError" class="err" role="alert" aria-live="polite"></div>
     </div>
     <div id="cumpleAbierto" class="oculto">
       <div class="regalo">
@@ -1687,7 +1740,14 @@ document.querySelectorAll('#navlinks a').forEach(function(a){
 });
 // el botón del hero
 var __cta = document.getElementById('ctaBajar');
-if (__cta) __cta.addEventListener('click', function(ev){ ev.preventDefault(); irA('#ruta'); });
+if (__cta){
+  __cta.addEventListener('click', function(ev){ ev.preventDefault(); irA('#ruta'); });
+  // ★ v17.1 — medido: Enter no activaba el CTA (Espacio y clic sí). Se añade
+  //   un handler explícito para que el camino de teclado principal funcione.
+  __cta.addEventListener('keydown', function(ev){
+    if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); irA('#ruta'); }
+  });
+}
 var __cta2 = document.getElementById('ctaMapa');
 if (__cta2) __cta2.addEventListener('click', function(ev){ ev.preventDefault(); irA('#mapa'); });
 
@@ -1738,7 +1798,9 @@ const CIUDAD_Q = {
 /* ── 2) MAPA (Leaflet) + POIs ── */
 (function(){
   const el = $('#mapaCaja'); if(!el || typeof L==='undefined') return;
-  const mapa = L.map('mapaCaja', {scrollWheelZoom:false, attributionControl:true}).setView([35.2,136.0], 6);
+  // ★ v17.0 — el zoom no funcionaba por ninguna vía (medido: 6->6 con teclas,
+  //   botones y clic; scrollWheelZoom:false dejaba al usuario sin ningún zoom).
+  const mapa = L.map('mapaCaja', {scrollWheelZoom:true, zoomControl:true, attributionControl:true}).setView([35.2,136.0], 6);
   window.__mapa = mapa;
   const sat = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
     maxZoom:19, subdomains:['mt0','mt1','mt2','mt3'], referrerPolicy:'no-referrer', attribution:'Google'
@@ -1866,6 +1928,17 @@ const CIUDAD_Q = {
 (function(){
   const det = $('#budgetDetalle'), cv = $('#graficoBudget');
   if (!det || typeof BUDGET==='undefined') return;
+  // ★ v17.0 — color de leyenda legible sobre el fondo real del panel
+  function colorLeyenda(){
+    try{
+      var p = cv.closest('.panel') || document.body;
+      var bg = getComputedStyle(p).backgroundColor || 'rgb(255,255,255)';
+      var m = bg.match(/[\d.]+/g);
+      if (!m || m.length < 3) return '#c8d2e0';
+      var lum = (0.299*(+m[0]) + 0.587*(+m[1]) + 0.114*(+m[2]))/255;
+      return lum > 0.5 ? '#38445c' : '#c8d2e0';   // oscuro sobre claro, claro sobre oscuro
+    }catch(e){ return '#c8d2e0'; }
+  }
   const total = BUDGET.reduce((s,b)=>s+b[1],0);
   det.innerHTML = `<div style="font-size:13px;letter-spacing:.2em;color:var(--muted);font-weight:900;margin-bottom:14px">DESGLOSE POR PERSONA</div>` +
     BUDGET.map(b => `<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
@@ -1877,8 +1950,26 @@ const CIUDAD_Q = {
     new Chart(cv, {
       type:'doughnut',
       data:{labels:BUDGET.map(b=>b[0]), datasets:[{data:BUDGET.map(b=>b[1]), backgroundColor:BUDGET.map(b=>b[2]), borderWidth:0, hoverOffset:10}]},
-      options:{plugins:{legend:{labels:{color:css.getPropertyValue('--txt').trim()||'#eef1f7'}}}, cutout:'62%', responsive:true, animation:{duration:900}}
+      // ★ v17.0 — la leyenda usaba un color fijo y era INVISIBLE de noche
+      //   (medido 1.01:1: #101521 sobre panel #11141D). El color se calcula de la
+      //   luminancia real del panel y se actualiza al cambiar de tema.
+      options:{plugins:{legend:{labels:{color:colorLeyenda()}}}, cutout:'62%', responsive:true, animation:{duration:900}}
     });
+    // guardar la referencia y re-colorear cuando cambie el tema
+    try{
+      var graf = Chart.getChart ? Chart.getChart(cv) : null;
+      if (graf){
+        var pintaLeyenda = function(){
+          var c = colorLeyenda();
+          graf.options.plugins.legend.labels.color = c;
+          graf.update('none');
+        };
+        window.__pintaLeyenda = pintaLeyenda;
+        // observar el atributo data-tema de <html>
+        new MutationObserver(pintaLeyenda).observe(document.documentElement, {attributes:true, attributeFilter:['data-tema']});
+        pintaLeyenda();
+      }
+    }catch(e){}
   }
 })();
 
@@ -1952,8 +2043,20 @@ const CIUDAD_Q = {
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
 
+  // ★ v17.0 — con prefers-reduced-motion NO se montan reveals.
+  //   Medido: eran gsap.fromTo con scrub, así que quien pide menos movimiento
+  //   se quedaba con 151 nodos en opacity 0 (los 10 h2 vacíos) y el scroll no
+  //   los revelaba. Sin movimiento = todo visible y estático.
+  var REDUCIDO = false;
+  try{ REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  if (REDUCIDO){
+    gsap.set('#rutaLista .dia, .poi, .panel, .vid, .grupo, h2.big', {clearProps:'all'});
+    document.documentElement.classList.add('sin-motion');
+    console.log('[v17.0] prefers-reduced-motion: reveals desactivados, todo visible');
+  }
+
   // Las tarjetas de la ruta y los POIs entran en 3D desde el fondo
-  gsap.utils.toArray('#rutaLista .dia, .poi, .panel, .vid, .grupo').forEach((el, i) => {
+  if (!REDUCIDO) gsap.utils.toArray('#rutaLista .dia, .poi, .panel, .vid, .grupo').forEach((el, i) => {
     gsap.fromTo(el,
       {opacity:0, y:70, z:-460, rotateX:12, rotateY:(i%2?6:-6), scale:0.94},
       {opacity:1, y:0, z:0, rotateX:0, rotateY:0, scale:1, ease:'power3.out',
@@ -1961,7 +2064,7 @@ const CIUDAD_Q = {
   });
 
   // Títulos grandes con entrada propia
-  gsap.utils.toArray('h2.big').forEach(h => {
+  if (!REDUCIDO) gsap.utils.toArray('h2.big').forEach(h => {
     gsap.fromTo(h, {opacity:0, y:56, z:-320, rotateX:16}, {opacity:1, y:0, z:0, rotateX:0, ease:'power3.out',
       scrollTrigger:{trigger:h, start:'top 100%', end:'top 74%', scrub:0.55}});
   });
