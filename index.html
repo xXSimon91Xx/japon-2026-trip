@@ -1201,14 +1201,18 @@ initChart();
     });
     _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
   }
-  // ★ Red de seguridad: si algo falla, a los 3s se revela todo lo que siga oculto.
-  setTimeout(function(){ _revealAhora(document); }, 3000);
-  // ★ Y otra a los 8s por si el usuario interactua tarde
-  setTimeout(function(){
-    document.querySelectorAll('.card:not(.in), .slide:not(.in), .slot:not(.in)').forEach(function(el){
-      if(el.offsetParent && getComputedStyle(el).opacity === '0'){ el.classList.add('in'); seen.add(el); }
+  // ★ Red de seguridad (revelado garantizado, no depende de transiciones ni observers):
+  function _blindaje(){
+    document.querySelectorAll('.card, .slide, .slot, .sec-title').forEach(function(el){
+      el.classList.add('in'); seen.add(el);
+      // si aun asi el navegador no pinta (transiciones pausadas/desactivadas), se fuerza inline
+      if(el.offsetParent && parseFloat(getComputedStyle(el).opacity) < 0.05){
+        el.style.opacity = '1'; el.style.transform = 'none';
+      }
     });
-  }, 8000);
+  }
+  setTimeout(_blindaje, 3000);
+  setTimeout(_blindaje, 8000);
 
   // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
   function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
