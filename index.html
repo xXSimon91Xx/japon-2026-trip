@@ -14,7 +14,9 @@
 .card .glare,.slide .glare,.slot .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;z-index:3}
 .card.tilting .glare,.slide.tilting .glare,.slot.tilting .glare{opacity:1}
 .card.tilting,.slide.tilting,.slot.tilting{box-shadow:0 22px 45px -18px rgba(0,0,0,.75),0 0 0 1px var(--accent-soft,rgba(255,59,92,.22));z-index:4}
-.card img.tf{backface-visibility:hidden}
+.card img.tf,.slide img.tf{backface-visibility:hidden;transition:transform .35s cubic-bezier(.22,.61,.36,1)}
+.card.tilting img.tf,.slide.tilting img.tf{transform:translate(calc(var(--mx,0) * -11px), calc(var(--my,0) * -11px)) scale(1.07)}
+.card.tilting h3,.slide.tilting h3{transform:translate(calc(var(--mx,0) * -4px), calc(var(--my,0) * -4px))}
 @media (prefers-reduced-motion: reduce){.card,.slide,.slot{transition:none!important}}
 .no-tilt .card,.no-tilt .slide,.no-tilt .slot{transform:none!important}
 
@@ -1093,7 +1095,7 @@ initChart();
   // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
   var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
   if(hoverOK){
-    var MAXD = 8, cur = null, raf = 0, lastEv = null;
+    var MAXD = 11, cur = null, raf = 0, lastEv = null;
     function glareOf(el){
       var g = el.querySelector(':scope > .glare');
       if(!g){ g = document.createElement('div'); g.className = 'glare'; el.appendChild(g); }
@@ -1103,6 +1105,7 @@ initChart();
       if(!el) return;
       el.classList.remove('tilting');
       el.style.transform = '';
+      el.style.removeProperty('--mx'); el.style.removeProperty('--my');
       var g = el.querySelector(':scope > .glare'); if(g) g.style.opacity = 0;
     }
     function apply(){
@@ -1112,7 +1115,9 @@ initChart();
       var px = (lastEv.clientX - r.left) / r.width - .5;
       var py = (lastEv.clientY - r.top) / r.height - .5;
       px = Math.max(-.5, Math.min(.5, px)); py = Math.max(-.5, Math.min(.5, py));
-      cur.style.transform = 'perspective(1000px) rotateY(' + (px * MAXD * 2).toFixed(2) + 'deg) rotateX(' + (-py * MAXD * 2).toFixed(2) + 'deg) translateZ(14px) scale(1.015)';
+      cur.style.transform = 'perspective(1000px) rotateY(' + (px * MAXD * 2).toFixed(2) + 'deg) rotateX(' + (-py * MAXD * 2).toFixed(2) + 'deg) translateZ(22px) scale(1.02)';
+      cur.style.setProperty('--mx', px.toFixed(3));
+      cur.style.setProperty('--my', py.toFixed(3));
       var g = glareOf(cur);
       g.style.opacity = 1;
       g.style.background = 'radial-gradient(340px circle at ' + ((px + .5) * 100).toFixed(1) + '% ' + ((py + .5) * 100).toFixed(1) + '%, rgba(255,255,255,.17), rgba(255,255,255,.05) 40%, transparent 62%)';
