@@ -98,7 +98,7 @@ html.no-motion .card.in{opacity:1!important;transform:none!important}
 }
 [data-theme="light"]{
   --bg:#f2f5fa; --bg2:#ffffff; --card:#ffffff; --card2:#f7f9fd;
-  --text:#131a28; --muted:#5c6779; --accent:#e0264b; --accent2:#d98a00;
+  --text:#131a28; --muted:#5c6779; --accent:#c8123c; --accent2:#a86600;
   --gold:#c99a00; --border:#dde4f0; --shadow:0 10px 30px rgba(20,30,60,.12);
   --nav-bg:rgba(242,245,250,.9);
 }
@@ -346,6 +346,16 @@ html,body{overflow-x:clip}
 .train-note b{color:var(--text)}
 .train-note br{display:none}
 .train-note{line-height:1.75}
+
+/* ═══ ACCESIBILIDAD: foco visible (teclado) ═══ */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+label:focus-within, [tabindex]:focus-visible, .card:focus-visible, .slide:focus-visible{
+  outline: 3px solid var(--accent) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0 }
 </style>
 <script>
 (function(){try{var t=localStorage.getItem('japon-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}})();
@@ -385,7 +395,8 @@ html,body{overflow-x:clip}
   </div>
   <div class="hero-scroll"><span>baja</span><i></i></div>
 </section>
-<main>
+<a href="#contenido" class="sr-only">Saltar al contenido principal</a>
+<main id="contenido">
 
 <!-- ================= TAB TRAILER ================= -->
 <section id="tab-trailer" class="tab tab-trailer active">
@@ -443,7 +454,7 @@ html,body{overflow-x:clip}
     <p>2 casas (Osaka · Tokio) + 17 puntos de interés extra con su distancia desde la base más cercana. Los 32 spots de la ruta llevan su 📍 en cada tarjeta de día.</p>
   </div>
   <div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H</b> casas (Osaka · Tokio)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· pines de cerca a lejos · toca un pin para ver distancia y ruta</span></div>
-<div id="map"></div>
+<div id="map" role="region" aria-label="Mapa del viaje con 19 paradas"></div>
 <div class="map-bar" id="capasBar"><button class="mbtn active" data-base="sat">🛰️ Satélite</button><button class="mbtn" data-base="map">🗺️ Mapa</button></div>
 <div class="map-bar" id="areaBar"><button class="mbtn active" data-area="all">🗾 Todos los pines</button><button class="mbtn" data-area="osaka">🏠 Osaka</button><button class="mbtn" data-area="kioto">⛩️ Kioto</button><button class="mbtn" data-area="nara">🦌 Nara</button><button class="mbtn" data-area="tokio">🗼 Tokio</button></div>
 <p class="map-note">🏠 <b>Base Osaka</b>: Shimanouchi 1-13-19 (10-22 dic) · <b>Base Tokio</b>: Okubo 1-39 (22-30 dic). Los pines extra son sitios que no están en el plan y su distancia se mide desde la casa más cercana. Los 21 días de ruta llevan su 📍 en cada tarjeta con el botón "Cómo llegar" a Google Maps.</p>
