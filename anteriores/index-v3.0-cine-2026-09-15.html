@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0e14">
+<meta property="og:title" content="JAPÓN 2026 — La Misión de los 6">
+<meta property="og:description" content="Ruta de 21 días: Osaka · Kioto · Nara · Tokio. Mapa, comida, presupuesto y checklist.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/web/d921d6cf95.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ff3b5c'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white'>⛩</text></svg>">
+<title>JAPÓN 2026 — La Misión de los 6</title>
+<meta name="description" content="Viaje de 21 días a Japón: Osaka · Kioto · Nara · Tokyo. 6 héroes, un país, una misión. 12 - 30 dic 2026.">
+<style>
+/* ═══ HERO 3D (v2.0) — portada cinematografica con Three.js ═══ */
+#hero3d{position:relative;height:100vh;min-height:560px;overflow:hidden;background:#05060c}
+#hero3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#hero3d .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;pointer-events:none;z-index:2;padding:20px;transform:translateY(-4vh);
+  background:radial-gradient(ellipse 80% 66% at 50% 46%, rgba(5,6,12,.93) 0%, rgba(5,6,12,.72) 42%, rgba(5,6,12,0) 80%)}
+#hero3d::after{content:'';position:absolute;left:0;right:0;bottom:0;height:160px;z-index:1;pointer-events:none;
+  background:linear-gradient(rgba(5,6,12,0), var(--bg))}
+#hero3d .hero-kicker{font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;color:#ff8ea3;font-weight:700;margin-bottom:14px;text-shadow:0 0 18px rgba(255,59,92,.8)}
+#hero3d h1.hero-title{font-size:clamp(2.4rem,9vw,6.4rem);font-weight:900;line-height:.95;letter-spacing:-.02em;color:#fff;margin:0;text-shadow:0 4px 26px rgba(0,0,0,.95),0 1px 3px rgba(0,0,0,1)}
+#hero3d h1.hero-title em{font-style:normal;color:#ff3b5c}
+#hero3d .hero-sub{margin-top:16px;font-size:clamp(.85rem,2.1vw,1.15rem);color:#c9cede;max-width:640px;line-height:1.5;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+#hero3d .hero-sub b{color:#f5c518}
+#hero3d .hero-cta{margin-top:26px;pointer-events:auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#hero3d .hero-cta a,#hero3d .hero-cta button{border:1px solid rgba(255,255,255,.22);background:rgba(11,14,20,.55);color:#fff;padding:11px 22px;border-radius:999px;font-weight:700;font-size:.92rem;cursor:pointer;backdrop-filter:blur(8px);transition:.25s;text-decoration:none}
+#hero3d .hero-cta a.primary{background:var(--accent);color:#0b0e14;border-color:transparent;box-shadow:0 10px 30px -8px rgba(255,59,92,.7)}
+#hero3d .hero-cta a:hover,#hero3d .hero-cta button:hover{transform:translateY(-2px)}
+#hero3d .hero-scroll{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:2;color:#8b93a7;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+#hero3d .hero-scroll i{display:block;width:1px;height:26px;background:linear-gradient(#ff3b5c,transparent);animation:heroDown 1.6s infinite}
+@keyframes heroDown{0%{transform:scaleY(.3);opacity:0}35%{opacity:1}100%{transform:scaleY(1);opacity:0}}
+#hero3d .hero-badge{position:absolute;top:16px;right:16px;z-index:3;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#8b93a7;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:5px 12px;background:rgba(11,14,20,.6);backdrop-filter:blur(6px);pointer-events:none}
+@media (max-width:640px){#hero3d{height:88vh}#hero3d .hero-sub{font-size:.82rem}#hero3d .hero-scroll{display:none}}
+@media (prefers-reduced-motion: reduce){#hero3d .hero-scroll i{animation:none}}
+
+/* ═══ 3D INTERACTIVO (15-sep-2026): tilt con raton + profundidad al scroll ═══ */
+#fx-warn{position:fixed;left:12px;bottom:64px;z-index:61;max-width:330px;background:#2a1a05;border:1px solid #f5c518;color:#ffd97a;border-radius:12px;padding:10px 12px;font-size:.8rem;line-height:1.35;display:none}
+#fx-warn button{margin-top:6px;background:#f5c518;color:#1a1204;border:0;border-radius:8px;padding:5px 10px;font-weight:800;cursor:pointer}
+@media(max-width:600px){#fx-warn{left:8px;right:8px;bottom:14px;max-width:none}}
+/* Reveal por CSS (GSAP se peleaba con el tilt: borraba el transform). Solo actua si html.js-anim */
+/* ═══ v3.2 SCROLL CINEMATOGRAFICO 3D (recorrido real) ═══ */
+main > section.tab{ padding-bottom: 6vh; }
+main > section.tab > * + *{ margin-top: 14px; }
+.cine-prof{ position: relative; }
+#cineDeep{ position: fixed; inset:-10%; pointer-events:none; z-index:0; opacity:0;
+  background: radial-gradient(60% 50% at 50% 45%, rgba(255,59,92,.16), transparent 70%),
+              radial-gradient(45% 40% at 72% 70%, rgba(245,197,24,.12), transparent 72%);
+  filter: blur(30px); }
+/* ═══ v3.0 SCROLL CINEMATOGRAFICO 3D ═══ */
+main{ perspective: 1900px; perspective-origin: 50% 42%; }
+.tab, .cine-block { transform-style: preserve-3d; }
+.cine-block{ backface-visibility: hidden; will-change: transform, opacity; }
+#cineFloor{ position: fixed; left:0; right:0; bottom:-42vh; height:42vh; pointer-events:none; z-index:0;
+  background:
+    linear-gradient(to bottom, rgba(11,14,20,0) 0%, rgba(11,14,20,.55) 38%, rgba(11,14,20,.92) 100%),
+    repeating-linear-gradient(to right, rgba(255,59,92,.16) 0 1px, transparent 1px 78px),
+    repeating-linear-gradient(to bottom, rgba(255,59,92,.10) 0 1px, transparent 1px 62px);
+  transform: perspective(700px) rotateX(66deg);
+  transform-origin: 50% 100%;
+  opacity:.55;
+  mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+}
+#cinePetals{ position: fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden }
+#cinePetals i{ position:absolute; display:block; width:13px; height:10px; border-radius:70% 8% 70% 8%;
+  background: linear-gradient(135deg,#ff6b86,#ff3b5c 55%,#f5c518); opacity:.5; }
+html.no-motion #cineFloor, html.no-motion #cinePetals{ display:none }
+html.no-motion .cine-block{ transform:none !important; opacity:1 !important }
+
+html.js-anim .card,html.js-anim .slide,html.js-anim .slot,html.js-anim .sec-title{
+  opacity:0;transform:translateY(36px) rotateX(-13deg) translateZ(-60px);transform-origin:50% 100%;
+  transition:opacity .6s ease,transform .8s cubic-bezier(.22,.61,.36,1);
+  transition-delay:calc(var(--d,0) * 1ms)}
+html.js-anim .card.in,html.js-anim .slide.in,html.js-anim .slot.in,html.js-anim .sec-title.in{
+  opacity:1;transform:none}
+html.no-motion .card,html.no-motion .slide,html.no-motion .slot,html.no-motion .sec-title,
+html.no-motion .card.in{opacity:1!important;transform:none!important}
+.grid{perspective:1400px}
+.card,.slide,.slot{transform-style:preserve-3d;position:relative;transition:transform .35s cubic-bezier(.22,.61,.36,1),box-shadow .35s}
+.card.tilting,.slide.tilting,.slot.tilting{transition:transform .08s linear}
+.card .glare,.slide .glare,.slot .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;z-index:3}
+.card.tilting .glare,.slide.tilting .glare,.slot.tilting .glare{opacity:1}
+.card.tilting,.slide.tilting,.slot.tilting{box-shadow:0 22px 45px -18px rgba(0,0,0,.75),0 0 0 1px var(--accent-soft,rgba(255,59,92,.22));z-index:4}
+.card img.tf,.slide img.tf{backface-visibility:hidden;transition:transform .35s cubic-bezier(.22,.61,.36,1)}
+.card.tilting img.tf,.slide.tilting img.tf{transform:translate(calc(var(--mx,0) * -11px), calc(var(--my,0) * -11px)) scale(1.07)}
+.card.tilting h3,.slide.tilting h3{transform:translate(calc(var(--mx,0) * -4px), calc(var(--my,0) * -4px))}
+@media (prefers-reduced-motion: reduce){.card,.slide,.slot{transition:none!important}}
+.no-tilt .card,.no-tilt .slide,.no-tilt .slot{transform:none!important}
+
+:root{
+  --bg:#0b0e14; --bg2:#0f141d; --card:#141b28; --card2:#1a2332;
+  --text:#e8ecf4; --muted:#94a0b5; --accent:#ff3b5c; --accent2:#ffb020;
+  --gold:#f5c518; --border:#222b3c; --shadow:0 10px 30px rgba(0,0,0,.45);
+  --nav-bg:rgba(11,14,20,.88);
+}
+[data-theme="light"]{
+  --bg:#f2f5fa; --bg2:#ffffff; --card:#ffffff; --card2:#f7f9fd;
+  --text:#131a28; --muted:#5c6779; --accent:#c8123c; --accent2:#a86600;
+  --gold:#c99a00; --border:#dde4f0; --shadow:0 10px 30px rgba(20,30,60,.12);
+  --nav-bg:rgba(242,245,250,.9);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;transition:background .3s,color .3s}
+a{color:var(--accent)}
+button{font-family:inherit;cursor:pointer}
+
+/* ============ NAV STICKY ============ */
+.nav{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 16px;background:var(--nav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.brand{font-weight:900;font-size:1.15rem;letter-spacing:.06em;margin-right:10px;white-space:nowrap}
+.brand small{display:block;font-weight:400;font-size:.68rem;color:var(--muted);letter-spacing:.12em}
+.nav-tabs{display:flex;gap:5px;flex-wrap:wrap}
+.tab-btn{border:1px solid transparent;background:transparent;color:var(--muted);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.86rem;transition:.25s}
+.tab-btn:hover{color:var(--text);background:var(--card2)}
+.tab-btn.active{color:#fff;background:linear-gradient(135deg,var(--accent),#a13dff);box-shadow:0 4px 16px rgba(255,59,92,.35)}
+.spacer{flex:1}
+#themeToggle{border:1px solid var(--border);background:var(--card);color:var(--text);width:38px;height:38px;border-radius:50%;font-size:1rem;transition:.25s}
+#themeToggle:hover{transform:rotate(20deg);border-color:var(--accent)}
+
+/* ============ TABS ============ */
+.tab{display:none;padding:22px 16px 70px;max-width:1180px;margin:0 auto;animation:tabIn .35s ease}
+.tab.active{display:block}
+@keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.tab-head{margin-bottom:18px}
+.tab-head h2{font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.04em}
+.tab-head p{color:var(--muted);font-size:.92rem}
+
+/* ============ TRAILER ============ */
+.tab-trailer{padding:0;max-width:none}
+.trailer{position:relative;height:calc(100vh - 58px);min-height:600px;overflow:hidden;background:#000}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.14);transition:opacity 1.5s ease,transform 6s ease}
+.slide.active{opacity:1;transform:scale(1.02)}
+.trailer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(0,0,0,.15) 45%,rgba(0,0,0,.82) 100%);z-index:10;pointer-events:none}
+.trailer-text{position:absolute;left:0;right:0;bottom:16%;text-align:center;z-index:20;padding:0 20px;pointer-events:none;overflow:hidden}
+.tt1{display:block;font-family:'Bebas Neue',Impact,'Arial Narrow',sans-serif;font-size:clamp(2rem,5.5vw,4.2rem);font-weight:900;letter-spacing:.14em;color:#fff;text-transform:uppercase;text-shadow:0 4px 30px rgba(0,0,0,.8)}
+.tt2{display:block;margin-top:8px;font-size:clamp(.9rem,2vw,1.5rem);letter-spacing:.38em;color:var(--accent);text-transform:uppercase;font-weight:700}
+.sub{display:block;margin-top:14px;font-size:clamp(.8rem,1.4vw,1.05rem);color:#c6cfdd;letter-spacing:.1em}
+.mode-title .tt1{font-size:clamp(2.6rem,8vw,6.5rem);color:var(--accent);animation:pulse 1.6s ease-in-out infinite;letter-spacing:.06em}
+.mode-title .tt2{color:var(--gold)}
+.anim{animation:fadeUp 1.1s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{transform:scale(1);text-shadow:0 0 30px rgba(255,59,92,.8)}50%{transform:scale(1.06);text-shadow:0 0 70px rgba(255,59,92,1)}}
+#counter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:22;font-size:clamp(6rem,22vw,13rem);font-weight:900;color:var(--accent);text-shadow:0 0 60px rgba(255,59,92,.9);opacity:0;pointer-events:none;transition:opacity .4s;font-family:'Bebas Neue',Impact,sans-serif;white-space:nowrap;max-width:100vw}
+#counter.show{opacity:1}
+#counter.pop{animation:counterPop .95s ease}
+@keyframes counterPop{0%{transform:translate(-50%,-50%) scale(1.8);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:.95}}
+.dots{position:absolute;bottom:110px;left:0;right:0;display:flex;gap:8px;justify-content:center;z-index:21}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.28);transition:.3s}
+.dot.active{background:var(--accent);transform:scale(1.4);box-shadow:0 0 12px var(--accent)}
+.trailer-controls{position:absolute;z-index:30;bottom:26px}
+.trailer-controls.left{left:26px}
+.trailer-controls.right{right:26px}
+.btn-play{border:none;background:linear-gradient(135deg,var(--accent),#a13dff);color:#fff;font-weight:800;padding:13px 26px;border-radius:999px;font-size:.95rem;letter-spacing:.05em;box-shadow:0 6px 24px rgba(255,59,92,.45);transition:.25s}
+.btn-play:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 30px rgba(255,59,92,.6)}
+.btn-skip{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.35);backdrop-filter:blur(6px);color:#fff;font-weight:700;padding:12px 22px;border-radius:999px;font-size:.9rem;transition:.25s}
+.btn-skip:hover{background:rgba(255,255,255,.15)}
+[data-theme="light"] .btn-skip{color:var(--text);border-color:var(--border);background:var(--card)}
+
+
+/* ============ RUTA ============ */
+.ruta-intro{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.chip{background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:999px;font-size:.8rem;color:var(--muted)}
+.chip b{color:var(--text)}
+.day{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--accent)}
+.day-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+.dnum{background:linear-gradient(135deg,var(--accent),#a13dff);color:#fff;font-weight:900;font-size:1.1rem;padding:8px 13px;border-radius:12px;letter-spacing:.05em}
+.day-header h3{font-size:1.05rem;letter-spacing:.03em}
+.day-header .city{color:var(--accent);font-weight:800;font-size:.78rem;letter-spacing:.25em}
+.day-header p{color:var(--muted);font-size:.85rem}
+.badge{margin-left:auto;background:var(--accent);color:#fff;font-size:.68rem;font-weight:800;padding:5px 11px;border-radius:999px;letter-spacing:.08em;white-space:nowrap}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}
+.slot{background:var(--card2);border-radius:12px;padding:11px 13px;font-size:.82rem}
+.slot b{display:block;color:var(--accent2);font-size:.7rem;letter-spacing:.18em;margin-bottom:4px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.meta span{background:var(--card2);border:1px solid var(--border);padding:6px 11px;border-radius:10px;font-size:.76rem;color:var(--muted)}
+.meta b{color:var(--text)}
+
+/* ============ MAPA ============ */
+.map-wrap iframe{width:100%;height:520px;border:0;border-radius:18px;display:block}
+.pois h3{margin:28px 0 4px;font-size:1.25rem}
+.pois>p{color:var(--muted);font-size:.88rem;margin-bottom:16px}
+.poi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.poi-cat{margin:6px 0 20px}.poi-cat>.sec-title{margin:16px 0 10px}
+.card .why2{display:block;margin-top:8px;font-size:.8rem;color:var(--accent2);border-top:1px dashed var(--border);padding-top:8px}
+.map-note{color:var(--muted);font-size:.78rem;margin-top:8px}
+.map-btns{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.map-btns button{border:1px solid var(--border);background:var(--card);color:var(--text);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.85rem;cursor:pointer}
+.map-btns button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.poi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;transition:.25s}
+.poi:hover{transform:translateY(-3px);border-color:var(--accent)}
+.poi h4{font-size:1rem;margin-bottom:6px}
+.poi h4 .flag{margin-right:6px}
+.poi p{font-size:.83rem;color:var(--muted)}
+.poi .why{display:block;margin-top:10px;font-size:.76rem;color:var(--accent2);border-top:1px dashed var(--border);padding-top:9px}
+
+/* ============ RESTAURANTES ============ */
+.rest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.rest{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);transition:.25s}
+.rest:hover{transform:translateY(-3px);border-color:var(--gold)}
+.rest-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rest-head h3{font-size:1.05rem}
+.rating{color:var(--gold);font-weight:900;font-size:1.35rem;letter-spacing:.02em;text-shadow:0 0 18px rgba(245,197,24,.35)}
+.rest-tags{display:flex;flex-wrap:wrap;gap:6px}
+.rest-tags span{background:var(--card2);border:1px solid var(--border);font-size:.72rem;padding:4px 9px;border-radius:999px;color:var(--muted)}
+.rest p{font-size:.84rem;color:var(--muted);flex:1}
+.rest a{font-size:.8rem;font-weight:700;text-decoration:none}
+.rest a:hover{text-decoration:underline}
+.rest.tatara{border-left:4px solid var(--gold);background:linear-gradient(180deg,var(--card),rgba(245,197,24,.06))}
+.tatara-note{background:rgba(245,197,24,.09);border:1px solid rgba(245,197,24,.4);border-radius:12px;padding:12px;font-size:.8rem}
+.tatara-note b{color:var(--gold)}
+.menu-chips{display:flex;flex-wrap:wrap;gap:6px}
+.menu-chips span{background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:5px 10px;font-size:.72rem}
+.menu-chips .saison{border-color:var(--gold);color:var(--gold)}
+.menu-chips .wagyu{border-color:var(--accent);color:var(--accent)}
+.menu-chips .kobe{border-color:#c084fc;color:#c084fc}
+
+/* ============ PRESUPUESTO ============ */
+.budget-wrap{display:grid;grid-template-columns:1fr;gap:22px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;position:relative;height:300px;box-shadow:var(--shadow)}
+.budget-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:22px}
+.b-line{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.b-line .key{font-size:.8rem;color:var(--muted)}
+.b-line .val{font-size:1.25rem;font-weight:900;margin-top:4px}
+.total-line{margin-top:18px;background:linear-gradient(135deg,var(--accent),#a13dff);color:#fff;border-radius:16px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.total-line b{font-size:1.5rem}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:16px}
+.tip{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:.83rem}
+.tip b{display:block;margin-bottom:3px;color:var(--accent2)}
+
+/* ============ CHECKLIST ============ */
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.progress-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+.progress-head b{font-size:1.2rem}
+.progress-track{height:16px;background:var(--card2);border:1px solid var(--border);border-radius:999px;margin-top:12px;overflow:hidden}
+.progress-bar{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .5s ease;box-shadow:0 0 14px rgba(255,59,92,.5)}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.check-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:.2s;user-select:none}
+.check-item:hover{border-color:var(--accent)}
+.check-item.done{opacity:.55;border-color:var(--border)}
+.check-box{width:24px;height:24px;min-width:24px;border:2px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;color:transparent;transition:.2s;margin-top:2px}
+.check-item.done .check-box{background:var(--accent);color:#fff;border-color:var(--accent)}
+.check-item h4{font-size:.92rem}
+.check-item p{font-size:.76rem;color:var(--muted);margin-top:2px}
+.check-item h4{font-size:1rem}.check-item p{font-size:.85rem}.check-item .price{font-size:.95rem;color:var(--accent2);font-weight:800}
+.check-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.check-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:9px}
+.check-links{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.res-link{display:inline-flex;align-items:center;gap:5px;margin:0;padding:7px 13px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:.76rem;line-height:1;text-decoration:none;white-space:nowrap;transition:.2s}
+.res-link:hover{filter:brightness(1.12)}
+.res-link.lnk-maps{background:transparent;border:1px solid var(--border);color:var(--text)}
+.res-link.lnk-maps:hover{border-color:var(--accent);color:var(--accent);filter:none}
+.check-cat{margin:6px 0 20px}.check-cat>.sec-title{margin:16px 0 10px}
+
+/* ============ VIDEOS · ACTIVIDADES · FIESTA ============ */
+.vid-grid,.act-grid,.fiesta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:6px}
+.vid,.act,.fiesta{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px 16px;box-shadow:var(--shadow);transition:.25s}
+.vid:hover,.act:hover,.fiesta:hover{transform:translateY(-3px);border-color:var(--accent)}
+.vid h3{font-size:.95rem;margin-bottom:4px}
+.vid-tags,.act-tags,.fiesta-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.vid-tags span,.act-tags span,.fiesta-tags span{background:var(--card2);border:1px solid var(--border);border-radius:999px;padding:4px 9px;font-size:.7rem;color:var(--muted)}
+.vid p{font-size:.82rem;color:var(--muted)}
+.vid p b{color:var(--accent2)}
+.act,.fiesta{display:flex;flex-direction:column;gap:6px}
+.act h3,.fiesta h3{font-size:.95rem}
+.act .price{align-self:flex-start;background:linear-gradient(135deg,var(--accent),#a13dff);color:#fff;font-weight:800;font-size:.72rem;padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+.fiesta .price{align-self:flex-start;background:var(--card2);border:1px solid var(--gold);color:var(--gold);font-weight:800;font-size:.72rem;padding:4px 10px;border-radius:999px}
+.act p,.fiesta p{font-size:.8rem;color:var(--muted)}
+.cheap-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);font-size:.85rem}
+.cheap-table th,.cheap-table td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+.cheap-table thead th{background:var(--card2);font-size:.72rem;letter-spacing:.14em;color:var(--muted)}
+.cheap-table td:last-child{font-weight:800;color:var(--gold);white-space:nowrap}
+.chatarra-note{margin-top:14px;background:rgba(255,176,32,.09);border:1px dashed rgba(255,176,32,.45);border-radius:12px;padding:12px 14px;font-size:.82rem}
+.chatarra-note b{color:var(--gold)}
+@media (max-width:640px){.cheap-table{font-size:.78rem}.cheap-table th,.cheap-table td{padding:8px 10px}}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;color:var(--muted);font-size:.8rem}
+@media (max-width:640px){
+  .trailer-controls.left,.trailer-controls.right{position:static;display:inline-block;margin:6px}
+  .trailer-controls{bottom:auto}
+  .trailer-btns{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:10px}
+  .dots{bottom:96px}
+}
+:root{--tag:rgba(255,255,255,.08)}[data-theme="light"]{--tag:rgba(0,0,0,.05)}
+.tf{width:100%;height:110px;object-fit:cover;border-radius:10px;margin-bottom:8px;background:var(--card2)}.tf.emoji{display:flex;align-items:center;justify-content:center;font-size:2.2rem}.card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;flex-wrap:wrap}.card-foot .maps{font-size:.78rem;font-weight:800;padding:6px 12px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;white-space:nowrap}
+/* EXTRA v9 */
+.sec-title{font-size:1.15rem;margin:20px 0 8px;letter-spacing:-.01em}
+.grid{display:grid;gap:12px;margin:10px 0}
+.g2{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;transition:.2s}
+.card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.card h3{font-size:1rem;margin-bottom:5px}
+.card h4{font-size:.92rem;margin-bottom:4px}
+.card p{color:var(--muted);font-size:.86rem;line-height:1.45}
+.card .price{color:var(--accent);font-weight:800;font-size:.92rem;margin-top:7px}
+.card a{color:var(--accent);font-weight:700;font-size:.82rem;text-decoration:none;margin-right:8px}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;background:var(--tag);border:1px solid var(--border);border-radius:999px;padding:2px 9px;margin:5px 4px 0 0;color:var(--text)}
+.tag.hot{background:var(--accent);color:#fff;border-color:var(--accent)}
+.note{background:var(--tag);border-left:3px solid var(--accent);padding:9px 13px;border-radius:0 10px 10px 0;font-size:.85rem;margin:12px 0}
+.chk-row{display:flex;align-items:center;gap:8px;padding:5px 11px;border:1px solid var(--border);border-radius:999px;background:var(--card);cursor:pointer;font-size:.78rem}
+.chk-row input{accent-color:var(--accent)}
+html,body{overflow-x:clip}
+/* ===== ESCALA TIPOGRAFICA UNICA v16 ===== */
+.sec-title{font-size:1.15rem}
+.card h3,.card h4,.vid h3,.act h3,.fiesta h3,.rest-head h3,.check-item h4,.poi h4,.tip b{font-size:1rem}
+#tab-comida .grid.g2 .card h3{font-size:1.1rem}
+.card p,.vid p,.act p,.fiesta p,.rest p,.tip,.check-item p,.poi p,.b-line .key{font-size:.86rem}
+.card .price,.act .price,.fiesta .price,.check-item .price,.b-line .val{font-size:.95rem;font-weight:800}
+.tag,.chip,.chk-row,.card-foot .maps,.res-link,.meta span,.b-line .sub{font-size:.78rem}
+.card .why2,.poi .why,.note,.map-note,.cheap-table,.slot{font-size:.8rem}
+#poi-list{display:block}
+.grid.g2>.card,.grid.g3>.card,.poi-grid>.poi,.check-grid>.check-item{height:100%}
+.card{display:flex;flex-direction:column}
+.card-foot{margin-top:auto;padding-top:10px;flex-wrap:wrap;gap:8px}
+.grid.g2>.card,.grid.g3>.card,.check-grid>.check-item{min-width:0}
+.map-legend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;font-size:.8rem;color:var(--muted)}
+#map{height:520px;border-radius:18px;z-index:1;margin-bottom:6px}
+.mm-pin2{border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #ff3b5c;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.mm-pin2 span{transform:rotate(45deg);line-height:1;font-size:14px;font-weight:900}
+.leaflet-popup-content-wrapper{background:var(--card);color:var(--text);border-radius:12px}
+.leaflet-popup-content{font-size:.83rem}
+.leaflet-container{background:var(--card2);font-family:inherit}
+.map-legend b{color:var(--text)}
+/* ===== v18: mapa capas, chips ruta, lock dia ===== */
+.map-bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.mbtn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:999px;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s}
+.mbtn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.mbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+#map{height:560px;border-radius:18px}
+@media (max-width:640px){#map{height:430px}}
+.day-maps{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 12px}
+.loc-chip{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);color:var(--text);font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:12px;text-decoration:none;white-space:nowrap;transition:.2s}
+.loc-chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.day-locked .slots,.day-locked .day-maps,.day-locked .meta{display:none}
+.lock-cover{display:none;flex-direction:column;align-items:flex-start;gap:10px;background:linear-gradient(135deg,rgba(255,59,92,.13),rgba(161,61,255,.09));border:1px dashed var(--accent);border-radius:14px;padding:18px;margin:10px 0 4px}
+.day-locked .lock-cover{display:flex}
+.lock-cover b{font-size:1rem;letter-spacing:.04em}
+.lock-cover p{color:var(--muted);font-size:.85rem;line-height:1.5;margin:0}
+.lock-go{border:0;background:var(--accent);color:#fff;font-weight:800;padding:9px 18px;border-radius:999px;cursor:pointer;font-size:.85rem}
+.lock-go:hover{filter:brightness(1.12)}
+.train-note{margin:4px 0 18px}
+.train-note b{color:var(--text)}
+.train-note br{display:none}
+.train-note{line-height:1.75}
+
+/* ═══ ACCESIBILIDAD: foco visible (teclado) ═══ */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+label:focus-within, [tabindex]:focus-visible, .card:focus-visible, .slide:focus-visible{
+  outline: 3px solid var(--accent) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+</style>
+<script>
+(function(){try{var t=localStorage.getItem('japon-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}})();
+</script>
+<link rel="preload" as="image" href="trailer/01_marc_beach_muscular.jpg">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">⛩️ JAPÓN 2026<small>LA MISIÓN DE LOS 6 · 9 DIC → 1 ENE</small></div>
+  <div class="nav-tabs" id="tabs">
+    <button class="tab-btn active" data-tab="trailer">▶ TRAILER</button>
+    <button class="tab-btn" data-tab="ruta">📅 Ruta 21 días</button>
+    <button class="tab-btn" data-tab="mapa">🗺️ Mapa</button>
+    <button class="tab-btn" data-tab="comida">🍱 Comida</button><button class="tab-btn" data-tab="actividades">🎆 Actividades</button><button class="tab-btn" data-tab="fiesta">🌃 Fiesta</button><button class="tab-btn" data-tab="videos">🎥 Vídeos</button>
+    <button class="tab-btn" data-tab="presupuesto">💰 Presupuesto</button>
+        <button class="tab-btn" data-tab="checklist">📝 Checklist</button><button class="tab-btn" data-tab="cumple">🔒 Cumple</button>
+
+      </div>
+  <div class="spacer"></div>
+  <button id="themeToggle" title="Cambiar tema">🌙</button>
+</nav>
+
+
+<!-- ════ HERO 3D v2.0 (Three.js) ════ -->
+<section id="hero3d">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-badge">v2.0 · Three.js</div>
+  <div class="hero-overlay">
+    <div class="hero-kicker">9 dic — 1 ene · la misión de los 6</div>
+    <h1 class="hero-title">JAPÓN<em>2026</em></h1>
+    <p class="hero-sub">21 días · <b>Osaka · Kioto · Nara · Tokio</b><br>Ruta, mapa, comida, presupuesto y checklist — todo en una página.</p>
+    <div class="hero-cta">
+      <a class="primary" href="#tabs">Entrar en la ruta ⛩️</a>
+      <a href="#tab-mapa">🗺️ Ver el mapa</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>baja</span><i></i></div>
+</section>
+<a href="#contenido" class="sr-only">Saltar al contenido principal</a>
+<main id="contenido">
+
+<!-- ================= TAB TRAILER ================= -->
+<section id="tab-trailer" class="tab tab-trailer active">
+  
+  <div class="trailer">
+    <div class="slide" style="background-image:url('trailer/01_marc_beach_muscular.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/02_ruben_shadow_dagger.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/03_erik_cursed_katana.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/04_adria_berserker_axe.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/05_kamal_sakura_bow.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/06_simeon_lightning_staff.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/07_arena_cielo.jpg')"></div>
+    <div class="slide" style="background-image:url('trailer/08_title_card.jpg')"></div>
+
+    <div class="trailer-text" id="trailerText">
+      <span class="tt1" id="tt1"></span>
+      <span class="tt2" id="tt2"></span>
+      <span class="sub" id="sub"></span>
+    </div>
+    <div id="counter">10</div>
+    <div class="dots" id="dots"></div>
+
+    <div class="trailer-btns">
+      <div class="trailer-controls left"><button class="btn-play" id="btnPlay">▶ Reproducir trailer</button></div>
+      <div class="trailer-controls right"><button class="btn-skip" id="btnSkip">Saltar →</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB RUTA ================= -->
+<section id="tab-ruta" class="tab">
+  <div class="tab-head">
+    <h2>📅 Ruta 21 días — Osaka → Kioto → Nara → Tokyo</h2>
+    <p>10–30 dic 2026. Base Osaka (Shimanouchi 1-13-19, Abe Heights) del 10 al 22 · Base Tokyo (Okubo 1-39) del 22 al 30 · Simon+Marc llegan el 10, los 4 amigos el 12.</p>
+  </div>
+  <div class="ruta-intro">
+    <span class="chip">✈️ Vuelos ZH <b>PNR QWKX47</b> BCN 11:20 (11 dic)→KIX 14:00 (12 dic) · vuelta NRT 19:00 (30 dic)</span>
+    <span class="chip">🚄 Shinkansen <b>Nozomi 14.720¥</b> (22 dic · ~2h21)</span>
+    <span class="chip">💰 <b>620 €</b> en destino ≈ 4.836 ¥/día</span>
+    <span class="chip">🎂 Cumple Marc <b>10 dic · 22 años</b></span>
+  </div>
+  <div class="note train-note"><b>🎫 Trenes — dónde se compra cada uno:</b><br>
+• <b>Nankai KIX→Namba (día 1, al llegar):</b> nada de online. En la salida de KIX hay máquinas verdes de Nankai: billete a Namba 920¥, o saca una <b>ICOCA</b> (2.000¥ = 1.500¥ de saldo) y entra directo con ella.<br>
+• <b>Kioto y Nara desde Osaka:</b> con la misma ICOCA, sin billete ni reserva — tocas y entras (JR Osaka→Kioto 580¥).<br>
+• <b>Shinkansen 22 dic (Shin-Osaka→Tokio, 14.720¥):</b> el único que necesita reserva: online en <b>Smart EX</b> (QR) o en las máquinas JR "Midori no Madoguchi" de Shin-Osaka.<br>
+• <b>Narita Express (30 dic, 3.200¥):</b> máquinas JR de Tokio o ventanilla mostrando el pasaporte.<br>
+• <b>Metro y buses:</b> siempre ICOCA. Resumen: solo Nozomi y NEX se compran por adelantado; todo lo demás es tocar con la tarjeta en el sitio.</div>
+<div id="ruta-list"></div>
+</section>
+
+<!-- ================= TAB MAPA ================= -->
+<section id="tab-mapa" class="tab">
+  <div class="tab-head">
+    <h2>🗺️ Mapa del viaje</h2>
+    <p>2 casas (Osaka · Tokio) + 17 puntos de interés extra con su distancia desde la base más cercana. Los 32 spots de la ruta llevan su 📍 en cada tarjeta de día.</p>
+  </div>
+  <div class="map-legend"><span><span class="dotk" style="background:#ff3b5c"></span><b>H</b> casas (Osaka · Tokio)</span><span><span class="dotk" style="background:#00c2ff"></span>Ciudad y ocio</span><span><span class="dotk" style="background:#3ddc84"></span>Naturaleza</span><span><span class="dotk" style="background:#f5c518"></span>Cultura</span><span><span class="dotk" style="background:#a13dff"></span>Museos</span><span>· pines de cerca a lejos · toca un pin para ver distancia y ruta</span></div>
+<div id="map" role="region" aria-label="Mapa del viaje con 19 paradas"></div>
+<div class="map-bar" id="capasBar"><button class="mbtn active" data-base="sat">🛰️ Satélite</button><button class="mbtn" data-base="map">🗺️ Mapa</button></div>
+<div class="map-bar" id="areaBar"><button class="mbtn active" data-area="all">🗾 Todos los pines</button><button class="mbtn" data-area="osaka">🏠 Osaka</button><button class="mbtn" data-area="kioto">⛩️ Kioto</button><button class="mbtn" data-area="nara">🦌 Nara</button><button class="mbtn" data-area="tokio">🗼 Tokio</button></div>
+<p class="map-note">🏠 <b>Base Osaka</b>: Shimanouchi 1-13-19 (10-22 dic) · <b>Base Tokio</b>: Okubo 1-39 (22-30 dic). Los pines extra son sitios que no están en el plan y su distancia se mide desde la casa más cercana. Los 21 días de ruta llevan su 📍 en cada tarjeta con el botón "Cómo llegar" a Google Maps.</p>
+<div class="pois">
+    <h3>🌏 PUNTOS DE INTERÉS EXTRA</h3>
+    <p>Sitios que NO están en el plan de 2026… pero que merecen mucho la pena (apuntados para la próxima misión).</p>
+    <div class="poi-grid" id="poi-list"></div>
+  </div>
+</section>
+
+<!-- ================= TAB PRESUPUESTO ================= -->
+<section id="tab-presupuesto" class="tab">
+  <div class="tab-head">
+    <h2>💰 Presupuesto en destino</h2>
+        <p>Gasto de bolsillo 20 días · vuelos y hoteles aparte (ya reservados).</p>
+      </div>
+      <div class="budget-wrap">
+        <div class="chart-box"><canvas id="budgetChart"></canvas></div>
+        <div class="budget-list" id="budget-list"></div>
+        <div class="total-line"><span>💶 TOTAL EN DESTINO (20 días)</span><b id="budget-total">…</b></div>
+        <div class="note" id="budget-sub"></div>
+  </div>
+  <div class="tab-head" style="margin-top:30px"><h3>🧠 Tips low-cost</h3></div>
+  <div class="tips-grid" id="tips-list"></div>
+</section>
+
+<!-- ================= TAB CHECKLIST ================= -->
+<section id="tab-checklist" class="tab">
+  <div class="tab-head">
+    <h2>📝 Checklist (<span id="check-total">…</span>)</h2>
+        <p>Toca cada tarjeta para marcarla. El progreso se guarda en tu navegador.</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-head"><b id="prog-num">…</b><span id="prog-pct">…</span></div>
+    <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+  </div>
+  <div id="check-list"></div>
+  </section>
+
+  <section id="tab-comida" class="tab">
+  <div class="tab-head"><h2>🍱 Comida — por categorías</h2><p>Conbini, cadenas, tradicional y los restaurantes TOP ★. Cada tarjeta con foto, horario y ruta desde el piso de Shimanouchi (Osaka).</p></div>
+  <h3 class="sec-title">🛒 SUPER & CONBINI</h3>
+  <div class="grid g3"><div class="card"><img decoding="async" class="tf" src="img/web/d921d6cf95.jpg" alt="🏪 7-Eleven / FamilyMart / Lawson" loading="lazy"><h3>🏪 7-Eleven / FamilyMart / Lawson</h3><p>Onigiri 120-180¥ · sándwiches 250¥ · fideos 300¥ · pollo frito 150¥. Desayuno y tentempié 24h.</p><div class="price">100-400¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/2488f793ed.jpg" alt="🥪 Gyudon de conbini" loading="lazy"><h3>🥪 Gyudon de conbini</h3><p>El gyudon caliente del conbini — la cena de las 2am.</p><div class="price">350¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/c1ed8f3d3c.jpg" alt="🍙 Imprescindibles" loading="lazy"><h3>🍙 Imprescindibles</h3><p>Pudin premium 280¥ · melon pan 150¥ · café 100¥ · tarta FamilyMart (cumple Marc) 2.000¥.</p><div class="price">150-2.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
+  <h3 class="sec-title">🍔 COMIDA RÁPIDA / CADENAS</h3>
+  <div class="grid g3"><div class="card"><img decoding="async" class="tf" src="img/web/0e2924b736.jpg" alt="🍲 Sukiya" loading="lazy"><h3>🍲 Sukiya</h3><p>Gyudon barato y bueno — cadena nacional.</p><div class="price">450¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.664,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/84f0cbdefd.jpg" alt="🥘 Matsuya / Yoshinoya" loading="lazy"><h3>🥘 Matsuya / Yoshinoya</h3><p>Las gigantes del gyudon + curry japonés.</p><div class="price">430¥</div><div class="card-foot"><span class="tag">🕐 5:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.665,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/c21d5851ba.jpg" alt="🍣 Kura Sushi (kaiten)" loading="lazy"><h3>🍣 Kura Sushi (kaiten)</h3><p>Sushi en cinta — 115¥/plato, casi regalado.</p><div class="price">115¥/plato</div><div class="card-foot"><span class="tag">🕐 11:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.661,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/34ed21adcf.jpg" alt="🌯 Katsu sando 7-Eleven" loading="lazy"><h3>🌯 Katsu sando 7-Eleven</h3><p>El sándwich de tonkatsu famoso mundialmente.</p><div class="price">300¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/8e62a96bd5.jpg" alt="🍜 Ramen Ichiran" loading="lazy"><h3>🍜 Ramen Ichiran</h3><p>Solo, barrera, máquina — experiencia 100% japonesa.</p><div class="price">900-1.200¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5016?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/efdb429b4f.jpg" alt="🐙 Takoyaki Dotonbori" loading="lazy"><h3>🐙 Takoyaki Dotonbori</h3><p>Bolitas de pulpo — el street food de Osaka por excelencia.</p><div class="price">500-800¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6688,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
+  <h3 class="sec-title">🍢 TRADICIONAL / EXPERIENCIAS</h3>
+  <div class="grid g3"><div class="card"><img decoding="async" class="tf" src="img/web/c3b645ffa3.jpg" alt="🌶️ Mouko Tanmen Nakamoto" loading="lazy"><h3>🌶️ Mouko Tanmen Nakamoto</h3><p>Ramen picante nivel 9-10 "Hokkyoku" — challenge de llorar.</p><div class="price">900-1.200¥</div><div class="card-foot"><span class="tag">🕐 11:30-23:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6953,139.7137?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/1db1d7cf37.jpg" alt="🍢 Kushikatsu Daruma" loading="lazy"><h3>🍢 Kushikatsu Daruma</h3><p>Brochetas fritas — el clásico de Shinsekai.</p><div class="price">600-1.200¥</div><div class="card-foot"><span class="tag">🕐 11:00-21:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6515,135.506?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/9af1c2b962.jpg" alt="🥞 Okonomiyaki DIY" loading="lazy"><h3>🥞 Okonomiyaki DIY</h3><p>Te lo haces en la plancha — Dotonbori / Americamura.</p><div class="price">800-1.500¥</div><div class="card-foot"><span class="tag">🕐 11:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.669,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/821eae5272.jpg" alt="🍜 Kitsune udon" loading="lazy"><h3>🍜 Kitsune udon</h3><p>El udon del templo — día de Kioto.</p><div class="price">500-800¥</div><div class="card-foot"><span class="tag">🕐 10:00-17:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.9671,135.7727?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/66f5215c6a.jpg" alt="🐡 Fugu" loading="lazy"><h3>🐡 Fugu</h3><p>Pez globo en Dotonbori (con licencia).</p><div class="price">2.000-4.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6678,135.5015?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/a20fb33ce7.jpg" alt="🎂 Tarta FamilyMart cumple" loading="lazy"><h3>🎂 Tarta FamilyMart cumple</h3><p>La tarta + velas del Donki en el Airbnb.</p><div class="price">2.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
+  <h3 class="sec-title">⭐ RESTAURANTES TOP — ★ = SI O SI</h3>
+  <div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/0cdfa9a1d1.jpg" alt="⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ TATARA Osaka <span class="tag hot">★ SI O SI</span></h3><p>Wagyu al carbón, tabla 7 arcos. Tabelog 3.6 · 100 TOP 2025.</p><div class="price">Saison 7.800¥ · wagyu 9.500¥ · Kobe 25.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6677,135.501?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/6fced8ff10.jpg" alt="⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Yoroniku Ebisu <span class="tag hot">★ SI O SI</span></h3><p>Mejor yakiniku de Japón, Tabelog 3.80. Reserva 1 mes antes.</p><div class="price">8.000-12.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6731,139.7115?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/ac7cb41902.jpg" alt="⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span>" loading="lazy"><h3>⭐ Kisshoukichi Kioto <span class="tag hot">★ SI O SI</span></h3><p>Teppanyaki Kobe 3.55, vista al río Kamo.</p><div class="price">8.000-9.999¥</div><div class="card-foot"><span class="tag">🕐 11:30-15:30 / 17:30-21:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/gyudon-local.jpg" alt="⭐ Matsusakagyu M Hozenji" loading="lazy"><h3>⭐ Matsusakagyu M Hozenji</h3><p>Wagyu A5 Matsusaka — reserva 20:00. Solo para entendidos.</p><div class="price">10-14k¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/4fb1e2bf86.jpg" alt="🍣 Sushi Yoshikawa Kaido" loading="lazy"><h3>🍣 Sushi Yoshikawa Kaido</h3><p>Omakase en Nishi-Shinjuku (10 min de la estación de Shinjuku) · solo con reserva, turnos 18:00 y 20:30 · cena de Navidad.</p><div class="price">10-15k¥</div><div class="card-foot"><span class="tag">🕐 12:00-14:30 / 17:00-22:00</span><a class="maps" href="https://www.google.com/maps/search/Sushi+Yoshikawa+Kaido+Nishi+Shinjuku+Tokyo" target="_blank" rel="noopener">📍 Cómo llegar</a><a class="maps" href="https://tabelog.com/en/tokyo/A1304/A130401/13310859" target="_blank" rel="noopener">🍽️ Reservar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/okonomiyaki-local.jpg" alt="🍝 OSTERIA IS -Gion-" loading="lazy"><h3>🍝 OSTERIA IS -Gion-</h3><p>Italiana en Gion · Tabelog 3.52. Cierra domingos.</p><div class="price">¥5.000-5.999</div><div class="card-foot"><span class="tag">🕐 11:30-14:00 / 17:30-21:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0027,135.7768?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div>
+  <div class="note">💡 Sin cenas de 10.000¥ a diario: conbini + cadenas + tabehoudai 2.980¥ (Rikimaru/Matchan) y los ★ solo en días clave. 🚇 Transporte: todo funciona con tarjeta Suica/ICOCA recargable (se compra en cualquier máquina de estación y vale para metro, tren y conbini).</div>
+</section>
+<section id="tab-actividades" class="tab">
+  <div class="tab-head"><h2>🎆 Actividades</h2><p>Divididas por ciudad, con foto, horario y ruta desde vuestro alojamiento.</p></div>
+<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/0b069ff042.jpg" alt="♨️ Spa World (onsen)" loading="lazy"><h3>♨️ Spa World (onsen)</h3><p>24 zonas de baños + piscinas temáticas. Tatuajes parcialmente OK.</p><div class="price">1.200-2.400¥</div><div class="card-foot"><span class="tag">🕐 10:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/kuromon.jpg" alt="🐙 Mercado Kuromon" loading="lazy"><h3>🐙 Mercado Kuromon</h3><p>Desayuno callejero: uni, wagyu pincho, fresas.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 5:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5056?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/denden.jpg" alt="🕹️ Den Den Town" loading="lazy"><h3>🕹️ Den Den Town</h3><p>El Akihabara de Osaka: electrónica, anime, figuras.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 11:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5027?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/03d40c3628.jpg" alt="🍺 300BAR (ticket bar)" loading="lazy"><h3>🍺 300BAR (ticket bar)</h3><p>Billete de 1992: 990¥ = 3 bebidas.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/monkey.jpg" alt="🐒 Iwatayama Monkey Park" loading="lazy"><h3>🐒 Iwatayama Monkey Park</h3><p>Monos salvajes con vista a Kioto.</p><div class="price">600¥</div><div class="card-foot"><span class="tag">🕐 9:00-16:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0144,135.6691?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/nishiki.jpg" alt="🥢 Nishiki Market" loading="lazy"><h3>🥢 Nishiki Market</h3><p>El "mercado de Kioto": 400 años de puestos.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 9:00-17:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0044,135.7646?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🗼 TOKIO</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/ninehours.jpg" alt="🛏️ Nine Hours Shinjuku" loading="lazy"><h3>🛏️ Nine Hours Shinjuku</h3><p>Cápsula futurista nave espacial + sleep fitscan.</p><div class="price">4.900-7.000¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6848,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/cyberbagus.jpg" alt="💻 Gran Cyber Bagus" loading="lazy"><h3>💻 Gran Cyber Bagus</h3><p>BOX privado con llave + ducha + bebida libre.</p><div class="price">3.800¥ noche</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6939,139.7035?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/mspop.jpg" alt="🔞 M's Pop Life Akihabara" loading="lazy"><h3>🔞 M's Pop Life Akihabara</h3><p>8 plantas de tienda adulta — BLUR para cámara.</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 10:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6986,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/6db3d1bcbc.jpg" alt="🕹️ Purikura + gachapon" loading="lazy"><h3>🕹️ Purikura + gachapon</h3><p>Fotomatones locos + máquinas de cápsulas.</p><div class="price">400¥ + 500¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.702,139.771?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/6f767a1508.jpg" alt="👗 Maid Café AtHome" loading="lazy"><h3>👗 Maid Café AtHome</h3><p>"Okaeri gozaimasu, goshujin-sama!"</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 10:00-22:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.7021,139.7716?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/d71fb03624.jpg" alt="🛍️ Don Quijote 24h" loading="lazy"><h3>🛍️ Don Quijote 24h</h3><p>8 plantas de TODO — haul garantizado, tax free.</p><div class="price">3-5k¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/toyosu.jpg" alt="🐟 Mercado de Toyosu" loading="lazy"><h3>🐟 Mercado de Toyosu</h3><p>La lonja que sustituyó a Tsukiji (visita, no compra).</p><div class="price">0¥</div><div class="card-foot"><span class="tag">🕐 5:00-14:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6437,139.7863?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/ramenmuseum.jpg" alt="🍜 Museo del Ramen" loading="lazy"><h3>🍜 Museo del Ramen</h3><p>8 ramens regionales bajo un techo (Shin-Yokohama).</p><div class="price">1.000-1.500¥</div><div class="card-foot"><span class="tag">🕐 11:00-21:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.511,139.604?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/cupnoodles.jpg" alt="🍜 Cup Noodles Museum" loading="lazy"><h3>🍜 Cup Noodles Museum</h3><p>Haz tu propio cup ramen (Yokohama).</p><div class="price">500¥ + 300¥ extra</div><div class="card-foot"><span class="tag">🕐 10:00-18:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.3814,139.625?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/da81dc1435.jpg" alt="🌀 teamLab Planets" loading="lazy"><h3>🌀 teamLab Planets</h3><p>Arte digital inmersivo con agua.</p><div class="price">3.600¥</div><div class="card-foot"><span class="tag">🕐 10:00-19:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.648,139.79?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/catcafe.jpg" alt="🐱 Cat café MOCHA" loading="lazy"><h3>🐱 Cat café MOCHA</h3><p>Cafés con gatos por horas.</p><div class="price">1.100¥/h</div><div class="card-foot"><span class="tag">🕐 10:00-20:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6598,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/barberia.jpg" alt="💈 Barbería Shoji 1870" loading="lazy"><h3>💈 Barbería Shoji 1870</h3><p>Primera barbería de Japón con poste — navaja recta ASMR.</p><div class="price">4.000¥</div><div class="card-foot"><span class="tag">🕐 9:00-19:00 · LUN cerrado</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6938,139.7034?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🤪 EXPERIENCIAS RARAS</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/vending.jpg" alt="🥤 Máquinas expendedoras" loading="lazy"><h3>🥤 Máquinas expendedoras</h3><p>Las famosas vending machines — hay 1 por cada 24 personas.</p><div class="price">100-400¥</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5017?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/onseninfo.jpg" alt="♨️ Normas de onsen/sento" loading="lazy"><h3>♨️ Normas de onsen/sento</h3><p>Tatuajes, protocolo y japonés básico — guía antes de entrar.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 según local</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6522,135.5062?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
+<section id="tab-fiesta" class="tab">
+  <div class="tab-head"><h2>🌃 Fiesta y vida nocturna</h2><p>Locales ABIERTOS verificados (Robot Restaurant y ageHa cerrados — fuera). Horario + ruta desde el piso.</p></div>
+<h3 class="sec-title">🏙️ OSAKA</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/karaokekan.jpg" alt="🎤 Karaoke Kan Namba" loading="lazy"><h3>🎤 Karaoke Kan Namba</h3><p>Sala 6 pax + nomihodai — el cumple de Marc.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h · cierra 5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/ramenbar-local.jpg" alt="🍺 300BAR + DJ" loading="lazy"><h3>🍺 300BAR + DJ</h3><p>Ticket bar con sets DJ.</p><div class="price">990¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/0e0ace189d.jpg" alt="🍶 Tachinomi (de pie)" loading="lazy"><h3>🍶 Tachinomi (de pie)</h3><p>Bares diminutos de sake/cerveza a 300¥.</p><div class="price">300¥</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/6d63367e8c.jpg" alt="🍢 Izakaya nocturna" loading="lazy"><h3>🍢 Izakaya nocturna</h3><p>Tapas japonesas — cualquiera en Namba vale.</p><div class="price">1.500-3.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6665,135.502?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/uranamba.jpg" alt="🍻 Ura-Namba bar hopping" loading="lazy"><h3>🍻 Ura-Namba bar hopping</h3><p>Callejones secretos: tachinomi + izakayas + música.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/ramenbar-local.jpg" alt="🦒 Giraffe" loading="lazy"><h3>🦒 Giraffe</h3><p>Club de 6 plantas en Shinsaibashi, techno/house.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.671,135.5?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/eihire-local.jpg" alt="🥃 Bar Yeso" loading="lazy"><h3>🥃 Bar Yeso</h3><p>Bar de whisky con cubitos de hielo gigantes.</p><div class="price">1.000-2.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-1:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.504?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">🌃 TOKIO</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/goldengai.jpg" alt="🍶 Golden Gai (Shinjuku)" loading="lazy"><h3>🍶 Golden Gai (Shinjuku)</h3><p>200 bares diminutos en 6 callejones.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 18:00-4:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.7005?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/af851c6c1d.jpg" alt="🍢 Omoide Yokocho" loading="lazy"><h3>🍢 Omoide Yokocho</h3><p>Callejón del yakitori con humo y luces.</p><div class="price">1.000-2.000¥</div><div class="card-foot"><span class="tag">🕐 17:00-23:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6931,139.6998?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/bigego.jpg" alt="🎤 Karaoke Big Echo 24h" loading="lazy"><h3>🎤 Karaoke Big Echo 24h</h3><p>Abierto toda la noche, salas baratas.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.703?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/womb.jpg" alt="🌀 WOMB Shibuya" loading="lazy"><h3>🌀 WOMB Shibuya</h3><p>La discoteca más famosa de Tokio — 4 plantas.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 22:00-4:30</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.661,139.698?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/warp.jpg" alt="⚡ WARP Shinjuku" loading="lazy"><h3>⚡ WARP Shinjuku</h3><p>Discoteca grande 4 plantas + terrace.</p><div class="price">2.000-3.500¥</div><div class="card-foot"><span class="tag">🕐 19:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.6957,139.7077?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/atom.jpg" alt="⚛️ Atom Tokyo" loading="lazy"><h3>⚛️ Atom Tokyo</h3><p>Electrónica underground en Shibuya.</p><div class="price">2.000-3.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.666,139.706?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/seloctagon.jpg" alt="🟠 SEL Octagon" loading="lazy"><h3>🟠 SEL Octagon</h3><p>Club underground de techno en Shibuya.</p><div class="price">2.500-4.000¥</div><div class="card-foot"><span class="tag">🕐 20:00-5:00</span><a class="maps" href="https://www.google.com/maps/dir/35.7013,139.6935/35.66,139.7?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div><h3 class="sec-title">⛩️ KIOTO</h3><div class="grid g2"><div class="card"><img decoding="async" class="tf" src="img/web/pontocho.jpg" alt="🏮 Pontocho / Kiyamachi" loading="lazy"><h3>🏮 Pontocho / Kiyamachi</h3><p>Callejones de bares junto al río Kamo.</p><div class="price">300-800¥/bar</div><div class="card-foot"><span class="tag">🕐 17:00-24:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0045,135.772?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div><div class="card"><img decoding="async" class="tf" src="img/web/eihire-local.jpg" alt="💤 Consejo nocturno Kioto" loading="lazy"><h3>💤 Consejo nocturno Kioto</h3><p>Kioto cierra pronto — metro hasta 23:30, planificar vuelta.</p><div class="price">—</div><div class="card-foot"><span class="tag">🕐 hasta 23:30</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div></div></section>
+<section id="tab-videos" class="tab">
+  <div class="tab-head"><h2>🎥 Ideas de vídeo para el canal</h2><p>Formato Ray-Ban POV. Marca ✓ al grabar (se guarda). Cada idea con 📍 cómo llegar y 🎬 ejemplo parecido.</p></div>
+  <div id="videosGrid" class="grid g2"></div>
+</section>
+<section id="tab-cumple" class="tab">
+  <div class="tab-head"><h2>🔒 Cumpleaños de Marc</h2><p>Zona privada. Solo Simon.</p></div>
+  <div id="bday-gate" class="card" style="max-width:420px">
+    <h3>🔑 Acceso privado</h3>
+    <p class="muted">Escribe la contraseña para ver el plan sorpresa.</p>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <input id="bday-pass" type="password" placeholder="Contraseña" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text)">
+      <button onclick="checkBday()" style="padding:10px 18px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:800;cursor:pointer">Entrar</button>
+    </div>
+    <p id="bday-err" class="muted" style="display:none;margin-top:8px">❌ Contraseña incorrecta.</p>
+  </div>
+  <div id="bday-content" style="display:none">
+    <div class="note">🤫 Plan sorpresa del día 10 (JUE 10 DIC). Que Marc no vea esta pestaña ni la tarjeta del día 1 en la ruta (va bloqueada).</div>
+    <div class="card" style="margin-bottom:14px"><h3>🛬 Crono realista del día 10 (Simon + Marc)</h3><div class="slots"><div class="slot"><b>14:00 · Aterrizaje KIX</b><br>Vuelo ZH (PNR QJ8B3P) · inmigración + maletas ≈ 40-60 min (KIX suele ir fluido)</div><div class="slot"><b>15:10 · Máquinas Nankai</b><br>En la salida: ICOCA 2.000¥ (o billete 920¥) → tren Airport Express a Namba (45 min)</div><div class="slot"><b>16:00 · Namba</b><br>De camino a casa: comprar la tarta (Rikuro's está a 1 min de la estación) + velas</div><div class="slot"><b>16:20 · Check-in Shimanouchi 1-13-19</b><br>Dejar maletas y descansar 20 min</div><div class="slot"><b>17:00 · 🎂 Tarta + velas + regalo</b><br>En casa, sin prisa</div><div class="slot"><b>18:30 · Dotonbori + cena</b><br>Glico, callejones, cena low-cost</div><div class="slot"><b>20:30 · Karaoke Kan</b><br>Sala 2 pax + nomihodai 1.500¥/2h</div><div class="slot"><b>~23:00 · Vuelta a casa</b><br>Día 11: Kuromon + Amerikamura</div></div><p style="font-size:.82rem;color:var(--muted);margin-top:6px">⏱️ Si el avión llega puntual y no hay colas raras, a las <b>16:20-16:30</b> estáis en casa; el cumple arranca a las <b>17:00</b>. Las 15:00 serían solo si KIX va vacío y no esperáis maletas — no lo contéis como fijo.</p></div>
+    <div class="grid g2">
+      <div class="card"><h3>🎂 Tarta: Rikuro Ojisan (Namba)</h3><p>El cheesecake que toca la campanilla — 900¥, recién hecho, a 1 min de la salida de Nankai Namba. Backup 24h: tarta de FamilyMart (1.500-2.500¥) en cualquier conbini. Velas y globos: Daiso/Seria (100¥) o Don Quijote de Namba.</p><div class="price">900-2.500¥</div><div class="card-foot"><span class="tag">🕐 Rikuro's 10:00-20:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6625,135.501/34.6631,135.5016?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎁 Regalo: 3 opciones</h3><p>1) Figura de Akihabara a su gusto (5-10k¥) · 2) Funda Ray-Ban grabada o correa extra para las Meta · 3) Entrada sorpresa a teamLab Planets el 23 dic (3.600¥). Si llegáis sin regalo, Don Quijote Namba tiene de todo hasta tarde.</p><div class="price">3.600-10.000¥</div></div>
+      <div class="card"><h3>🍜 Cena low-cost Dotonbori (sin wagyu)</h3><p>Takoyaki (500¥), kushikatsu u okonomiyaki — cenar picoteando por Dotonbori ~1.000-1.500¥ p.p. El wagyu top NO hoy: TATARA ya está reservado el 14 dic con los 6 (9.500¥ p.p.). Matsusakagyu M Hozenji (10-14k¥) queda descartado para 2: demasiado para una cena privada + repetir con el grupo.</p><div class="price">~2.500¥ los 2</div><div class="card-foot"><span class="tag">🕐 puestos 10:00-23:00</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6687,135.5013?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>🎤 Karaoke Kan Namba · 20:30</h3><p>Sala pequeña 2 pax, 1.500¥/2h con bebida libre (nomihodai). Perfecto para el "feliz cumpleaños" cantado mal a propósito. Si Marc quiere noche tranquila: tachinomi en Ura-Namba en vez de karaoke.</p><div class="price">1.500¥/2h</div><div class="card-foot"><span class="tag">🕐 24h</span><a class="maps" href="https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Cómo llegar</a></div></div>
+      <div class="card"><h3>💶 Coste del plan (los 2)</h3><p>Nankai 2×920¥ + ICOCA 2×2.000¥ + tarta 900¥ + velas 100¥ + cena 2×1.300¥ + karaoke 2×1.500¥ ≈ <b>11.000-12.000¥ (~75 €)</b> contando que la ICOCA se queda con saldo para el resto del viaje. La ICOCA es gasto real de transporte, no del cumple: el cumple puro son ~5.000¥ (~32 €).</p><div class="price">~75 € los 2</div></div>
+      <div class="card"><h3>🎒 Mini-checklist del día 10</h3><p>1) Comprar ICOCA en KIX (máquinas, efectivo) · 2) Tarta Rikuro's en Namba (o FamilyMart) · 3) Velas + globos Daiso/Donki · 4) Regalo (decidir antes de salir de España o Donki) · 5) Reservar karaoke Kan por la app al llegar a casa (o a pie de local, suele haber sala).</p></div>
+    </div>
+  </div>
+</section>
+<div id="cineFloor" aria-hidden="true"></div>
+<div id="cineDeep" aria-hidden="true"></div>
+<div id="cinePetals" aria-hidden="true"></div>
+</main>
+
+<footer><div style="margin-bottom:6px;font-weight:700;color:var(--accent)">v23 · 3D activo</div>Hecho con 💜 por la tripulación · Vuelos ZH (PNR QWKX47) · Bases Osaka/Tokyo · 620 € en destino · shinkansen Nozomi 14.720¥ · Tabelog verificado — ¡nos vemos en Japón! ⛩️</footer>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.170.0/examples/jsm/"}}
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ============================================================
+   JAPÓN 2026 — v3 (tabs) · datos inline
+   ============================================================ */
+var ROUTE = [
+ {d:1, fecha:'JUE 10 DIC', city:'OSAKA', title:'Llegada a Osaka', badge:'✈️ KIX 14:00', m:'Vuelo ZH BCN 11:20 → KIX 14:00 (PNR QJ8B3P). Control + Nankai a Namba.', t:'Check-in Shimanouchi 1-13-19 + Dotonbori: Glico.', n:'Dotonbori de noche + karaoke Kan tranqui.', tr:'Nankai KIX→Namba ~920¥', price:'~40 €', vid:'Aterrizaje + primera noche.', food:'Takoyaki + konbini'},
+ {d:2, fecha:'VIE 11 DIC', city:'OSAKA', title:'Los 2 solos', badge:'💜 2 PAX', m:'Kuromon sin prisa + Amerikamura a vuestro ritmo.', t:'Spa World onsen relax.', n:'Ura-Namba íntimo: tachinomi.', tr:'Metro', price:'~30 €', vid:'Los 2 solos por Osaka.', food:'Okonomiyaki DIY'},
+ {d:3, fecha:'SÁB 12 DIC', city:'OSAKA', title:'Llegan los 4', badge:'✈️ KIX 14:00', m:'Recoger a Erik, Adrià, Ruben y Kamal (llegan KIX 14:00, PNR QWKX47).', t:'Check-in + Dotonbori todos juntos.', n:'Bienvenida: Shinsekai + kushikatsu.', tr:'Nankai (ellos)', price:'~30 €', vid:'Reencuentro en Namba.', food:'Kushikatsu Daruma'},
+ {d:4, fecha:'DOM 13 DIC', city:'OSAKA', title:'Castillo + Namba', badge:'', m:'Castillo de Osaka + parque.', t:'Shinsaibashi + Amerikamura (repe con grupo).', n:'Dotonbori noche total.', tr:'Metro', price:'~30 €', vid:'Castillo + Glico de noche.', food:'Takoyaki'},
+ {d:5, fecha:'LUN 14 DIC', city:'OSAKA', title:'TATARA Night', badge:'🔥 WAGYU', m:'Kuromon de desayuno.', t:'Den Den Town + Shinsekai.', n:'🔥 TATARA: wagyu al carbón.', tr:'Metro', price:'~55 €', vid:'Wagyu en slow-mo.', food:'TATARA'},
+ {d:6, fecha:'MAR 15 DIC', city:'KIOTO', title:'Fushimi + Gion', badge:'', m:'Fushimi Inari 8am: 10.000 torii.', t:'Gion, Kiyomizu, Sannenzaka.', n:'Pontocho iluminado.', tr:'JR Osaka→Kioto ~580¥', price:'~40 €', vid:'Time-lapse torii.', food:'Kitsune udon'},
+ {d:7, fecha:'MIÉ 16 DIC', city:'KIOTO', title:'Arashiyama', badge:'', m:'Monos Iwatayama + bambú.', t:'Kinkaku-ji + Nishiki Market.', n:'Pontocho / vuelta Osaka.', tr:'JR + bus', price:'~40 €', vid:'Monos + bambú ASMR.', food:'Nishiki'},
+ {d:8, fecha:'JUE 17 DIC', city:'NARA', title:'Ciervos + Buda', badge:'', m:'Nara Park + Todai-ji.', t:'Vuelta Osaka, Ura-Namba.', n:'Tachinomi bar hopping.', tr:'Kintetsu ~680¥', price:'~30 €', vid:'Ciervos por galletas.', food:'Kaki-no-ha sushi'},
+ {d:9, fecha:'VIE 18 DIC', city:'OSAKA', title:'USJ', badge:'🎢', m:'USJ: Nintendo World (llegar 7:30).', t:'USJ tarde.', n:'Izakaya Namba.', tr:'JR Loop ~200¥', price:'~70 €', vid:'Mario Kart real.', food:'USJ + izakaya'},
+ {d:10, fecha:'SÁB 19 DIC', city:'OSAKA', title:'Spa + compras', badge:'', m:'Spa World (repe con grupo).', t:'Shinsaibashi compras.', n:'300BAR + DJ.', tr:'Metro', price:'~35 €', vid:'Onsen en grupo.', food:'Okonomiyaki DIY'},
+ {d:11, fecha:'DOM 20 DIC', city:'KIOTO', title:'Kioto II', badge:'', m:'Nishiki de mañana.', t:'Kisshoukichi Kobe (comida).', n:'Dotonbori última gran noche.', tr:'JR', price:'~80 €', vid:'Kobe a la plancha.', food:'Kisshoukichi'},
+ {d:12, fecha:'LUN 21 DIC', city:'OSAKA', title:'Último Osaka', badge:'', m:'Kuromon + souvenirs.', t:'Shinsekai + Tsutenkaku.', n:'Despedida Osaka + maletas listas.', tr:'Metro', price:'~30 €', vid:'Torre + kushikatsu final.', food:'Kushikatsu'},
+ {d:13, fecha:'MAR 22 DIC', city:'TOKYO', title:'Nozomi → Tokyo', badge:'🚄', m:'Nozomi Shin-Osaka ~9:00 → Tokyo (~2h21).', t:'Check-in Okubo + Shinjuku (Omoide).', n:'Shibuya + Blue Cave + Golden Gai.', tr:'Nozomi 14.720¥', price:'~110 €', vid:'Fuji desde la ventanilla.', food:'Ekiben + Shibuya'},
+ {d:14, fecha:'MIÉ 23 DIC', city:'TOKYO', title:'teamLab + Toyosu', badge:'🌀', m:'Toyosu + Odaiba (Gundam).', t:'teamLab Planets 3.600¥.', n:'Roppongi + Midtown.', tr:'Yurikamome + metro', price:'~45 €', vid:'Agua infinita 4K.', food:'Sushi Toyosu'},
+ {d:15, fecha:'JUE 24 DIC', city:'TOKYO', title:'Akihabara Nochebuena', badge:'🎮', m:"M's Pop Life, figuras, gachapon.", t:'Cyber Bagus arcades.', n:'Rice and Circus (bizarre) + neones.', tr:'JR Chuo-Sobu', price:'~45 €', vid:'Neón de Akiba.', food:'Bizarre + ramen'},
+ {d:16, fecha:'VIE 25 DIC', city:'TOKYO', title:'Navidad Ginza', badge:'🎄', m:'Barbería Shoji (4.000¥).', t:'Ginza + Tsukiji de paso.', n:'Cena Navidad: Yoshikawa Kaido.', tr:'Metro', price:'~70 €', vid:'Antes/después barbería.', food:'Yoshikawa (omakase)'},
+ {d:17, fecha:'SÁB 26 DIC', city:'TOKYO', title:'Donki + Yoroniku', badge:'💎 3.80', m:'Mega Donki + Meiji Jingu.', t:'Nakano / Shin-Okubo.', n:'Yoroniku: yakiniku de dioses.', tr:'JR', price:'~130 €', vid:'Flambeado slow-mo.', food:'Yoroniku'},
+ {d:18, fecha:'DOM 27 DIC', city:'TOKYO', title:'Ueno + picante', badge:'🌶️', m:'Ueno + Ameyoko.', t:'Senso-ji + Skytree.', n:'🌶️ Nakamoto Hokkyoku.', tr:'Metro + JR', price:'~30 €', vid:'Picante nivel 10.', food:'Nakamoto'},
+ {d:19, fecha:'LUN 28 DIC', city:'TOKYO', title:'Tsukiji + Este', badge:'', m:'Tsukiji 6am sushi.', t:'Shibuya día + compras finales.', n:'Cena clausura: Sendou.', tr:'Metro', price:'~60 €', vid:'Atún 6am.', food:'Sendou (12 piezas)'},
+ {d:20, fecha:'MAR 29 DIC', city:'TOKYO', title:'Último día', badge:'', m:'Souvenirs + favoritos.', t:'Comodín: retos pendientes.', n:'Despedida: izakaya + iluminada final.', tr:'Metro', price:'~30 €', vid:'Adiós a Tokyo.', food:'Izakaya final'},
+ {d:21, fecha:'MIÉ 30 DIC', city:'VUELTA', title:'Hasta pronto ✈️', badge:'', m:'Check-out + NEX ~15:30 a NRT.', t:'Vuelos NRT 19:00 (QJ8B3P + QWKX47).', n:'En el avión, editando el trailer.', tr:"N'EX ~3.200¥ + vuelo", price:'~25 €', vid:'Créditos en loop.', food:'Konbini final'}
+];
+
+var POIS = [
+ {f:'🏝️', n:'Okinawa', img:'poi-okinawa.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', h:'🕐 castillo 8:30-17:00 · playas 24h', lat:26.2124, lng:127.6809},
+ {f:'⛩️', n:'Takayama', img:'poi-takayama.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', h:'🕐 calles y museos 9:00-17:00', lat:36.1462, lng:137.2521},
+ {f:'⛴️', n:'Hiroshima + Miyajima', img:'poi-miyajima.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
+ {f:'🏔️', n:'Nikko', img:'poi-nikko.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', h:'🕐 Toshogu 8:00-17:00 (cierra 16:00 en invierno)', lat:36.7586, lng:139.5990},
+ {f:'♨️', n:'Hakone Onsen', img:'poi-hakone.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', h:'🕐 onsen 10:00-20:00 · lago 24h', lat:35.2325, lng:139.1069},
+ {f:'🎬', n:'Ghibli Museum', img:'poi-ghibli.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', h:'🕐 10:00-18:00 · cerrado los martes', lat:35.6962, lng:139.5702},
+ {f:'🎡', n:'Tokyo DisneySea', img:'poi-disneysea.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', h:'🕐 8:00-22:00 (varía por día)', lat:35.6273, lng:139.8889},
+ {f:'🌉', n:'Shibuya Crossing', img:'poi-shibuya.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
+ {f:'⛩️', n:'Senso-ji Asakusa', img:'poi-sensoji.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
+ {f:'🗼', n:'Tokyo Skytree', img:'poi-skytree.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', h:'🕐 10:00-21:00 (última subida 20:00)', lat:35.7101, lng:139.8107},
+ {f:'🎮', n:'Akihabara', img:'poi-akihabara.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
+ {f:'🥃', n:'Golden Gai (Shinjuku)', img:'poi-goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', h:'🕐 18:00-4:00 (bares)', lat:35.6920, lng:139.7009},
+ {f:'🐟', n:'Mercado de Toyosu', img:'poi-toyosu.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', h:'🕐 lonja 5:00-14:00 · zona gourmet 7:00-17:00', lat:35.6437, lng:139.7863},
+ {f:'⛩️', n:'Fushimi Inari', img:'poi-fushimi.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
+ {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'poi-arashiyama.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', h:'🕐 24h · mejor antes de las 9:00', lat:35.0173, lng:135.6725},
+ {f:'🏯', n:'Castillo de Osaka', img:'poi-castle.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', h:'🕐 9:00-17:00 · parque 24h', lat:34.6873, lng:135.5262},
+ {f:'🦌', n:'Todai-ji (Nara)', img:'poi-todaiji.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
+];
+
+var BUDGET = [
+ ['Comida y bebida', 280, '#ff3b5c'],
+ ['Transporte (shinkansen + urbano)', 150, '#00c2ff'],
+ ['Entradas (USJ 8.600¥, teamLab 3.600¥…)', 90, '#ffb020'],
+ ['Extras y compras', 100, '#3ddc84']
+];
+
+var TIPS = [
+ ['🏪 Desayuno konbini','Onigiri + café por 300-500¥ en Lawson/FamilyMart. La glucemia del samurái.'],
+ ['🍚 Gyudon en Sukiya/Matsuya','Plato completo por ~400¥. La comida más barata de Japón, y rica.'],
+ ['✨ Iluminaciones GRATIS','Shibuya Blue Cave (600.000 LEDs) y Midosuji no cuestan nada y son de las mejores del país.'],
+ ['📱 ICOCA/Suica en el móvil','Transporte sin fricción, sin colas y sin recargos. Google Maps + ICOCA = libertad.'],
+ ['🏷️ Supermercado 20:00','Bentō y sushi con hasta -50% al cierre. Cena premium por 3€.'],
+ ['💧 Agua gratis','El grifo en Japón es potable; rellena la botella (y en las fuentes de los templos).'],
+ ['🚄 Shinkansen listo','Nozomi reservado ya (14.720¥). Ojo: Nozomi no entra en el JR Pass — compara con Kodama si añades días.'],
+ ['🎟️ Entradas sin extras','USJ y teamLab en horas normales sin Express Pass; entra con tu propia comida al parque.']
+];
+
+var CHECK = [
+['✈️ RESERVAS', [
+  ['✈️','Vuelos ZH ida/vuelta','PNR QWKX47 · BCN 11:20 (11 dic)→KIX 14:00 (12 dic) · vuelta NRT 19:00 (30 dic)','—',true],
+  ['🎎','Alojamiento Osaka','Shimanouchi 1-13-19 (Abe Heights) · 10-22 dic','—',true,null,'https://www.google.com/maps/search/Shimanouchi+1-13-19+Osaka'],
+  ['🗼','Alojamiento Tokyo','Okubo 1-39 · 22-30 dic','—',true,null,'https://www.google.com/maps/search/Okubo+1-39+Shinjuku+Tokyo'],
+  ['🚄','Shinkansen Nozomi 22 dic','SmartEX · 10:00 (~2h21) · RESERVA obligatoria online','14.720¥',false,'https://smart-ex.jp/en/',null,'🎫 Comprar en SmartEX'],
+  ['🔥','TATARA Osaka','Noche 14 dic (los 6) · wagyu al carbón · Umeda','9.500¥ curso wagyu',false,'https://s.tabelog.com/en/osaka/A2701/A270101/27138164','https://www.google.com/maps/dir/34.6686,135.5017/34.6677,135.5010?travelmode=walking&hl=es','🍽️ Reservar mesa'],
+  ['💎','Yoroniku Tokio','26 dic · RESERVA 1 mes antes · Ebisu','8.000-12.000¥',false,'https://tabelog.com/en/tokyo/A1303/A130302/13029113/','https://www.google.com/maps/dir/35.7013,139.6935/35.6731,139.7115?travelmode=transit&hl=es','🍽️ Reservar mesa'],
+  ['🍣','Sushi Yoshikawa Kaido','Cena de Navidad · Nishi-Shinjuku (10 min de la estación) · turnos 18:00 y 20:30 · SOLO con reserva','10.000-15.000¥',false,'https://tabelog.com/en/tokyo/A1304/A130401/13310859','https://www.google.com/maps/search/Sushi+Yoshikawa+Kaido+Nishi+Shinjuku+Tokyo','🍽️ Reservar mesa'],
+  ['🥩','Kisshoukichi Kioto','20 dic (comida) · Kobe beef frente al río Kamo','8.000-9.999¥',false,'https://s.tabelog.com/en/kyoto/A2601/A260201/26040329','https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es','🍽️ Reservar mesa'],
+  ['🎢','Entradas USJ 18 dic','Nintendo World · 7:30 · comprar online','8.600¥',false,'https://www.usj.co.jp/web/en/us/tickets/',null,'🎢 Comprar entradas'],
+  ['🌀','teamLab 23 dic','Comprar 26 nov 00:00 JST · online','3.600¥',false,'https://teamlabplanets.dmm.com/en/',null,'🌀 Comprar entradas'],
+  ['🛏️','Nine Hours cápsula','Reserva 2 semanas antes · online · Shinjuku','4.900¥',false,'https://ninehours.co.jp/en/','https://www.google.com/maps/dir/35.7013,139.6935/35.6848,139.7030?travelmode=walking&hl=es','🛏️ Ver disponibilidad'],
+ ]],
+['🎒 EQUIPO & ROPA', [
+  ['🎥','Ray-Ban Meta Gen2','Comprar en España','329€',false],
+  ['📸','Powerbank','Día entero grabando','—',false],
+  ['🧥','Ropa invierno dic','7-12°C · capas','—',false],
+  ['👟','Zapatillas cómodas','30.000 pasos/día','—',false],
+  ['💊','Botiquín básico','Ibuprofeno, tiritas','—',false],
+ ]],
+['💴 DINERO & APPS', [
+  ['💴','Efectivo yen','Retirar en KIX (7-Bank)','50k¥',false],
+  ['📶','eSIM + Pocket WiFi','Comprar online ANTES de volar (Airalo)','23€',false,'https://www.airalo.com/japan-esim'],
+  ['🛡️','Seguro de viaje','Médico + equipaje','—',true],
+  ['📱','Maps offline','Descargar Osaka/Tokio/Kioto','0¥',true],
+  ['🔌','Adaptador enchufe','Tipo A (USA) · 100V','5€',false],
+  ['🪪','Pasaporte 6 meses','Sin visado UE <90d','—',true],
+  ['🍔','Reservas Tabelog','App EN + confirmaciones','0¥',false],
+ ]],
+['🚇 TRANSPORTE', [
+  ['🚄','Nozomi Shin-Osaka→Tokyo','22 dic 10:00 (~2h21) · RESERVA online','14.720¥',false,'https://smart-ex.jp/en/',null,'🎫 Comprar en SmartEX'],
+  ['🚃','JR Osaka↔Kioto/Nara','Días 15-17 y 20 · SIN reserva · ICOCA directo','580-680¥',false],
+  ['🚃','ICOCA / Welcome Suica','Se compra ALLÍ en máquinas KIX · recarga 3.000¥ · vale metro+tren+conbini','3.000¥',false,'https://www.westjr.co.jp/global/en/ticket/'],
+  ['🚕','Nankai KIX→Namba','Al llegar (10 y 12 dic) · SIN reserva, se paga allí · Rapi:t opcional con reserva','920¥',false,'https://www.nankai.co.jp/'],
+  ['🧳','Takuhaibin maleta','Se hace EN EL CONBINI (29 dic), sin reserva','2.000¥',false],
+  ['🚌','NEX → NRT','30 dic ~15:30 · asiento reservado recomendado · se compra en máquinas JR o ventanilla con pasaporte','3.200¥',false,'https://www.jreast.co.jp/e/nex/',null,'🔗 Info oficial'],
+ ]],
+['🎆 ACTIVIDADES & FIESTA', [
+  ['🎤','Karaoke Kan Namba','Noche del 10 dic · sala 2 pax (plan cumple)','1.500¥/2h',false,'https://www.karaokekan.jp/','https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es','🎤 Ver local / reservar'],
+  ['🍺','Golden Gai / Omoide','Noche Tokyo · Shinjuku','—',false,null,'https://www.google.com/maps/dir/35.7013,139.6935/35.6930,139.7005?travelmode=walking&hl=es'],
+  ['💈','Barbería Shoji 1870','LUN cerrado · Shinjuku','4.000¥',false,null,'https://www.google.com/maps/dir/35.7013,139.6935/35.6938,139.7034?travelmode=walking&hl=es'],
+  ['💻','Cyber Bagus noche','24 dic · Akihabara','3.800¥',false,null,'https://www.google.com/maps/dir/35.7013,139.6935/35.6939,139.7035?travelmode=walking&hl=es'],
+  ['🔞','M\'s Pop Life','BLUR para cámara','0¥',false],
+  ['✨','Iluminaciones Navidad','Midosuji · Blue Cave · Roppongi','0¥',false],
+  ['🦌','Nara + Todai-ji','17 dic · ciervos · desde Osaka en JR (ICOCA)','600¥',false,null,'https://www.google.com/maps/dir/34.6686,135.5017/34.6887,135.8398?travelmode=transit&hl=es'],
+  ['⛩️','Fushimi Inari 8am','15 dic · sin gente · desde Osaka en JR (ICOCA)','400¥',false,null,'https://www.google.com/maps/dir/34.6686,135.5017/34.9671,135.7727?travelmode=transit&hl=es'],
+ ]],
+];
+var checkCat = {};
+try { checkCat = JSON.parse(localStorage.getItem('japon-checklist')||'{}'); } catch(e){}
+function saveChecks(){ try{ localStorage.setItem('japon-checklist', JSON.stringify(checkCat)); }catch(e){} }
+function renderCheck(){
+  var box = document.getElementById('check-list'); if(!box) return;
+  var html = '', total = 0, done = 0;
+  CHECK.forEach(function(cat){
+    html += '<div class="check-cat"><h3 class="sec-title">'+cat[0]+'</h3><div class="check-grid">';
+    cat[1].forEach(function(c, j){
+      var key = cat[0] + '_' + j;
+      var st = checkCat[key] === undefined ? c[4] : checkCat[key];
+      total++; if(st) done++;
+      var links = (c[5] ? '<a class="res-link" href="'+c[5]+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+(c[7]||'🔗 Reservar / comprar')+'</a>' : '') + (c[6] ? '<a class="res-link lnk-maps" href="'+c[6]+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍 Cómo llegar</a>' : '');
+      html += '<div class="check-item'+(st?' done':'')+'" onclick="toggleCheck(\''+cat[0]+'\','+j+')"><div class="check-box">'+(st?'✓':'')+'</div><div class="check-main"><h4>'+(c[0]||'')+' '+(c[1]||'')+'</h4><p>'+(c[2]||'')+'</p><div class="check-foot"><span class="price">'+(c[3]||'')+'</span>'+(links?'<div class="check-links">'+links+'</div>':'')+'</div></div></div>';
+    });
+    html += '</div></div>';
+  });
+  box.innerHTML = html;
+  var pct = total ? Math.round(done/total*100) : 0;
+  var pb = document.getElementById('prog-bar'); if(pb) pb.style.width = pct + '%';
+  var pn = document.getElementById('prog-num'); if(pn) pn.textContent = done + ' / ' + total + ' completadas';
+  var pp = document.getElementById('prog-pct'); if(pp) pp.textContent = pct + '%';
+  var ct = document.getElementById('check-total'); if(ct) ct.textContent = total + ' puntos';
+}
+document.getElementById('check-list').addEventListener('click', function(e){
+  if(e.target.closest('a')) e.stopPropagation();
+}, true);
+function toggleCheck(cat, j){
+  var key = cat + '_' + j;
+  var cur = checkCat[key] === undefined ? (function(){ for(var i=0;i<CHECK.length;i++){ if(CHECK[i][0]===cat) return CHECK[i][1][j][4]; } return false; })() : checkCat[key];
+  checkCat[key] = !cur; saveChecks(); renderCheck();
+}
+
+/* ============ THEME ============ */
+var themeBtn = document.getElementById('themeToggle');
+function mapDark(on){
+  var pane = document.querySelector('.leaflet-tile-pane');
+  if(pane) pane.style.filter = on ? 'invert(1) hue-rotate(180deg) saturate(0.7) brightness(0.92) contrast(0.9)' : '';
+}
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{localStorage.setItem('japon-theme', t);}catch(e){}
+  themeBtn.textContent = t === 'dark' ? '🌙' : '☀️';
+  if(typeof curBase !== 'undefined'){ mapDark(curBase === 'map' && t === 'dark'); }
+  initChart();
+}
+themeBtn.addEventListener('click', function(){
+  setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+});
+
+/* ============ TABS ============ */
+function goTab(name){
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === name); });
+  document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('active', s.id === 'tab-' + name); });
+  window.scrollTo(0,0);
+  if(name==='mapa'){ setTimeout(function(){ if(window.map){ map.invalidateSize(); if(!map.__fitted && JAPAN_B){ map.fitBounds(JAPAN_B, {padding:[36,36]}); map.__fitted = true; } } else { initMap(); } }, 150); }
+  if(name==='videos') renderVideos();
+  if(name==='checklist'){ renderCheck(); }
+  if(name==='presupuesto'){ try{ initChart(); }catch(e){} }
+}
+document.querySelectorAll('.tab-btn').forEach(function(b){
+  b.addEventListener('click', function(){ goTab(b.dataset.tab); });
+});
+
+/* ============ TRAILER ============ */
+var SLIDES = [
+ {img:'trailer/01_marc_beach_muscular.jpg', t1:'MARC', t2:'El Titán de la Playa', sub:'Primero en pisar suelo japonés.'},
+ {img:'trailer/02_ruben_shadow_dagger.jpg', t1:'RUBEN', t2:'La Sombra de los Bakamono', sub:'Se mueve entre las sombras de Osaka.'},
+ {img:'trailer/03_erik_cursed_katana.jpg', t1:'ERIK', t2:'Portador de la Katana Maldita', sub:'La maldición se despierta en Kioto.'},
+ {img:'trailer/04_adria_berserker_axe.jpg', t1:'ADRIA', t2:'El Berserker del Hacha', sub:'Nada lo detiene. Ni siquiera el wagyu.'},
+ {img:'trailer/05_kamal_sakura_bow.jpg', t1:'KAMAL', t2:'El Arquero del Cerezo', sub:'Cada flecha florece como un sakura.'},
+ {img:'trailer/06_simeon_lightning_staff.jpg', t1:'SIMEON', t2:'El Mago del Rayo', sub:'La tormenta eléctrica de Tokyo.'},
+ {img:'trailer/07_arena_cielo.jpg', t1:'LA ARENA DEL CIELO', t2:'Algo se acerca…', sub:'', countdown:true},
+ {img:'trailer/08_title_card.jpg', t1:'¡PROXIMAMENTE EN JAPON!', t2:'SEIS HÉROES · UN PAÍS · UNA MISIÓN', sub:'10 — 30 dic 2026 · OSAKA → KIOTO → NARA → TOKYO', title:true}
+];
+var DUR = [5000, 5000, 5000, 5000, 5000, 5000, 12000, 9000];
+
+var slides = document.querySelectorAll('.slide');
+var tt1 = document.getElementById('tt1'), tt2 = document.getElementById('tt2'), sub = document.getElementById('sub');
+var txtBox = document.getElementById('trailerText'), counter = document.getElementById('counter');
+var dotsBox = document.getElementById('dots');
+var seqId = 0, timers = [], cdTimer = null, cdSeq = 0;
+
+for (var i = 0; i < SLIDES.length; i++){
+  var d = document.createElement('span'); d.className = 'dot' + (i === 0 ? ' active' : '');
+  dotsBox.appendChild(d);
+}
+
+function animEl(el){
+  el.classList.remove('anim'); void el.offsetWidth; el.classList.add('anim');
+}
+function clearCd(){
+  cdSeq++;
+  if (cdTimer){ clearTimeout(cdTimer); cdTimer = null; }
+  counter.classList.remove('show','pop');
+}
+function startCountdown(){
+  var n = 11, my = ++cdSeq;
+  (function tick(){
+    if (my !== cdSeq) return;
+    n--;
+    if (n < 1){ clearCd(); return; }
+    counter.textContent = n;
+    counter.classList.remove('pop'); void counter.offsetWidth; counter.classList.add('pop');
+    cdTimer = setTimeout(tick, 1000);
+  })();
+}
+function setSlide(i){
+  clearCd();
+  slides.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+  var dots = dotsBox.children;
+  for (var k = 0; k < dots.length; k++) dots[k].classList.toggle('active', k === i);
+  var S = SLIDES[i];
+  tt1.textContent = S.t1; tt2.textContent = S.t2; sub.textContent = S.sub || '';
+  txtBox.classList.toggle('mode-title', !!S.title);
+  animEl(tt1); animEl(tt2); animEl(sub);
+  if (S.countdown){
+        startCountdown();
+      }
+}
+function stopTrailer(){
+  seqId++;
+  timers.forEach(clearTimeout); timers = [];
+  clearCd();
+}
+function playTrailer(){
+  stopTrailer();
+  var id = ++seqId;
+  var step = function(i){
+    if (id !== seqId) return;
+    setSlide(i);
+    timers.push(setTimeout(function(){ step((i + 1) % SLIDES.length); }, DUR[i]));
+  };
+  step(0);
+}
+document.getElementById('btnPlay').addEventListener('click', function(){ playTrailer(); });
+document.getElementById('btnSkip').addEventListener('click', function(){ stopTrailer(); goTab('ruta'); });
+
+setSlide(0);
+playTrailer();
+
+/* ============ RUTA ============ */
+
+function mathDist(lat1, lng1, lat2, lng2){
+  var R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLng = (lng2-lng1)*Math.PI/180;
+  var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+var DAY_MAPS = {"1": [], "2": [["Kuromon", 34.6659, 135.5056], ["Amerikamura", 34.669, 135.4985], ["Spa World", 34.6522, 135.5062]], "3": [["Namba", 34.6625, 135.501], ["Dotonbori", 34.6687, 135.5013], ["Shinsekai", 34.6525, 135.5063]], "4": [["Osaka Castle", 34.6873, 135.5262], ["Dotonbori", 34.6687, 135.5013]], "5": [["Kuromon", 34.6659, 135.5056], ["Den Den", 34.6686, 135.5027], ["TATARA", 34.6677, 135.501]], "6": [["Fushimi Inari", 34.9671, 135.7727], ["Gion", 35.003, 135.775], ["Pontocho", 35.0045, 135.772]], "7": [["Arashiyama", 35.0173, 135.6725], ["Kiyomizu", 34.9949, 135.785]], "8": [["Nara Park", 34.6887, 135.8398], ["Todai-ji", 34.689, 135.8398]], "9": [["USJ", 34.6654, 135.4322]], "10": [["Spa World", 34.6522, 135.5062], ["Shinsaibashi", 34.6694, 135.4988]], "11": [["Nishiki", 35.0044, 135.7646], ["Kisshoukichi", 35.0039, 135.7786]], "12": [["Kuromon", 34.6659, 135.5056], ["Shinsekai", 34.6525, 135.5063]], "13": [["Shin-Osaka", 34.7331, 135.5001], ["Shibuya", 35.6595, 139.7005], ["Golden Gai", 35.693, 139.7005]], "14": [["Toyosu", 35.6437, 135.7863], ["teamLab", 35.648, 139.79]], "15": [["Akihabara", 35.6986, 139.771], ["Bagus", 35.6939, 139.7035]], "16": [["Ginza", 35.6717, 139.7651], ["Shoji", 35.6938, 139.7034]], "17": [["Donki Shibuya", 35.6598, 139.7005], ["Yoroniku", 35.6731, 139.7115]], "18": [["Ueno", 35.7106, 139.7747], ["Senso-ji", 35.7148, 139.7967], ["Nakamoto", 35.6953, 139.7137]], "19": [["Tsukiji", 35.6654, 139.7714], ["Skytree", 35.7101, 139.8107], ["Sendou", 35.6717, 139.7651]], "20": [["Shinjuku", 35.6938, 139.7034]], "21": [["Narita", 35.7734, 140.3934]]};
+
+var rutaBox = document.getElementById('ruta-list');
+ROUTE.forEach(function(d){
+  var slot = function(icon, lbl, txt){ return '<div class="slot"><b>' + icon + ' ' + lbl + '</b>' + (locked ? '🔒 Oculto — abre la pestaña Cumple.' : txt) + '</div>'; };
+  var badge = d.badge ? '<span class="badge">' + d.badge + '</span>' : '';
+  var locked = d.d === 1;
+  var card = document.createElement('article');
+  card.className = locked ? 'day day-locked' : 'day';
+  var lockCov = locked ? '<div class="lock-cover"><b>🔒 Día 10 — plan sorpresa</b><p>Este día va en secreto hasta que lleguéis (que Marc no lo vea). Se abre con contraseña en la pestaña Cumple.</p><button class="lock-go" onclick="goTab(\'cumple\')">🔑 Abrir plan del día 10</button></div>' : '';
+  card.innerHTML =
+    '<div class="day-header"><span class="dnum">D' + d.d + '</span><div><h3>' + d.fecha + ' · <span class="city">' + d.city + '</span></h3><p>' + d.title + '</p></div>' + badge + '</div>' +
+    '<div class="slots">' +
+      slot('🌅','MAÑANA', d.m) +
+      slot('☀️','TARDE', d.t) +
+      slot('🌙','NOCHE', d.n) +
+    '</div>' +
+    '<div class="day-maps">' + (d.d !== 1 && DAY_MAPS[d.d] ? DAY_MAPS[d.d].map(function(s){
+      var m2 = mathDist(s[1], s[2], d.d < 10 ? 34.6686 : 35.7013, d.d < 10 ? 135.5017 : 139.6935);
+      var t = m2 < 6 ? 'walking' : 'transit';
+      return '<a class="loc-chip" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/' + (d.d < 10 ? '34.6686,135.5017' : '35.7013,139.6935') + '/' + s[1] + ',' + s[2] + '?travelmode=' + t + '">📍 ' + s[0] + '</a>';
+    }).join('') : '') + '</div>' +
+    lockCov +
+    '<div class="meta">' +
+      '<span>🚆 <b>' + d.tr + '</b></span>' +
+      '<span>💶 <b>' + d.price + '</b></span>' +
+      '<span>🎬 <b>' + d.vid + '</b></span>' +
+      '<span>🍜 <b>' + d.food + '</b></span>' +
+    '</div>';
+  rutaBox.appendChild(card);
+});
+
+/* ============ RESTAURANTES/* ============ RESTAURANTES ============ */
+
+/* ============ MAPA ============ */
+var MAPS = [
+ {n:'🏠 Base Osaka · Shimanouchi', d:'Alojamiento 12-22 dic · 1-13-19', c:[34.6686,135.5017], t:'base'},
+ {n:'🏠 Base Tokyo · Okubo', d:'Alojamiento 22-30 dic · 1-39', c:[35.7013,139.6935], t:'base'},
+ {n:'🍜 TATARA', d:'Wagyu al carbón · Noche 14 dic', c:[34.6677,135.5010], t:'food'},
+ {n:'🍜 OSTERIA IS -Gion-', d:'Italo-japonés · Tabelog 3.52', c:[35.0027,135.7768], t:'food'},
+ {n:'🍜 Kobe Gyuu Kisshoukichi', d:'Kobe beef · Tabelog 3.55', c:[35.0039,135.7786], t:'food'},
+ {n:'🍜 Yoroniku', d:'Yakiniku premium · Tabelog 3.80', c:[35.6731,139.7115], t:'food'},
+ {n:'🍜 Ginza Sushi Sendou', d:'Sushi · Tabelog 3.52', c:[35.6717,139.7651], t:'food'},
+ {n:'🍜 Sushi Yoshikawa Kaido', d:'Omakase Navidad · Tabelog 3.55', c:[35.6704,139.7575], t:'food'},
+ {n:'🍜 Ramen Nakamoto', d:'Ramen picante 🌶️ · Shinjuku', c:[35.6953,139.7137], t:'food'},
+ {n:'✨ Shibuya Blue Cave', d:'600.000 LEDs · GRATIS · 22 dic', c:[35.6598,139.7006], t:'light'},
+ {n:'✨ Roppongi Keyakizaka', d:'Iluminación de cine · 23 dic', c:[35.6604,139.7292], t:'light'},
+ {n:'✨ Tokyo Midtown', d:'Iluminación + árbol gigante · 23 dic', c:[35.6665,139.7313], t:'light'},
+ {n:'✨ Midosuji Osaka', d:'Iluminación navideña · GRATIS', c:[34.6992,135.4986], t:'light'},
+ {n:'⛩️ Fushimi Inari', d:'10.000 torii · 15 dic', c:[34.9671,135.7727], t:'spot'},
+ {n:'⛩️ Kiyomizu-dera', d:'Terraza de madera · Kioto', c:[34.9949,135.7850], t:'spot'},
+ {n:'🦌 Nara Park + Todai-ji', d:'Ciervos y Gran Buda · 17 dic', c:[34.6887,135.8398], t:'spot'},
+ {n:'🎢 USJ', d:'Universal Studios · 18 dic · 8.600¥', c:[34.6654,135.4322], t:'spot'},
+ {n:'🌀 teamLab Planets', d:'Arte digital con agua · 3.600¥', c:[35.6480,139.7900], t:'spot'},
+ {n:'🏯 Osaka Castle', d:'Castillo y parque · 13 dic', c:[34.6873,135.5262], t:'spot'},
+ {n:'🗼 Dotonbori', d:'Letrero Glico y callejones', c:[34.6687,135.5013], t:'spot'},
+ {n:'🗼 Shinsekai + Tsutenkaku', d:'Kushikatsu y ambiente retro', c:[34.6525,135.5063], t:'spot'},
+ {n:'💈 Shoji Barbería (1870)', d:'Corte retro · 4.000¥ · 25 dic', c:[35.6938,139.7034], t:'spot'},
+ {n:'🛏️ Nine Hours Cápsula', d:'Experiencia cápsula · 4.900-7.000¥', c:[35.6848,139.7030], t:'spot'},
+ {n:'🕹️ Gran Cyber Bagus', d:'Arcades Akihabara · 3.800¥ vs nocturno', c:[35.6984,139.7731], t:'spot'},
+ {n:'🎮 M’s Pop Life Akiba', d:'Figuras y gachapon · Akihabara', c:[35.6986,139.7710], t:'spot'},
+ {n:'🛒 Mega Donki', d:'Don Quijote gigante · Shinjuku', c:[35.6957,139.7062], t:'spot'},
+ {n:'⛩️ Senso-ji Asakusa', d:'La linterna gigante · 27 dic', c:[35.7148,139.7967], t:'spot'},
+ {n:'🌸 Meiji Jingu', d:'Santuario del bosque · 26 dic', c:[35.6764,139.6993], t:'spot'},
+ {n:'🗼 Tokyo Skytree', d:'634 m de antena · 27 dic', c:[35.7101,139.8107], t:'spot'},
+ {n:'🤖 Unicorn Gundam Odaiba', d:'Estatua transformable · 23 dic', c:[35.6246,139.7758], t:'spot'},
+ {n:'🎌 Ueno + Ameyoko', d:'Mercadillo caótico · 27 dic', c:[35.7106,139.7747], t:'spot'}
+];
+var map = null, curBase = 'sat';
+var PIN_COL = {'base':'#ff3b5c','Ciudad y ocio':'#00c2ff','Naturaleza':'#3ddc84','Cultura':'#f5c518','Museos y parques':'#a13dff'};
+var baseM = null, baseS = null, lblS = null, JAPAN_B = null;
+var T_OSM = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+var T_GOOGLE = 'https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+var T_IM  = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var T_LB  = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
+function pinIcon(html, color, big){
+  var s = big ? 36 : 28;
+  return L.divIcon({className:'', html:'<div class="mm-pin2" style="width:'+s+'px;height:'+s+'px;border-color:'+color+'"><span>'+html+'</span></div>', iconSize:[s,s], iconAnchor:[s/2,s], popupAnchor:[0,-s]});
+}
+var satTries = 0, lastSatTry = 0;
+function satFallback(){
+  satTries++;
+  if(satTries === 1){ baseS.setUrl(T_IM); map.addLayer(lblS); }
+  else if(satTries === 2){ baseS.setUrl(T_OSM); map.removeLayer(lblS); }
+  else { satTries = 0; baseS.setUrl(T_IM); map.addLayer(lblS); }
+}
+setInterval(function(){
+  if(curBase !== 'sat' || !map) return;
+  if(Date.now() - lastSatTry < 10000) return;
+  var sizes = [];
+  document.querySelectorAll('#map .leaflet-tile-pane img').forEach(function(im){
+    var src = im.src || '';
+    if(src.indexOf('arcgisonline') < 0) return;
+    var e = (window.performance && performance.getEntriesByName) ? performance.getEntriesByName(src) : null;
+    if(e && e.length && e[0].transferSize > 0) sizes.push(e[0].transferSize);
+  });
+  if(sizes.length < 3) return;
+  var sorted = sizes.slice().sort(function(a,b){ return a-b; });
+  var med = sorted[Math.floor(sorted.length/2)];
+  if(med < 7000){ lastSatTry = Date.now(); satFallback(); }
+}, 4000);
+function mkLayers(){
+  baseM = L.tileLayer(T_OSM, {attribution:'© OpenStreetMap', maxZoom:19, referrerPolicy:'no-referrer'});
+  baseS = L.tileLayer(T_GOOGLE, {attribution:'© Google Maps', subdomains:['mt0','mt1','mt2','mt3'], maxZoom:20, referrerPolicy:'no-referrer'});
+  lblS  = L.tileLayer(T_LB, {attribution:'© Esri', maxZoom:18, referrerPolicy:'no-referrer'});
+  baseM.on('tileerror', function(){ if(baseM._url === T_OSM) baseM.setUrl('https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'); });
+  baseS.on('tileerror', satFallback);
+}
+function setBase(mode){
+  curBase = mode;
+  if(mode === 'sat') satTries = 0;
+  if(!baseM) mkLayers();
+  map.removeLayer(baseM); map.removeLayer(baseS); map.removeLayer(lblS);
+  if(mode === 'sat'){ map.addLayer(baseS); if(baseS._url === T_IM) map.addLayer(lblS); }
+  else { map.addLayer(baseM); }
+  mapDark(mode === 'map' && document.documentElement.dataset.theme === 'dark');
+  document.querySelectorAll('#capasBar .mbtn').forEach(function(b){ b.classList.toggle('active', b.dataset.base === mode); });
+}
+var AREAS = {osaka:[34.6686,135.5017,13], kioto:[35.0116,135.7681,12], nara:[34.6851,135.8049,13], tokio:[35.6762,139.6503,12]};
+function initMap(){
+  var el = document.getElementById('map');
+  if(!el || !window.L) return;
+  if(map){ map.remove(); map = null; }
+  map = L.map('map', {zoomControl:true}).setView([34.9, 136.9], 5);
+  setBase('sat');
+  var pts = [L.latLng(34.6686,135.5017), L.latLng(35.7013,139.6935)];
+  L.marker([34.6686,135.5017], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Osaka (checkpoint)</b><br>Shimanouchi 1-13-19 · Abe Heights<br><a href="https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5017?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Ver en Google Maps</a>');
+  L.marker([35.7013,139.6935], {icon: pinIcon('H', PIN_COL.base, true)}).addTo(map).bindPopup('<b>🏠 Casa Tokio</b><br>Okubo 1-39<br><a href="https://www.google.com/maps/dir/35.7013,139.6935/35.7013,139.6935?travelmode=walking&hl=es" target="_blank" rel="noopener">📍 Ver en Google Maps</a>');
+  POIS.forEach(function(p){
+    pts.push(L.latLng(p.lat, p.lng));
+    L.marker([p.lat, p.lng], {icon: pinIcon(p.f, PIN_COL[p.cat] || '#ff3b5c', false)}).addTo(map)
+      .bindPopup('<b>' + p.f + ' ' + p.n + '</b><br>' + poiDist(p.lat, p.lng) + '<br>' + (p.h ? p.h + '<br>' : '') + '<a href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a>');
+  });
+  JAPAN_B = L.latLngBounds(pts);
+    map.__fitted = false;
+    setTimeout(function(){
+      map.invalidateSize();
+      var tabEl = document.getElementById('tab-mapa');
+      if(tabEl && getComputedStyle(tabEl).display !== 'none'){
+        map.fitBounds(JAPAN_B, {padding:[36,36]});
+        map.__fitted = true;
+      }
+    }, 60);
+  map.on('moveend', function(){
+    var z = map.getZoom(), bb = map.getBounds();
+    document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
+      var on = (b.dataset.area === 'all') ? (z >= 4.6 && z <= 6) : false;
+      if(!on && AREAS[b.dataset.area]){
+        var ll = L.latLng(AREAS[b.dataset.area][0], AREAS[b.dataset.area][1]);
+        on = bb.contains(ll) && z >= 10.5;
+      }
+      b.classList.toggle('active', on);
+    });
+  });
+}
+document.querySelectorAll('#capasBar .mbtn').forEach(function(b){
+  b.addEventListener('click', function(){ setBase(b.dataset.base); });
+});
+document.querySelectorAll('#areaBar .mbtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(b.dataset.area === 'all'){ map.fitBounds(JAPAN_B, {padding:[36,36]}); return; }
+    var a = AREAS[b.dataset.area];
+    map.flyTo([a[0], a[1]], a[2], {duration:1.1});
+  });
+});
+
+/* ============ POIS ============ */
+var poiBox = document.getElementById('poi-list');
+var POI_ORDER = ['Ciudad y ocio','Naturaleza','Cultura','Museos y parques'];
+var POI_CATS = {};
+POIS.forEach(function(p){ var c = p.cat || 'Naturaleza'; (POI_CATS[c] = POI_CATS[c] || []).push(p); });
+function poiBase(lat){ return lat < 35.6 ? {n:'Osaka', c:[34.6686,135.5017]} : {n:'Tokio', c:[35.7013,139.6935]}; }
+function poiDistKm(lat, lng){
+  var b = poiBase(lat).c;
+  var R = 6371, la1 = b[0]*Math.PI/180, la2 = lat*Math.PI/180;
+  var dLa = (lat-b[0])*Math.PI/180, dLn = (lng-b[1])*Math.PI/180;
+  var a = Math.sin(dLa/2)*Math.sin(dLa/2) + Math.cos(la1)*Math.cos(la2)*Math.sin(dLn/2)*Math.sin(dLn/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function poiDist(lat, lng){
+  var b = poiBase(lat), km = poiDistKm(lat, lng);
+  var modo = km < 60 ? 'escapada' : (km < 450 ? 'shinkansen' : 'vuelo');
+  return '&#128205; ~' + Math.round(km).toLocaleString('es-ES') + ' km de la casa de ' + b.n + ' · ' + modo;
+}
+Object.keys(POI_CATS).forEach(function(c){ POI_CATS[c].sort(function(a, b){ return poiDistKm(a.lat, a.lng) - poiDistKm(b.lat, b.lng); }); });
+function dirLink(lat, lng){
+  var b = (lat < 35.6 ? '34.6686,135.5017' : '35.7013,139.6935');
+  var d = Math.hypot(lat - (lat < 35.6 ? 34.6686 : 35.7013), lng - (lat < 35.6 ? 135.5017 : 139.6935));
+  var mode = d < 0.2 ? 'walking' : 'transit';
+  return 'https://www.google.com/maps/dir/' + b + '/' + lat + ',' + lng + '?travelmode=' + mode + '&hl=es';
+}
+POI_ORDER.forEach(function(cat){
+  if(!POI_CATS[cat] || !POI_CATS[cat].length) return;
+  var wrap = document.createElement('div'); wrap.className = 'poi-cat';
+  var hd = document.createElement('h3'); hd.className = 'sec-title'; hd.textContent = cat; wrap.appendChild(hd);
+  var grid = document.createElement('div'); grid.className = 'grid g2';
+  POI_CATS[cat].forEach(function(p){
+    var card = document.createElement('div'); card.className = 'card';
+    var im = p.img ? '<img decoding="async" class="tf" src="img/web/' + p.img + '" alt="' + p.n + '" loading="lazy">' : '<div class="tf emoji">📍</div>';
+    card.innerHTML = im + '<h3>' + p.f + ' ' + p.n + '</h3><p>' + p.d + '</p>' +
+      '<div class="price">' + poiDist(p.lat, p.lng) + '</div>' +
+      '<p class="why2">💡 ' + p.w + '</p>' +
+      '<div class="card-foot">' + (p.h ? '<span class="tag">' + p.h + '</span>' : '') + '<a class="maps" href="' + dirLink(p.lat, p.lng) + '" target="_blank" rel="noopener">📍 Cómo llegar</a></div>';
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid); poiBox.appendChild(wrap);
+});
+
+
+
+/* ============ PRESUPUESTO ============ */
+var budgetChart = null;
+function initChart(){
+  var cv = document.getElementById('budgetChart');
+  if (!cv || !window.Chart) return;
+  if (budgetChart) budgetChart.destroy();
+  var dark = document.documentElement.dataset.theme === 'dark';
+  var YEN = 156, BTOT = BUDGET.reduce(function(a,b){ return a + b[1]; }, 0);
+  budgetChart = new Chart(cv, {
+    type:'doughnut',
+    data:{labels:BUDGET.map(function(b){ return b[0] + ' · ' + b[1] + ' €'; }), datasets:[{data:BUDGET.map(function(b){return b[1];}), backgroundColor:BUDGET.map(function(b){return b[2];}), borderWidth:2, borderColor:dark?'#141b28':'#ffffff'}]},
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{legend:{position:'bottom', labels:{color:dark?'#e8ecf4':'#131a28', font:{size:11}, padding:14, boxWidth:12}},
+        tooltip:{callbacks:{label:function(c){ var v = c.parsed; return ' ' + v + ' € (≈' + Math.round(v*YEN).toLocaleString('es-ES') + '¥ · ' + Math.round(v/BTOT*100) + '%)'; }}}}
+    }
+  });
+}
+var budgetBox = document.getElementById('budget-list');
+var YEN2 = 156, BTOT2 = BUDGET.reduce(function(a,b){ return a + b[1]; }, 0);
+BUDGET.forEach(function(b){
+  var line = document.createElement('div');
+  line.className = 'b-line';
+  line.innerHTML = '<div class="key">' + b[0] + '</div><div class="val" style="color:' + b[2] + '">' + b[1] + ' €</div><div class="sub">≈' + Math.round(b[1]*YEN2).toLocaleString('es-ES') + '¥ · ' + Math.round(b[1]/BTOT2*100) + '%</div>';
+  budgetBox.appendChild(line);
+});
+(function(){
+  var t = document.getElementById('budget-total');
+  if(t) t.textContent = BTOT2 + ' € ≈ ' + Math.round(BTOT2*YEN2).toLocaleString('es-ES') + '¥';
+  var s = document.getElementById('budget-sub');
+  if(s) s.textContent = '💡 ≈' + Math.round(BTOT2*YEN2/20).toLocaleString('es-ES') + ' ¥/día por persona (20 días). Vuelos y hoteles aparte, ya reservados.';
+})();
+var tipsBox = document.getElementById('tips-list');
+TIPS.forEach(function(t){
+  var tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.innerHTML = '<b>' + t[0] + '</b>' + t[1];
+  tipsBox.appendChild(tip);
+});
+
+// ===== VIDEOS (check grabado) =====
+// ===== VIDEOS (orden cronologico, check grabado, horario + maps) =====
+var VIDEOS = [
+ {t:'Karaoke Kan Namba', d:'Día 1', hook:'Primera noche en Kan Namba', f:'Vlog', c:'2-3k¥', h:'24h · cierra 5:00', b:[34.6659,135.5045], lat:34.6659, lng:135.5045, y:'https://www.youtube.com/results?search_query=karaoke+nomihodai+japan'},
+ {t:'1.000 torii 8am', d:'Día 6', hook:'Fushimi Inari sin gente', f:'B-roll', c:'400¥', h:'24h · mejor 7:30', b:[34.6686,135.5017], lat:34.9671, lng:135.7727, y:'https://www.youtube.com/results?search_query=fushimi+inari+sunrise'},
+ {t:'Ciervos de Nara', d:'Día 8', hook:'Te atacan por 200¥ de galletas', f:'B-roll', c:'600¥', h:'Todai-ji 7:30-17', b:[34.6686,135.5017], lat:34.6887, lng:135.8398, y:'https://www.youtube.com/results?search_query=nara+deer+park'},
+ {t:'Ekiben shinkansen', d:'Día 13', hook:'Bento a 285km/h a Tokyo', f:'ASMR', c:'2.500¥', h:'estación 6-21', b:[34.6686,135.5017], lat:34.7331, lng:135.5001, y:'https://www.youtube.com/results?search_query=ekiben+shinkansen'},
+ {t:'TeamLab luz', d:'Día 14', hook:'El museo más viral', f:'POV', c:'3.600¥', h:'10-19', b:[35.7013,139.6935], lat:35.6480, lng:139.7900, y:'https://www.youtube.com/results?search_query=teamlab+borderless'},
+ {t:"M's Pop Life", d:'Día 15', hook:'8 plantas adultas — BLUR', f:'Reacción', c:'0¥', h:'10-23', b:[35.7013,139.6935], lat:35.6986, lng:139.7710, y:'https://www.youtube.com/results?search_query=akihabara+adult+store'},
+ {t:'Cyber café noche', d:'Día 15', hook:'PC + manga + ducha + bebida libre', f:'Tour', c:'3.800¥', h:'24h', b:[35.7013,139.6935], lat:35.6939, lng:139.7035, y:'https://www.youtube.com/results?search_query=manga+cafe+overnight+japan'},
+ {t:'Bizarre Foods', d:'Día 15', hook:'Cuervo/caballo en Rice and Circus', f:'Reacción', c:'2-4k¥', h:'11:30-14:30 / 17-21', b:[35.7013,139.6935], lat:35.7157, lng:139.7000, y:'https://www.youtube.com/results?search_query=bizarre+foods+japan'},
+ {t:'Barbería 1870', d:'Día 16', hook:'Navaja recta ASMR', f:'ASMR', c:'4.000¥', h:'9-19 · LUN cerrado', b:[35.7013,139.6935], lat:35.6938, lng:139.7034, y:'https://www.youtube.com/results?search_query=japanese+barber+straight+razor+asmr'},
+ {t:'Donki haul 24h', d:'Día 17', hook:'Haul 10k¥ en el Don Quijote', f:'Haul', c:'3-5k¥', h:'24h', b:[35.7013,139.6935], lat:35.6598, lng:139.7005, y:'https://www.youtube.com/results?search_query=don+quijote+haul'},
+ {t:'Ramen nivel 10', d:'Día 18', hook:'Nakamoto Hokkyoku — lloramos', f:'Challenge', c:'1.200¥', h:'11:30-23', b:[35.7013,139.6935], lat:35.6953, lng:139.7137, y:'https://www.youtube.com/results?search_query=spiciest+ramen+challenge'},
+ {t:'Tsukiji 6am', d:'Día 19', hook:'Sushi a las 6 de la mañana', f:'B-roll', c:'1.500-3.000¥', h:'5-14', b:[35.7013,139.6935], lat:35.6654, lng:139.7714, y:'https://www.youtube.com/results?search_query=tsukiji+market+6am'},
+ {t:'Cápsula hotel', d:'Día libre', hook:'Noche en cápsula (opcional)', f:'Tour POV', c:'4.900¥', h:'24h', b:[35.7013,139.6935], lat:35.6848, lng:139.7030, y:'https://www.youtube.com/results?search_query=nine+hours+capsule+hotel+tokyo'},
+ {t:'24h solo konbini', d:'Día libre', hook:'Reto 6 pax solo con un 7-Eleven', f:'Reto POV', c:'~1.000¥', h:'24h', b:[34.6686,135.5017], lat:34.6625, lng:135.5010, y:'https://www.youtube.com/results?search_query=24+hours+7+eleven+japan'},
+ {t:'Purikura + gachapon', d:'Día libre', hook:'Fotomatones + cápsulas', f:'B-roll', c:'1.000¥', h:'10-22', b:[35.7013,139.6935], lat:35.7020, lng:139.7710, y:'https://www.youtube.com/results?search_query=purikura+japan'}
+];
+var vidDone = {};
+try { vidDone = JSON.parse(localStorage.getItem('japon-videos')||'{}'); } catch(e){}
+function renderVideos(){
+  var box = document.getElementById('videosGrid'); if(!box) return;
+  box.innerHTML = VIDEOS.map(function(v,i){
+    var ok = vidDone[i];
+    var dirl = 'https://www.google.com/maps/dir/' + v.b[0] + ',' + v.b[1] + '/' + v.lat + ',' + v.lng + '?travelmode=walking&hl=es';
+    return '<div class="card"'+(ok?' style="opacity:.55;border-color:var(--accent)"':'')+'>'+
+      '<div class="flex" style="display:flex;justify-content:space-between;align-items:center"><h4>🎬 '+v.t+'</h4>'+
+      '<label class="chk-row"><input type="checkbox" '+(ok?'checked':'')+' onchange="toggleVid('+i+')"> Grabado</label></div>'+
+      '<p><b>📅 '+v.d+'</b> · '+v.hook+'</p><p class="muted">'+v.f+'</p><div class="price">'+v.c+'</div>'+
+      '<div class="card-foot"><span class="tag">🕐 '+v.h+'</span><a class="maps" href="'+dirl+'" target="_blank">📍 Cómo llegar</a></div>'+
+      '<a style="display:inline-block;margin-top:8px" href="'+v.y+'" target="_blank">🎬 Ejemplo parecido →</a></div>';
+  }).join('');
+}
+function toggleVid(i){ vidDone[i] = !vidDone[i]; try{ localStorage.setItem('japon-videos', JSON.stringify(vidDone)); }catch(e){} renderVideos(); }
+/* ============ CHECKLIST ============ */
+// checklist v9: CHECK/renderCheck/toggleCheck definidos arriba
+
+/* ============ VIDEOS (Ray-Ban) ============ */
+
+/* ============ ACTIVIDADES ============ */
+
+/* ============ FIESTA ============ */
+
+var BDAY_HASH = '68465c63ab096ee350f8893106723c8cf2b1c2bf11091c6fa25d4172c32d6dac';
+function checkBday(){
+  var v = (document.getElementById('bday-pass').value || '');
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(function(buf){
+    var hex = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    if(hex === BDAY_HASH){
+      document.getElementById('bday-gate').style.display = 'none';
+      document.getElementById('bday-content').style.display = 'block';
+      try{ sessionStorage.setItem('bday','1'); }catch(e){}
+    } else {
+      document.getElementById('bday-err').style.display = 'block';
+    }
+  });
+}
+(function(){ try{ if(sessionStorage.getItem('bday')==='1'){ var g=document.getElementById('bday-gate'),c=document.getElementById('bday-content'); if(g&&c){ g.style.display='none'; c.style.display='block'; } } }catch(e){} })();
+/* ============ INIT ============ */
+
+renderCheck();
+setTheme(document.documentElement.dataset.theme);
+initMap();
+initChart();
+</script>
+<style>.poi .poi-go{display:block;margin-top:8px;color:var(--accent);font-weight:700;font-size:.78rem}.poi-dir{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none}</style>
+<script type="module">
+  // Lenis por ESM: el bundle UMD minificado renombra la clase a "L" y PISA window.L de Leaflet (bug detectado en test)
+  import('https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs')
+    .then(function(m){ window.Lenis = m.default || m.Lenis || window.Lenis; })
+    .catch(function(e){ console.warn('lenis no carga', e); })
+    .finally(function(){ window.dispatchEvent(new Event('lenis-ready')); });
+</script>
+<!-- ═══ MOTION PREMIUM (14-sep-2026): Lenis smooth scroll + GSAP reveals ═══ -->
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FORCE = false;
+  try{ FORCE = localStorage.getItem('jp3d') === 'on'; }catch(e){}
+  // ── Aviso claro si el sistema pide reducir movimiento (antes se desactivaba en silencio) ──
+  function aviso(){
+    if(!rm || FORCE) return;
+    var w = document.createElement('div'); w.id = 'fx-warn';
+    w.innerHTML = '⚠️ <b>Tu Windows/navegador tiene «reducir movimiento» activado</b>, por eso el 3D está apagado. ' +
+                  '<button id="fx-force">Activar el 3D igualmente</button>';
+    document.body.appendChild(w); w.style.display = 'block';
+    document.getElementById('fx-force').addEventListener('click', function(){
+      try{ localStorage.setItem('jp3d','on'); }catch(e){}
+      location.reload();
+    });
+  }
+  if(rm && !FORCE){ document.documentElement.classList.add('no-motion'); aviso(); return; }
+  if(!window.gsap){ document.documentElement.classList.add('no-motion'); return; }
+
+  // ── Barra de intensidad del 3D (se guarda y se recuerda) ──
+  // ── Lenis: scroll sedoso (se apaga solo si prefiere menos movimiento)
+  var lenis = null;
+  function initLenis(){
+    if(lenis || !window.Lenis) return;
+    try{
+      lenis = new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 1 });
+      // ★ CRITICO: sincronizar Lenis con ScrollTrigger; sin esto los ScrollTrigger NO se actualizan
+      //   al hacer scroll (Lenis sustituye el scroll nativo) y el 3D cinematografico nunca avanza.
+      if(window.ScrollTrigger && window.gsap){
+        lenis.on('scroll', function(){ ScrollTrigger.update(); });
+        gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+        gsap.ticker.lagSmoothing(0);
+        window.__lenisST = true;
+      } else {
+        (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+      }
+      window.__lenis = lenis;
+      if(typeof window.__onLenis === 'function') window.__onLenis();
+    }catch(e){ console.warn('lenis off', e); }
+  }
+  initLenis();
+  window.addEventListener('lenis-ready', initLenis);
+
+  // ── Reveals robustos (IntersectionObserver + clase .in; sin GSAP en las cards)
+  document.documentElement.classList.add('js-anim');
+  var seen = new WeakSet();
+  var io = new IntersectionObserver(function(entries){
+    var i = 0;
+    entries.forEach(function(en){
+      var el = en.target;
+      if(!en.isIntersecting || seen.has(el)) return;
+      seen.add(el);
+      el.style.setProperty('--d', Math.min(i++ * 55, 330));
+      el.classList.add('in');
+      seen.add(el);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
+
+  function scan(){
+    document.querySelectorAll('.tab .card, .sec-title, .slot, .slide, .day').forEach(function(el){
+      if(!seen.has(el)) io.observe(el);
+    });
+  }
+  scan();
+  // ★ FIX: cuando JS re-renderiza (ej. marcar "Grabado" en Videos) las cards nuevas se quedaban invisibles.
+  // Un MutationObserver las re-observa al instante.
+  if(window.MutationObserver){
+    var _mo = new MutationObserver(function(muts){
+      var need = false;
+      for(var i = 0; i < muts.length && !need; i++){
+        var nds = muts[i].addedNodes;
+        for(var j = 0; j < nds.length; j++){
+          var n = nds[j];
+          if(n && n.nodeType === 1){
+            if(n.classList && n.classList.contains('card')){ need = true; break; }
+            if(n.querySelector && n.querySelector('.card, .slide, .slot, .sec-title')){ need = true; break; }
+          }
+        }
+      }
+      if(need) scan();
+    });
+  }
+  // ★ Re-render (marcar "Grabado", filtrar, buscar): revelar YA las cards nuevas de ese contenedor.
+  var _revealAhora = function(cont){
+    (cont || document).querySelectorAll('.card, .slide, .slot, .sec-title').forEach(function(el){
+      el.classList.add('in'); seen.add(el);
+    });
+  };
+  window.__revealAhora = _revealAhora;   // disponible para el cambio de tab
+  if(window.MutationObserver){
+    var _mo = new MutationObserver(function(muts){
+      var conts = [];
+      for(var i = 0; i < muts.length; i++){
+        var nds = muts[i].addedNodes;
+        for(var j = 0; j < nds.length; j++){
+          var n = nds[j];
+          if(n && n.nodeType === 1 && (n.classList.contains('card') || n.querySelector('.card, .slide, .slot, .sec-title'))){
+            conts.push(muts[i].target); break;
+          }
+        }
+      }
+      if(conts.length){
+        // directo, sin rAF (rAF no corre en pestanas no visibles y dejaba las cards invisibles)
+        conts.forEach(function(c){ _revealAhora(c); });
+        scan();
+        setTimeout(function(){ conts.forEach(function(c){ _revealAhora(c); }); }, 80);   // respaldo
+        setTimeout(function(){ conts.forEach(function(c){ _revealAhora(c); }); }, 400);
+      }
+    });
+    _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
+  }
+  // ══════ ★ MOTOR CINEMATOGRAFICO 3D (v3.1) — montado por seccion ══════
+  (function(){
+    function esReducido(){
+      try{ return document.documentElement.classList.contains('no-motion') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; }
+    }
+    if(!window.gsap || !window.ScrollTrigger){ window.__CINE={ok:false, error:'sin gsap'}; return; }
+    gsap.registerPlugin(ScrollTrigger);
+    if(esReducido()){ window.__CINE={ok:false, reducido:true}; return; }
+
+    // petalos
+    var pj = document.getElementById('cinePetals');
+    if(pj){
+      var nP = innerWidth < 820 ? 12 : 26, frag = '';
+      for(var i=0;i<nP;i++){
+        var dur = 9 + Math.random()*11, dx = (Math.random()*180-90).toFixed(0);
+        frag += '<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;--dx:'+dx+'px;transform:scale('+(0.6+Math.random()*0.9).toFixed(2)+')"></i>';
+      }
+      pj.innerHTML = frag;
+      [].forEach.call(pj.querySelectorAll('i'), function(el){
+        var dur = 9 + Math.random()*11, dx = Math.random()*180-90;
+        gsap.fromTo(el, { y: '-10vh', x: 0, rotate: 0, opacity: 0 },
+          { y: '112vh', x: dx, rotate: 540, opacity: 0.5, duration: dur, repeat: -1, ease: 'none',
+            delay: -Math.random()*dur });
+      });
+    }
+    // ★ profundidad global: al bajar, el contenido se acerca (sensacion de avanzar) y aparece el glow
+    if(document.getElementById('cineDeep')){
+      gsap.fromTo('#cineDeep', { opacity: 0 }, { opacity: 1, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'50% top', scrub: 1 } });
+      gsap.to('#cineDeep', { opacity: 0.25, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'60% top', end:'bottom bottom', scrub: 1 } });
+    }
+    var mainEl = document.querySelector('main');
+    if(mainEl){
+      gsap.fromTo(mainEl, { z: -80 }, { z: 30, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'bottom bottom', scrub: 1.4 } });
+    }
+    // suelo cinematografico
+    if(document.getElementById('cineFloor')){
+      gsap.to('#cineFloor', { yPercent: 7, opacity: 0.26, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'bottom bottom', scrub: 1.2 } });
+    }
+
+    // ★ monta la animacion 3D de UNA seccion (sus bloques de contenido)
+    window.__montarCine = function(sec){
+      if(!sec || sec.dataset && sec.dataset.cineListo) return 0;
+      var hijos = [].filter.call(sec.children, function(el){
+        if(el.tagName === 'STYLE' || el.tagName === 'SCRIPT') return false;
+        if(el.id && /cineFloor|cinePetals/.test(el.id)) return false;
+        if(el.closest && el.closest('#bday-content')) return false;
+        return true;
+      });
+      hijos.forEach(function(el, idx){
+        el.classList.add('cine-block');
+        // entrada: llega desde el fondo, girada y pequena -> se coloca delante (rangos cortos: funciona con poco scroll)
+        gsap.fromTo(el,
+          { opacity: 0, y: 90, z: -520, rotateX: 15, rotateY: (idx%2 ? 10 : -10), scale: 0.9 },
+          { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 100%', end: 'top 88%', scrub: 0.45 } });
+        // salida SUTIL: se acerca un poco (profundidad) pero SIN perder legibilidad
+        gsap.to(el,
+          { opacity: 0.94, y: -12, z: 60, rotateX: -2, scale: 1.008, ease: 'power2.in',
+            scrollTrigger: { trigger: el, start: 'bottom 74%', end: 'bottom 40%', scrub: 0.8 } });
+      });
+      if(sec.dataset) sec.dataset.cineListo = '1';
+      try{ ScrollTrigger.refresh(); }catch(e){}
+      return hijos.length;
+    };
+
+    var total = 0;
+    document.querySelectorAll('main > section.tab').forEach(function(sec){
+      if(sec.classList.contains('active')) total += window.__montarCine(sec);
+    });
+    if(!total){ total += window.__montarCine(document.querySelector('.tab.active')); }
+    window.__CINE = { ok:true, bloques: total };
+
+    // al cambiar de pestana se monta la nueva escena (con un fundido 3D de entrada)
+    var _go = window.goTab;
+    if(typeof _go === 'function'){
+      window.goTab = function(n){
+        var r = _go.apply(this, arguments);
+        var sec = document.getElementById('tab-' + n);
+        if(sec){
+          setTimeout(function(){
+            var m = window.__montarCine(sec);
+            gsap.fromTo(sec, { opacity: 0.25, rotateY: -10, y: 70, z: -430 },
+              { opacity: 1, rotateY: 0, y: 0, z: 0, duration: 0.9, ease: 'power3.out' });
+            try{ ScrollTrigger.refresh(); }catch(e){}
+            window.__CINE.bloques = (window.__CINE.bloques||0) + m;
+          }, 70);
+        }
+        return r;
+      };
+    }
+    addEventListener('load', function(){ setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 400); });
+    setTimeout(function(){ try{ ScrollTrigger.refresh(); }catch(e){} }, 1600);
+  })();
+
+  // ★ Red de seguridad (revelado garantizado, no depende de transiciones ni observers):
+  function _blindaje(){
+    document.querySelectorAll('.card, .slide, .slot, .sec-title').forEach(function(el){
+      el.classList.add('in'); seen.add(el);
+      // si aun asi el navegador no pinta (transiciones pausadas/desactivadas), se fuerza inline
+      if(el.offsetParent && parseFloat(getComputedStyle(el).opacity) < 0.05){
+        el.style.opacity = '1'; el.style.transform = 'none';
+      }
+    });
+  }
+  setTimeout(_blindaje, 2500);
+  setTimeout(_blindaje, 6000);
+  setInterval(_blindaje, 4000);   // red permanente: cualquier card que se quede oculta se revela en <=4s
+
+  // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
+  function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
+  mapFree(); setTimeout(mapFree, 800);
+
+  // ── Al cambiar de tab: re-escanear y refrescar el scroll
+  var _goTab = window.goTab;
+  if(typeof _goTab === 'function'){
+    window.goTab = function(n){
+      var r = _goTab.apply(this, arguments);
+      setTimeout(function(){
+        scan(); mapFree(); if(lenis) lenis.resize();
+        if(window.__revealAhora){
+          var t = document.getElementById('tab-' + n);
+          if(t) window.__revealAhora(t);          // revelar ya lo de la tab abierta
+          setTimeout(function(){ window.__revealAhora(t); }, 120);   // y otra pasada por si el render es async
+        }
+      }, 60);
+      return r;
+    };
+  }
+
+
+  // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
+  var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(hoverOK){
+    var MAXD = 3.5, LIFT = 8;   // modo MINI fijo (peticion de Simon: sin selector)
+    var cur = null, raf = 0, lastEv = null, lastT = 0;
+    function glareOf(el){
+      var g = el.querySelector(':scope > .glare');
+      if(!g){ g = document.createElement('div'); g.className = 'glare'; el.appendChild(g); }
+      return g;
+    }
+    function reset(el){
+      if(!el) return;
+      el.classList.remove('tilting');
+      el.style.transform = '';
+      el.style.removeProperty('--mx'); el.style.removeProperty('--my');
+      var g = el.querySelector(':scope > .glare'); if(g) g.style.opacity = 0;
+    }
+    function apply(){
+      if(!cur || !lastEv) return;
+      var r = cur.getBoundingClientRect();
+      var px = (lastEv.clientX - r.left) / r.width - .5;
+      var py = (lastEv.clientY - r.top) / r.height - .5;
+      px = Math.max(-.5, Math.min(.5, px)); py = Math.max(-.5, Math.min(.5, py));
+      cur.style.transform = 'perspective(1000px) rotateY(' + (px * MAXD * 2).toFixed(2) + 'deg) rotateX(' + (-py * MAXD * 2).toFixed(2) + 'deg) translateZ(' + LIFT + 'px) scale(1.025)';
+      cur.style.setProperty('--mx', px.toFixed(3));
+      cur.style.setProperty('--my', py.toFixed(3));
+      /* glare retirado a peticion de Simon (molestaba sobre "Como llegar") */
+    }
+    document.addEventListener('mousemove', function(e){
+      var t = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
+      if(t && t.closest('#tab-trailer')) t = null;   // el trailer NO lleva 3D
+      if(t !== cur){ reset(cur); cur = t; if(cur) cur.classList.add('tilting'); }
+      lastEv = e;
+      if(!cur) return;
+      var _now = (window.performance && performance.now) ? performance.now() : Date.now();
+      if(_now - lastT < 14) return;   // ~60fps, sin rAF (se cuelga en pestanas no visibles)
+      lastT = _now;
+      apply();
+    }, { passive: true });
+    document.addEventListener('mouseleave', function(){ reset(cur); cur = null; }, { passive: true });
+    // al hacer scroll, quitar el tilt (evita transform peleando con el reveal)
+    window.addEventListener('scroll', function(){ if(cur){ reset(cur); cur = null; } }, { passive: true });
+  } else {
+    document.documentElement.classList.add('no-tilt');
+  }
+
+
+  // ── EFECTO 3D AL SELECCIONAR: la card "salta" en 3D al hacer click ──
+  document.addEventListener('pointerdown', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
+    if(!el || el.closest('#tab-trailer')) return;
+    if(e.target.closest && e.target.closest('a')) return;
+    if(el.closest('#viewer3d, .leaflet-container')) return;
+    try{
+      el.animate([
+        { transform: 'perspective(1000px) scale(.975) rotateX(3deg)' },
+        { transform: 'perspective(1000px) scale(1.035) translateZ(26px) rotateX(-2deg)', offset: .45 },
+        { transform: 'perspective(1000px) scale(1)' }
+      ], { duration: 380, easing: 'cubic-bezier(.34,1.56,.64,1)' });
+    }catch(_e){}
+  }, { passive: true });
+
+  // ── Entrada del hero (primer tab visible)
+  var hero = document.querySelector('.tab.active .tab-head, .tab.active h1');
+  if(hero){ gsap.fromTo(hero, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: 'power2.out' }); }
+})();
+</script>
+
+
+<!-- ═══ HERO 3D v2.0 — Three.js (torii neon + petalos + grid synthwave) ═══ -->
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+(function(){
+  window.__HERO3D = {started:true, renderer:false, frames:0, err:null};
+  var cv = document.getElementById('heroCanvas'); if(!cv){ window.__HERO3D.err='sin canvas'; return; }
+  var hero = document.getElementById('hero3d');
+  var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = hero.clientWidth || innerWidth, H = hero.clientHeight || innerHeight;
+  function esMovilInicial(){ return (innerWidth < 820) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
+  var renderer;
+  try{ renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, preserveDrawingBuffer:true}); }
+  catch(e){ window.__HERO3D.err='WebGL: '+e.message; console.warn('WebGL no disponible', e); return; }
+  window.__HERO3D.renderer = true;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, esMovilInicial() ? 1.25 : 1.5));
+  renderer.setSize(W, H, false);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x05060c);
+  scene.fog = new THREE.FogExp2(0x05060c, 0.011);
+
+  var camera = new THREE.PerspectiveCamera(52, W/H, 0.1, 260);
+  camera.position.set(0, 1.2, 7);
+
+  scene.add(new THREE.AmbientLight(0x8899ff, 0.4));
+  var hemi = new THREE.HemisphereLight(0x2a1a2e, 0x05060c, 0.55); scene.add(hemi);
+  var l1 = new THREE.PointLight(0xff3b5c, 60, 70); l1.position.set(6, 5, -6); scene.add(l1);
+  var l2 = new THREE.PointLight(0xf5c518, 38, 60); l2.position.set(-7, 4, -20); scene.add(l2);
+
+  // suelo: grid neon + plano oscuro brillante
+  var grid = new THREE.GridHelper(260, 130, 0x2b1a24, 0x1b2233);  // sin linea central cantosa
+  grid.position.y = -3.2; scene.add(grid);
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(320,320),
+    new THREE.MeshStandardMaterial({color:0x080b13, metalness:.6, roughness:.55}));
+  floor.rotation.x = -Math.PI/2; floor.position.y = -3.26; scene.add(floor);
+
+  // torii procedural
+  function torii(x, z, s){
+    var g = new THREE.Group();
+    var mat = new THREE.MeshStandardMaterial({color:0xff3b5c, emissive:0xff3b5c, emissiveIntensity:1.5, metalness:.4, roughness:.4});
+    var col = new THREE.CylinderGeometry(.22, .27, 4.4, 14);
+    var c1 = new THREE.Mesh(col, mat); c1.position.set(-1.5, 0, 0);
+    var c2 = new THREE.Mesh(col, mat); c2.position.set(1.5, 0, 0);
+    var kasagi = new THREE.Mesh(new THREE.BoxGeometry(5.1, .24, .62), mat); kasagi.position.y = 2.5;
+    var top = new THREE.Mesh(new THREE.BoxGeometry(4.6, .34, .5), mat); top.position.y = 2.24;
+    var mid = new THREE.Mesh(new THREE.BoxGeometry(4.0, .26, .42), mat); mid.position.y = 1.3;
+    g.add(c1, c2, kasagi, top, mid);
+    g.position.set(x, -1.75, z); g.scale.setScalar(s);
+    var disc = new THREE.Mesh(new THREE.CircleGeometry(2.7*s, 24),
+      new THREE.MeshBasicMaterial({color:0xff3b5c, transparent:true, opacity:.09, depthWrite:false}));
+    disc.rotation.x = -Math.PI/2; disc.position.set(x, -3.17, z); scene.add(disc);
+    return g;
+  }
+  var toriiList = [];
+  [[-4.4,-13,1.15],[4.6,-21,1.02],[-5.0,-30,.92],[3.6,-40,.85],[-4.0,-52,.78],[2.2,-64,.72]].forEach(function(p){
+    var t = torii(p[0], p[1], p[2]); scene.add(t); toriiList.push(t);   // FIX: era (x, s, z) -> escala negativa
+  });
+
+  // petalos de sakura
+  var N = (innerWidth < 820) ? 260 : 950;
+  var pos = new Float32Array(N*3), vel = new Float32Array(N);
+  for(var i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*62; pos[i*3+1]=Math.random()*27-3; pos[i*3+2]=Math.random()*-92+6; vel[i]=.008+Math.random()*.026; }
+  var pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  function discoTex(){
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var x = c.getContext('2d'), g = x.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(.35,'rgba(255,235,240,.85)'); g.addColorStop(1,'rgba(255,190,205,0)');
+    x.fillStyle = g; x.beginPath(); x.arc(32,32,32,0,6.283); x.fill();
+    var t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  }
+  var points = new THREE.Points(pg, new THREE.PointsMaterial({map: discoTex(), color:0xffd0dc, size:.28, transparent:true, opacity:.9, depthWrite:false, blending:THREE.AdditiveBlending}));
+  scene.add(points);
+
+  // scroll -> camara + fade del texto
+  var prog = 0, ov = hero.querySelector('.hero-overlay');
+  function onScroll(){
+    var r = hero.getBoundingClientRect();
+    prog = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height)));
+    if(ov){ ov.style.opacity = String(Math.max(0, 1 - prog*2.8)); ov.style.transform = 'translateY(' + (-prog*80).toFixed(1) + 'px)'; }
+  }
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  var visible = true;
+  if(window.IntersectionObserver) new IntersectionObserver(function(e){ visible = e[0].isIntersecting; }, {threshold:0}).observe(hero);
+  // bloom: el neon de verdad
+  var composer = null;
+  var esMovil = (innerWidth < 820) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  try{
+    if(esMovil) throw new Error('bloom off en movil');
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    var bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.42, 0.65, 0.4);
+    composer.addPass(bloom);
+    composer.addPass(new OutputPass());
+    window.__HERO3D.bloom = true;
+  }catch(e){ window.__HERO3D.bloom = 'no: ' + e.message; composer = null; }
+  var t0 = performance.now();
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(!visible) return;   // (document.hidden bloqueaba el render en pestanas no enfocadas)
+    var t = (now - t0)/1000;
+    var tz = 7 - prog*48;
+    camera.position.z += (tz - camera.position.z)*0.09;
+    camera.position.x += ((prog-.5)*3.4 - camera.position.x)*0.05;
+    camera.position.y = 1.55 + Math.sin(t*.5)*.13 + prog*1.1;
+    camera.lookAt((prog-.5)*1.6, 1.15 + prog*.45, camera.position.z - 16);
+    if(!rm){ points.rotation.y = t*.012; }
+    var arr = pg.attributes.position.array;
+    for(var i=0;i<N;i++){
+      if(!rm) arr[i*3+1] -= vel[i]*2.3;
+      if(arr[i*3+1] < -3.2){ arr[i*3+1] = 25; arr[i*3] = (Math.random()-.5)*62; }
+    }
+    pg.attributes.position.needsUpdate = true;
+    l1.intensity = 55 + Math.sin(t*1.7)*15;
+    for(var k=0;k<toriiList.length;k++) toriiList[k].rotation.y = Math.sin(t*.34 + k)*.06;
+    if(composer) composer.render(); else renderer.render(scene, camera);
+    window.__HERO3D.frames++;
+  }
+  requestAnimationFrame(frame);
+  // render manual (util para verificar en pestanas no visibles / headless)
+  window.__HERO3D_ONCE = function(n){ n = n || 1; for(var k=0;k<n;k++){ if(composer) composer.render(); else renderer.render(scene, camera); window.__HERO3D.frames++; } return window.__HERO3D.frames; };
+  window.__HERO3D_ONCE(1);
+  addEventListener('resize', function(){
+    W = hero.clientWidth; H = hero.clientHeight;
+    camera.aspect = W/H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H, false);
+    if(composer) composer.setSize(W, H);
+  });
+
+  // botones del hero -> tabs reales
+  document.querySelectorAll('#hero3d .hero-cta a').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      var href = a.getAttribute('href') || '';
+      if(href.indexOf('#tab-') === 0){
+        ev.preventDefault();
+        var b = document.querySelector('.tab-btn[data-tab="' + href.replace('#tab-','') + '"]');
+        if(b) b.click();
+        var t = document.getElementById('tabs');
+        if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

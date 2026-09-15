@@ -1,0 +1,368 @@
+{
+ "comida": [
+  {
+   "tipo": "grupo",
+   "titulo": "🛒 SUPER & CONBINI"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/d921d6cf95.jpg",
+   "tit": "🏪 7-Eleven / FamilyMart / Lawson",
+   "desc": "Onigiri 120-180¥ · sándwiches 250¥ · fideos 300¥ · pollo frito 150¥. Desayuno y tentempié 24h.",
+   "precio": "100-400¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/2488f793ed.jpg",
+   "tit": "🥪 Gyudon de conbini",
+   "desc": "El gyudon caliente del conbini — la cena de las 2am.",
+   "precio": "350¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/c1ed8f3d3c.jpg",
+   "tit": "🍙 Imprescindibles",
+   "desc": "Pudin premium 280¥ · melon pan 150¥ · café 100¥ · tarta FamilyMart (cumple Marc) 2.000¥.",
+   "precio": "150-2.000¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "grupo",
+   "titulo": "🍔 COMIDA RÁPIDA / CADENAS"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/0e2924b736.jpg",
+   "tit": "🍲 Sukiya",
+   "desc": "Gyudon barato y bueno — cadena nacional.",
+   "precio": "450¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.664,135.5?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/84f0cbdefd.jpg",
+   "tit": "🥘 Matsuya / Yoshinoya",
+   "desc": "Las gigantes del gyudon + curry japonés.",
+   "precio": "430¥",
+   "horario": "🕐 5:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.665,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/c21d5851ba.jpg",
+   "tit": "🍣 Kura Sushi (kaiten)",
+   "desc": "Sushi en cinta — 115¥/plato, casi regalado.",
+   "precio": "115¥/plato",
+   "horario": "🕐 11:00-23:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.661,135.502?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/34ed21adcf.jpg",
+   "tit": "🌯 Katsu sando 7-Eleven",
+   "desc": "El sándwich de tonkatsu famoso mundialmente.",
+   "precio": "300¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/8e62a96bd5.jpg",
+   "tit": "🍜 Ramen Ichiran",
+   "desc": "Solo, barrera, máquina — experiencia 100% japonesa.",
+   "precio": "900-1.200¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6686,135.5016?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/efdb429b4f.jpg",
+   "tit": "🐙 Takoyaki Dotonbori",
+   "desc": "Bolitas de pulpo — el street food de Osaka por excelencia.",
+   "precio": "500-800¥",
+   "horario": "🕐 10:00-22:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6688,135.502?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "grupo",
+   "titulo": "🍢 TRADICIONAL / EXPERIENCIAS"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/c3b645ffa3.jpg",
+   "tit": "🌶️ Mouko Tanmen Nakamoto",
+   "desc": "Ramen picante nivel 9-10 \"Hokkyoku\" — challenge de llorar.",
+   "precio": "900-1.200¥",
+   "horario": "🕐 11:30-23:00",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.6953,139.7137?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/1db1d7cf37.jpg",
+   "tit": "🍢 Kushikatsu Daruma",
+   "desc": "Brochetas fritas — el clásico de Shinsekai.",
+   "precio": "600-1.200¥",
+   "horario": "🕐 11:00-21:30",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6515,135.506?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/9af1c2b962.jpg",
+   "tit": "🥞 Okonomiyaki DIY",
+   "desc": "Te lo haces en la plancha — Dotonbori / Americamura.",
+   "precio": "800-1.500¥",
+   "horario": "🕐 11:00-22:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.669,135.502?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/821eae5272.jpg",
+   "tit": "🍜 Kitsune udon",
+   "desc": "El udon del templo — día de Kioto.",
+   "precio": "500-800¥",
+   "horario": "🕐 10:00-17:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.9671,135.7727?travelmode=transit&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/66f5215c6a.jpg",
+   "tit": "🐡 Fugu",
+   "desc": "Pez globo en Dotonbori (con licencia).",
+   "precio": "2.000-4.000¥",
+   "horario": "🕐 17:00-23:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6678,135.5015?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/a20fb33ce7.jpg",
+   "tit": "🎂 Tarta FamilyMart cumple",
+   "desc": "La tarta + velas del Donki en el Airbnb.",
+   "precio": "2.000¥",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6625,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "grupo",
+   "titulo": "⭐ RESTAURANTES TOP — ★ = SI O SI"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/0cdfa9a1d1.jpg",
+   "tit": "⭐ TATARA Osaka ★ SI O SI",
+   "desc": "Wagyu al carbón, tabla 7 arcos. Tabelog 3.6 · 100 TOP 2025.",
+   "precio": "Saison 7.800¥ · wagyu 9.500¥ · Kobe 25.000¥",
+   "horario": "🕐 17:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6677,135.501?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/6fced8ff10.jpg",
+   "tit": "⭐ Yoroniku Ebisu ★ SI O SI",
+   "desc": "Mejor yakiniku de Japón, Tabelog 3.80. Reserva 1 mes antes.",
+   "precio": "8.000-12.000¥",
+   "horario": "🕐 17:00-23:30",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.6731,139.7115?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/ac7cb41902.jpg",
+   "tit": "⭐ Kisshoukichi Kioto ★ SI O SI",
+   "desc": "Teppanyaki Kobe 3.55, vista al río Kamo.",
+   "precio": "8.000-9.999¥",
+   "horario": "🕐 11:30-15:30 / 17:30-21:30",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/gyudon-local.jpg",
+   "tit": "⭐ Matsusakagyu M Hozenji",
+   "desc": "Wagyu A5 Matsusaka — reserva 20:00. Solo para entendidos.",
+   "precio": "10-14k¥",
+   "horario": "🕐 17:00-23:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6683,135.5028?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/4fb1e2bf86.jpg",
+   "tit": "🍣 Sushi Yoshikawa Kaido",
+   "desc": "Omakase en Nishi-Shinjuku (10 min de la estación de Shinjuku) · solo con reserva, turnos 18:00 y 20:30 · cena de Navidad.",
+   "precio": "10-15k¥",
+   "horario": "🕐 12:00-14:30 / 17:00-22:00",
+   "maps": "https://www.google.com/maps/search/Sushi+Yoshikawa+Kaido+Nishi+Shinjuku+Tokyo"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/okonomiyaki-local.jpg",
+   "tit": "🍝 OSTERIA IS -Gion-",
+   "desc": "Italiana en Gion · Tabelog 3.52. Cierra domingos.",
+   "precio": "¥5.000-5.999",
+   "horario": "🕐 11:30-14:00 / 17:30-21:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/35.0027,135.7768?travelmode=transit&hl=es"
+  }
+ ],
+ "fiesta": [
+  {
+   "tipo": "grupo",
+   "titulo": "🏙️ OSAKA"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/karaokekan.jpg",
+   "tit": "🎤 Karaoke Kan Namba",
+   "desc": "Sala 6 pax + nomihodai — el cumple de Marc.",
+   "precio": "1.500¥/2h",
+   "horario": "🕐 24h · cierra 5:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/ramenbar-local.jpg",
+   "tit": "🍺 300BAR + DJ",
+   "desc": "Ticket bar con sets DJ.",
+   "precio": "990¥",
+   "horario": "🕐 17:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.693,135.5?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/0e0ace189d.jpg",
+   "tit": "🍶 Tachinomi (de pie)",
+   "desc": "Bares diminutos de sake/cerveza a 300¥.",
+   "precio": "300¥",
+   "horario": "🕐 18:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/6d63367e8c.jpg",
+   "tit": "🍢 Izakaya nocturna",
+   "desc": "Tapas japonesas — cualquiera en Namba vale.",
+   "precio": "1.500-3.000¥",
+   "horario": "🕐 17:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.6665,135.502?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/uranamba.jpg",
+   "tit": "🍻 Ura-Namba bar hopping",
+   "desc": "Callejones secretos: tachinomi + izakayas + música.",
+   "precio": "300-800¥/bar",
+   "horario": "🕐 18:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.505?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/ramenbar-local.jpg",
+   "tit": "🦒 Giraffe",
+   "desc": "Club de 6 plantas en Shinsaibashi, techno/house.",
+   "precio": "2.000-3.000¥",
+   "horario": "🕐 20:00-5:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.671,135.5?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/eihire-local.jpg",
+   "tit": "🥃 Bar Yeso",
+   "desc": "Bar de whisky con cubitos de hielo gigantes.",
+   "precio": "1.000-2.500¥",
+   "horario": "🕐 19:00-1:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/34.666,135.504?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "grupo",
+   "titulo": "🌃 TOKIO"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/goldengai.jpg",
+   "tit": "🍶 Golden Gai (Shinjuku)",
+   "desc": "200 bares diminutos en 6 callejones.",
+   "precio": "300-800¥/bar",
+   "horario": "🕐 18:00-4:00",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.7005?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/af851c6c1d.jpg",
+   "tit": "🍢 Omoide Yokocho",
+   "desc": "Callejón del yakitori con humo y luces.",
+   "precio": "1.000-2.000¥",
+   "horario": "🕐 17:00-23:30",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.6931,139.6998?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/bigego.jpg",
+   "tit": "🎤 Karaoke Big Echo 24h",
+   "desc": "Abierto toda la noche, salas baratas.",
+   "precio": "1.500¥/2h",
+   "horario": "🕐 24h",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.693,139.703?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/womb.jpg",
+   "tit": "🌀 WOMB Shibuya",
+   "desc": "La discoteca más famosa de Tokio — 4 plantas.",
+   "precio": "2.500-4.000¥",
+   "horario": "🕐 22:00-4:30",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.661,139.698?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/warp.jpg",
+   "tit": "⚡ WARP Shinjuku",
+   "desc": "Discoteca grande 4 plantas + terrace.",
+   "precio": "2.000-3.500¥",
+   "horario": "🕐 19:00-5:00",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.6957,139.7077?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/atom.jpg",
+   "tit": "⚛️ Atom Tokyo",
+   "desc": "Electrónica underground en Shibuya.",
+   "precio": "2.000-3.000¥",
+   "horario": "🕐 20:00-5:00",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.666,139.706?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/seloctagon.jpg",
+   "tit": "🟠 SEL Octagon",
+   "desc": "Club underground de techno en Shibuya.",
+   "precio": "2.500-4.000¥",
+   "horario": "🕐 20:00-5:00",
+   "maps": "https://www.google.com/maps/dir/35.7013,139.6935/35.66,139.7?travelmode=walking&hl=es"
+  },
+  {
+   "tipo": "grupo",
+   "titulo": "⛩️ KIOTO"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/pontocho.jpg",
+   "tit": "🏮 Pontocho / Kiyamachi",
+   "desc": "Callejones de bares junto al río Kamo.",
+   "precio": "300-800¥/bar",
+   "horario": "🕐 17:00-24:00",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/35.0045,135.772?travelmode=transit&hl=es"
+  },
+  {
+   "tipo": "card",
+   "img": "img/web/eihire-local.jpg",
+   "tit": "💤 Consejo nocturno Kioto",
+   "desc": "Kioto cierra pronto — metro hasta 23:30, planificar vuelta.",
+   "precio": "—",
+   "horario": "🕐 hasta 23:30",
+   "maps": "https://www.google.com/maps/dir/34.6686,135.5017/35.0039,135.7786?travelmode=transit&hl=es"
+  }
+ ],
+ "cumple_html": "\n    <div class=\"nota\">🤫 Plan sorpresa del día 10 (JUE 10 DIC). Que Marc no vea esta pestaña ni la tarjeta del día 1 en la ruta (va bloqueada).</div>\n    <div class=\"panel\" style=\"margin-bottom:14px\"><h3>🛬 Crono realista del día 10 (Simon + Marc)</h3><div class=\"slots\"><div class=\"slot\"><b>14:00 · Aterrizaje KIX</b><br>Vuelo ZH (PNR QJ8B3P) · inmigración + maletas ≈ 40-60 min (KIX suele ir fluido)</div><div class=\"slot\"><b>15:10 · Máquinas Nankai</b><br>En la salida: ICOCA 2.000¥ (o billete 920¥) → tren Airport Express a Namba (45 min)</div><div class=\"slot\"><b>16:00 · Namba</b><br>De camino a casa: comprar la tarta (Rikuro's está a 1 min de la estación) + velas</div><div class=\"slot\"><b>16:20 · Check-in Shimanouchi 1-13-19</b><br>Dejar maletas y descansar 20 min</div><div class=\"slot\"><b>17:00 · 🎂 Tarta + velas + regalo</b><br>En casa, sin prisa</div><div class=\"slot\"><b>18:30 · Dotonbori + cena</b><br>Glico, callejones, cena low-cost</div><div class=\"slot\"><b>20:30 · Karaoke Kan</b><br>Sala 2 pax + nomihodai 1.500¥/2h</div><div class=\"slot\"><b>~23:00 · Vuelta a casa</b><br>Día 11: Kuromon + Amerikamura</div></div><p style=\"font-size:.82rem;color:var(--muted);margin-top:6px\">⏱️ Si el avión llega puntual y no hay colas raras, a las <b>16:20-16:30</b> estáis en casa; el cumple arranca a las <b>17:00</b>. Las 15:00 serían solo si KIX va vacío y no esperáis maletas — no lo contéis como fijo.</p></div>\n    <div class=\"rejilla\">\n      <div class=\"panel\"><h3>🎂 Tarta: Rikuro Ojisan (Namba)</h3><p>El cheesecake que toca la campanilla — 900¥, recién hecho, a 1 min de la salida de Nankai Namba. Backup 24h: tarta de FamilyMart (1.500-2.500¥) en cualquier conbini. Velas y globos: Daiso/Seria (100¥) o Don Quijote de Namba.</p><div class=\"precio\">900-2.500¥</div><div class=\"pie\"><span class=\"tag\">🕐 Rikuro's 10:00-20:00</span><a class=\"gmap\" href=\"https://www.google.com/maps/dir/34.6625,135.501/34.6631,135.5016?travelmode=walking&hl=es\" target=\"_blank\" rel=\"noopener\">📍 Cómo llegar</a></div></div>\n      <div class=\"panel\"><h3>🎁 Regalo: 3 opciones</h3><p>1) Figura de Akihabara a su gusto (5-10k¥) · 2) Funda Ray-Ban grabada o correa extra para las Meta · 3) Entrada sorpresa a teamLab Planets el 23 dic (3.600¥). Si llegáis sin regalo, Don Quijote Namba tiene de todo hasta tarde.</p><div class=\"precio\">3.600-10.000¥</div></div>\n      <div class=\"panel\"><h3>🍜 Cena low-cost Dotonbori (sin wagyu)</h3><p>Takoyaki (500¥), kushikatsu u okonomiyaki — cenar picoteando por Dotonbori ~1.000-1.500¥ p.p. El wagyu top NO hoy: TATARA ya está reservado el 14 dic con los 6 (9.500¥ p.p.). Matsusakagyu M Hozenji (10-14k¥) queda descartado para 2: demasiado para una cena privada + repetir con el grupo.</p><div class=\"precio\">~2.500¥ los 2</div><div class=\"pie\"><span class=\"tag\">🕐 puestos 10:00-23:00</span><a class=\"gmap\" href=\"https://www.google.com/maps/dir/34.6686,135.5017/34.6687,135.5013?travelmode=walking&hl=es\" target=\"_blank\" rel=\"noopener\">📍 Cómo llegar</a></div></div>\n      <div class=\"panel\"><h3>🎤 Karaoke Kan Namba · 20:30</h3><p>Sala pequeña 2 pax, 1.500¥/2h con bebida libre (nomihodai). Perfecto para el \"feliz cumpleaños\" cantado mal a propósito. Si Marc quiere noche tranquila: tachinomi en Ura-Namba en vez de karaoke.</p><div class=\"precio\">1.500¥/2h</div><div class=\"pie\"><span class=\"tag\">🕐 24h</span><a class=\"gmap\" href=\"https://www.google.com/maps/dir/34.6686,135.5017/34.6659,135.5045?travelmode=walking&hl=es\" target=\"_blank\" rel=\"noopener\">📍 Cómo llegar</a></div></div>\n      <div class=\"panel\"><h3>💶 Coste del plan (los 2)</h3><p>Nankai 2×920¥ + ICOCA 2×2.000¥ + tarta 900¥ + velas 100¥ + cena 2×1.300¥ + karaoke 2×1.500¥ ≈ <b>11.000-12.000¥ (~75 €)</b> contando que la ICOCA se queda con saldo para el resto del viaje. La ICOCA es gasto real de transporte, no del cumple: el cumple puro son ~5.000¥ (~32 €).</p><div class=\"precio\">~75 € los 2</div></div>\n      <div class=\"panel\"><h3>🎒 Mini-checklist del día 10</h3><p>1) Comprar ICOCA en KIX (máquinas, efectivo) · 2) Tarta Rikuro's en Namba (o FamilyMart) · 3) Velas + globos Daiso/Donki · 4) Regalo (decidir antes de salir de España o Donki) · 5) Reservar karaoke Kan por la app al llegar a casa (o a pie de local, suele haber sala).</p></div>\n    </div>\n  "
+}
