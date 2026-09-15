@@ -1111,9 +1111,19 @@ function loop(now){
     // solo encendidas en la seccion de cine
     window.__luzBuda.forEach(function(l){ l.visible = (p > 0.002); });
 
-    // dolly-in de la cámara hacia el buda
-    cam.position.set(0, 0.75 + suave*0.30, 9.0 - suave*3.6);   // v11.1 — menos dolly-in: la figura cabe
-    cam.lookAt(0, 1.05 + suave*0.25, -1.0);   // ★ v13.0 — encuadre al Buda, que ahora esta arriba
+    // ★ v14.0 — TRANSICIÓN SIN CORTE desde el hero.
+    //   Pose final del hero (medida leyendo su codigo, cineP=1):
+    //     position (-0.67, 1.8, 5.2)  lookAt (0, 1.7, -7.0)
+    //   Pose del cine: position (0, 0.75+, 9.0-)  lookAt (0, 1.05+, -1.0)
+    //   Sin esto la camara saltaba 3.8 unidades hacia atrás de golpe al entrar.
+    const mezcla = Math.min(1, p / 0.15);          // 0 = pose del hero, 1 = pose del cine
+    const HX = -0.67, HY = 1.8, HZ = 5.2;          // donde acabo el hero
+    const HLy = 1.7, HLz = -7.0;                   // a donde miraba el hero
+    const CX = 0, CY = 0.75 + suave*0.30, CZ = 9.0 - suave*3.6;
+    const CLy = 1.05 + suave*0.25, CLz = -1.0;
+    const e = mezcla*mezcla*(3 - 2*mezcla);        // smoothstep: entrada/salida suaves
+    cam.position.set(HX + (CX - HX)*e, HY + (CY - HY)*e, HZ + (CZ - HZ)*e);
+    cam.lookAt(0, HLy + (CLy - HLy)*e, HLz + (CLz - HLz)*e);
 
     // el anillo aparece al principio y se desvanece al acercarse
     if (window.__anilloCine){
@@ -1134,7 +1144,10 @@ function loop(now){
     const p = window.__cineP;
     cam.position.z = 10.6 - p * 5.4;
     cam.position.y = 1.8 + Math.sin(p * Math.PI) * 0.85;
-    cam.position.x = Math.sin(p * Math.PI * 1.4) * 0.7;
+    // ★ v14.0 — el balanceo en x se apaga al final del pin, para llegar a la pose
+    //   exacta (-0.67) desde la que arranca el blend del cine: si sigue bailando,
+    //   la transicion vuelve a notarse.
+    cam.position.x = Math.sin(p * Math.PI * 1.4) * 0.7 * (1 - Math.max(0, (p - 0.85) / 0.15));
     cam.lookAt(0, 1.35 + p * 0.35, -4.0 - p * 3.0);
     if (window.__galeria3d && window.__galeria3d.modelos){
       window.__galeria3d.modelos.forEach(function(m, i){
