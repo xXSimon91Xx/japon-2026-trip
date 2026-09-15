@@ -355,6 +355,7 @@ h2.big em{font-style:normal; color:var(--neon)}
 
 /* ══ v8.2 — una sola ficha: la fila compacta desaparece cuando entra la grande ══ */
 #hero .metricas, #hero .stats, #hero .datos{transition:opacity .45s ease}
+body.cine-ficha #avionInfo,
 body.cine-ficha #hero .metricas,
 body.cine-ficha #hero .stats,
 body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
@@ -860,6 +861,32 @@ function loop(now){
   window.__frames = (window.__frames||0) + 1; __ultimoFrame = now;
   const dt = Math.min((now - ultimo)/1000, 0.05); ultimo = now;
   estado.t += dt;
+  // ★★ v8.3 — SOMBRAS: se aplican AQUÍ para que no dependa de qué bloque carga los modelos.
+  //    Sin castShadow no hay sombra; sin sombra los objetos no tienen volumen.
+  if (!window.__sombrasListas && window.__galeria3d && window.__galeria3d.listos >= 1){
+    var __hechas = 0;
+    escena.traverse(function(__o){
+      if (__o.isDirectionalLight && !__o.castShadow){
+        __o.castShadow = true;
+        __o.shadow.mapSize.set(1024, 1024);
+        __o.shadow.camera.near = 1;  __o.shadow.camera.far = 45;
+        __o.shadow.camera.left = -16; __o.shadow.camera.right = 16;
+        __o.shadow.camera.top = 16;   __o.shadow.camera.bottom = -16;
+        __o.shadow.bias = -0.0018;
+        __o.shadow.radius = 3.5;
+        __hechas++;
+      }
+      if (__o.isMesh){
+        if (!__o.castShadow) __o.castShadow = true;
+        if (!__o.receiveShadow) __o.receiveShadow = true;
+      }
+    });
+    try{ renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+         renderer.shadowMap.needsUpdate = true; }catch(e){}
+    window.__sombrasListas = true;
+    window.__sombrasInfo = {luces: __hechas};
+    console.log('[v8.3] sombras activadas en', __hechas, 'luces + todos los meshes');
+  }
   if (cinePass) cinePass.uniforms.uTime.value = estado.t;
   // ★ v8.0 — el scroll dirige la escena del hero (pin + scrub)
   if (window.__cineP !== undefined && estado.seccion === 'hero'){
@@ -2182,7 +2209,7 @@ try{
       // ★ la barra de progreso de la PÁGINA también sigue el cine mientras dura el pin,
       //   así los dos indicadores nunca dicen cosas distintas (era 25% vs 50%)
       try{
-        var pgbar = document.getElementById('progress') || document.querySelector('.progress, #progreso');
+        var pgbar = document.getElementById('progreso') || document.getElementById('progress');
         if (pgbar) pgbar.style.width = (p * 100).toFixed(1) + '%';
       }catch(e){}
       var ficha = el('cineFicha');
