@@ -34,7 +34,12 @@ body{
 #bg3d canvas{display:block; width:100%; height:100%}
 #velo{position:fixed; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(180deg, transparent 0%, rgba(8,9,15,.35) 35%, rgba(8,9,15,.72) 100%)}
-:root[data-tema="dia"] #velo{background:linear-gradient(180deg, rgba(244,246,251,.15) 0%, rgba(244,246,251,.55) 55%, rgba(244,246,251,.85) 100%)}
+:root[data-tema="dia"] #navlinks a{color:#38445c; border-color:rgba(56,68,92,.22)}
+[data-tema="dia"] #navlinks a:hover{color:#0b0e14; background:rgba(11,14,20,.07)}
+[data-tema="dia"] #btnTema{color:#38445c; border-color:rgba(56,68,92,.22)}
+[data-tema="dia"] .panel .sub, [data-tema="dia"] .panel p{color:#a9b4c6}
+[data-tema="dia"] .panel h3, [data-tema="dia"] .panel h2{color:#eef2f8}
+[data-tema="dia"] #velo{background:linear-gradient(180deg, rgba(244,246,251,.15) 0%, rgba(244,246,251,.55) 55%, rgba(244,246,251,.85) 100%)}
 
 /* ── NAV ── */
 #nav{
@@ -219,6 +224,19 @@ h2.big em{font-style:normal; color:var(--neon)}
 .panel h3{font-size:19px;font-weight:900;margin-bottom:9px;letter-spacing:-.01em}
 .panel p{font-size:14.5px;color:var(--muted);line-height:1.55}
 .panel .price, .panel .precio{font-size:16px;font-weight:900;color:var(--gold);margin-top:9px}
+
+/* ★ fix overflow 320px en la tabla de presupuesto */
+@media (max-width: 380px){
+  #budgetDetalle{max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch}
+  #budgetDetalle table, #budgetDetalle .fila{max-width:100%}
+  #budgetDetalle td, #budgetDetalle th{word-break:break-word; font-size:13px}
+  .dospaneles > .panel{min-width:0}
+}
+#budgetDetalle{max-width:100%; overflow-x:auto}
+
+/* ★ el botón de capas de Leaflet tenía solo title='Layers' (inglés, sin nombre accesible) */
+.leaflet-control-layers-toggle::after{content:''}
+.leaflet-control-layers-toggle{outline-offset:2px}
 </style>
 </head>
 <body>
@@ -693,6 +711,12 @@ function loop(now){
   window.__frames = (window.__frames||0) + 1; __ultimoFrame = now;
   const dt = Math.min((now - ultimo)/1000, 0.05); ultimo = now;
   estado.t += dt;
+  // ★ prog también aquí: el evento scroll puede no dispararse si el scroll lo mueve Lenis
+  try{
+    const __h = document.documentElement;
+    const __max = (__h.scrollHeight - __h.clientHeight) || 1;
+    estado.prog = Math.min(1, Math.max(0, (window.scrollY || __h.scrollTop || 0) / __max));
+  }catch(e){}
 
   // avión: recorre el arco con el scroll (0 → 1 en la primera pantalla)
   const tA = Math.min(1, Math.max(0, estado.prog * 3.4));
@@ -848,27 +872,27 @@ var ROUTE = [
  {d:18, fecha:'DOM 27 DIC', city:'TOKYO', title:'Ueno + picante', badge:'🌶️', m:'Ueno + Ameyoko.', t:'Senso-ji + Skytree.', n:'🌶️ Nakamoto Hokkyoku.', tr:'Metro + JR', price:'~30 €', vid:'Picante nivel 10.', food:'Nakamoto'},
  {d:19, fecha:'LUN 28 DIC', city:'TOKYO', title:'Tsukiji + Este', badge:'', m:'Tsukiji 6am sushi.', t:'Shibuya día + compras finales.', n:'Cena clausura: Sendou.', tr:'Metro', price:'~60 €', vid:'Atún 6am.', food:'Sendou (12 piezas)'},
  {d:20, fecha:'MAR 29 DIC', city:'TOKYO', title:'Último día', badge:'', m:'Souvenirs + favoritos.', t:'Comodín: retos pendientes.', n:'Despedida: izakaya + iluminada final.', tr:'Metro', price:'~30 €', vid:'Adiós a Tokyo.', food:'Izakaya final'},
- {d:21, fecha:'MIÉ 30 DIC', city:'VUELTA', title:'Hasta pronto ✈️', badge:'', m:'Check-out + NEX ~15:30 a NRT.', t:'Vuelos NRT 19:00 (QJ8B3P + QWKX47).', n:'En el avión, editando el trailer.', tr:"N'EX ~3.200¥ + vuelo", price:'~25 €', vid:'Créditos en loop.', food:'Konbini final'}
+ {d:21, fecha:'MIÉ 30 DIC', city:'Aeropuerto de Narita', title:'Hasta pronto ✈️', badge:'', m:'Check-out + NEX ~15:30 a NRT.', t:'Vuelos NRT 19:00 (QJ8B3P + QWKX47).', n:'En el avión, editando el trailer.', tr:"N'EX ~3.200¥ + vuelo", price:'~25 €', vid:'Créditos en loop.', food:'Konbini final'}
 ];
 
 var POIS = [
- {f:'🏝️', n:'Okinawa', img:'poi-okinawa.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', h:'🕐 castillo 8:30-17:00 · playas 24h', lat:26.2124, lng:127.6809},
- {f:'⛩️', n:'Takayama', img:'poi-takayama.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', h:'🕐 calles y museos 9:00-17:00', lat:36.1462, lng:137.2521},
- {f:'⛴️', n:'Hiroshima + Miyajima', img:'poi-miyajima.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
- {f:'🏔️', n:'Nikko', img:'poi-nikko.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', h:'🕐 Toshogu 8:00-17:00 (cierra 16:00 en invierno)', lat:36.7586, lng:139.5990},
- {f:'♨️', n:'Hakone Onsen', img:'poi-hakone.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', h:'🕐 onsen 10:00-20:00 · lago 24h', lat:35.2325, lng:139.1069},
- {f:'🎬', n:'Ghibli Museum', img:'poi-ghibli.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', h:'🕐 10:00-18:00 · cerrado los martes', lat:35.6962, lng:139.5702},
- {f:'🎡', n:'Tokyo DisneySea', img:'poi-disneysea.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', h:'🕐 8:00-22:00 (varía por día)', lat:35.6273, lng:139.8889},
- {f:'🌉', n:'Shibuya Crossing', img:'poi-shibuya.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
- {f:'⛩️', n:'Senso-ji Asakusa', img:'poi-sensoji.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
- {f:'🗼', n:'Tokyo Skytree', img:'poi-skytree.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', h:'🕐 10:00-21:00 (última subida 20:00)', lat:35.7101, lng:139.8107},
- {f:'🎮', n:'Akihabara', img:'poi-akihabara.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
- {f:'🥃', n:'Golden Gai (Shinjuku)', img:'poi-goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', h:'🕐 18:00-4:00 (bares)', lat:35.6920, lng:139.7009},
- {f:'🐟', n:'Mercado de Toyosu', img:'poi-toyosu.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', h:'🕐 lonja 5:00-14:00 · zona gourmet 7:00-17:00', lat:35.6437, lng:139.7863},
- {f:'⛩️', n:'Fushimi Inari', img:'poi-fushimi.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
- {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'poi-arashiyama.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', h:'🕐 24h · mejor antes de las 9:00', lat:35.0173, lng:135.6725},
- {f:'🏯', n:'Castillo de Osaka', img:'poi-castle.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', h:'🕐 9:00-17:00 · parque 24h', lat:34.6873, lng:135.5262},
- {f:'🦌', n:'Todai-ji (Nara)', img:'poi-todaiji.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
+ {f:'🏝️', n:'Okinawa', img:'8e62a96bd5.jpg', cat:'Naturaleza', d:'El Japón tropical: playas de arena blanca, castillo Shuri y buceo. A 2h de vuelo desde Osaka.', w:'Perfecto para un futuro viaje de 4-5 días al final del itinerario: en diciembre sigue haciendo 20°C.', h:'🕐 castillo 8:30-17:00 · playas 24h', lat:26.2124, lng:127.6809},
+ {f:'⛩️', n:'Takayama', img:'84f0cbdefd.jpg', cat:'Naturaleza', d:'Pueblo alpino con calles del siglo XVII, el Takayama Matsuri y Hida beef.', w:'Postal de otro siglo en mitad de los Alpes japoneses; ryokan con onsen y sake local.', h:'🕐 calles y museos 9:00-17:00', lat:36.1462, lng:137.2521},
+ {f:'⛴️', n:'Hiroshima + Miyajima', img:'pontocho.jpg', cat:'Cultura', d:'El torii flotante de Itsukushima, el icono más fotografiado del país, más ciervos y ostras a la brasa.', w:'Solo 1h40 en shinkansen desde Osaka: memoria histórica + una de las vistas más famosas del mundo.', h:'🕐 torii 24h · templo 6:30-18:00', lat:34.2956, lng:132.3198},
+ {f:'🏔️', n:'Nikko', img:'6fced8ff10.jpg', cat:'Naturaleza', d:'Templo Toshogu lacado en oro (los tres monos sabios), cascada Kegon y montañas.', w:'Day-trip factible a ~2h de Tokyo; templos sintoístas de otro nivel en plena naturaleza.', h:'🕐 Toshogu 8:00-17:00 (cierra 16:00 en invierno)', lat:36.7586, lng:139.5990},
+ {f:'♨️', n:'Hakone Onsen', img:'4fb1e2bf86.jpg', cat:'Naturaleza', d:'Aguas termales con vistas al Monte Fuji y crucero por el lago Ashi.', w:'El cierre de viaje definitivo: baño termal al aire libre mientras el Fuji se asoma.', h:'🕐 onsen 10:00-20:00 · lago 24h', lat:35.2325, lng:139.1069},
+ {f:'🎬', n:'Ghibli Museum', img:'c21d5851ba.jpg', cat:'Museos y parques', d:'El museo de Miyazaki en Mitaka: bosque, robots y mini-cines.', w:'Exige reserva con 1-2 meses de antelación; anótalo para la próxima misión y no te quedes fuera.', h:'🕐 10:00-18:00 · cerrado los martes', lat:35.6962, lng:139.5702},
+ {f:'🎡', n:'Tokyo DisneySea', img:'c1ed8f3d3c.jpg', cat:'Ciudad y ocio', d:'El parque temático marino exclusivo de Japón, considerado el más bonito del mundo.', w:'Día entero de inmersión total; ideal si vuelves con presupuesto extra.', h:'🕐 8:00-22:00 (varía por día)', lat:35.6273, lng:139.8889},
+ {f:'🌉', n:'Shibuya Crossing', img:'0e2924b736.jpg', cat:'Ciudad y ocio', d:'El cruce más transitado del mundo: ~3.000 personas por cada verde.', w:'Icono absoluto de Tokyo; POV con las Ray-Ban o plano cenital gratis desde el Starbucks de enfrente.', h:'🕐 24h · luces apagan ~24:00', lat:35.6595, lng:139.7005},
+ {f:'⛩️', n:'Senso-ji Asakusa', img:'warp.jpg', cat:'Cultura', d:'El templo más antiguo de Tokyo y la linterna gigante de la puerta Kaminarimon.', w:'Postal de manual; la Nakamise-dori (calle de acceso) está llena de snacks raros.', h:'🕐 templo 6:00-17:00 · recinto 24h', lat:35.7148, lng:139.7967},
+ {f:'🗼', n:'Tokyo Skytree', img:'6d63367e8c.jpg', cat:'Ciudad y ocio', d:'La torre más alta del mundo (634 m) y su mirador a 350 m.', w:'Vistas infinitas en día despejado; el mirador Tembo Deck cuesta ~2.100¥ (reserva online).', h:'🕐 10:00-21:00 (última subida 20:00)', lat:35.7101, lng:139.8107},
+ {f:'🎮', n:'Akihabara', img:'atom.jpg', cat:'Ciudad y ocio', d:'El barrio otaku: arcades, maid cafés, figuras y electrónica.', w:'Un día entero de rarezas que no existen en España; gashapon por 300-500¥.', h:'🕐 tiendas 10:00-20:00', lat:35.7001, lng:139.7715},
+ {f:'🥃', n:'Golden Gai (Shinjuku)', img:'goldengai.jpg', cat:'Ciudad y ocio', d:'6 callejuelas con ~200 bares miniatura de 3-6 personas.', w:'El corazón del Tokyo de barrio; cover de 500-1.000¥ en algunos bares.', h:'🕐 18:00-4:00 (bares)', lat:35.6920, lng:139.7009},
+ {f:'🐟', n:'Mercado de Toyosu', img:'0e0ace189d.jpg', cat:'Museos y parques', d:'La lonja mayorista que sustituyó a Tsukiji en 2018 + zona gastronómica Senkyaku Banrai.', w:'Sushi de lonja y el tour del atún reservando con antelación; las zonas públicas son gratis.', h:'🕐 lonja 5:00-14:00 · zona gourmet 7:00-17:00', lat:35.6437, lng:139.7863},
+ {f:'⛩️', n:'Fushimi Inari', img:'uranamba.jpg', cat:'Cultura', d:'Los 10.000 torii rojos del monte Inari.', w:'Id a primera hora: la estampa sin gente no tiene precio (ya está en ruta, día 4).', h:'🕐 24h · mejor al amanecer', lat:34.9671, lng:135.7727},
+ {f:'🎋', n:'Bosque de bambú de Arashiyama', img:'d921d6cf95.jpg', cat:'Cultura', d:'El túnel de bambú más famoso del mundo, a 10 min de la estación Saga-Arashiyama.', w:'ASMR natural; antes de las 9:00 está vacío (día 5).', h:'🕐 24h · mejor antes de las 9:00', lat:35.0173, lng:135.6725},
+ {f:'🏯', n:'Castillo de Osaka', img:'af851c6c1d.jpg', cat:'Cultura', d:'El castillo de Toyotomi Hideyoshi reconstruido, con foso y parque.', w:'La foto clásica de Osaka; el exterior y el parque son gratis (día 2).', h:'🕐 9:00-17:00 · parque 24h', lat:34.6873, lng:135.5262},
+ {f:'🦌', n:'Todai-ji (Nara)', img:'bigego.jpg', cat:'Cultura', d:'El Gran Buda de bronce dentro del mayor edificio de madera del mundo.', w:'El monumento más impresionante de Nara, a 5 min de los ciervos (día 6).', h:'🕐 7:30-17:30 (nov-feb 8:00-16:30)', lat:34.6887, lng:135.8398}
 ];
 
 var POI_ORDER = ['Ciudad y ocio','Naturaleza','Cultura','Museos y parques'];
@@ -1148,7 +1172,7 @@ const CIUDAD_Q = {
         ${p.img?`<img src="img/web/${esc(p.img)}" alt="${esc(p.n)}" loading="lazy" decoding="async">`:''}
         <div class="poiCuerpo">
           <div class="cat">${esc(p.cat||'')}</div>
-          <h4>${p.f||''} ${esc(p.n)}</h4>
+          <h3>${p.f||''} ${esc(p.n)}</h3>
           <div class="desc">${esc(p.d||'')}</div>
           ${p.h?`<div class="horario">${esc(p.h)}</div>`:''}
           ${p.w?`<div class="desc" style="margin-top:9px; font-size:13px">💡 ${esc(p.w)}</div>`:''}
@@ -1167,7 +1191,7 @@ const CIUDAD_Q = {
     html += `<article class="poi">
       ${it.img?`<img src="${esc(it.img)}" alt="${esc(it.tit)}" loading="lazy" decoding="async">`:''}
       <div class="poiCuerpo">
-        <h4>${esc(it.tit)}</h4>
+        <h3>${esc(it.tit)}</h3>
         <div class="desc">${esc(it.desc)}</div>
         ${it.precio?`<div class="precio">${esc(it.precio)}</div>`:''}
         ${it.horario?`<div class="horario">${esc(it.horario)}</div>`:''}
@@ -1188,7 +1212,7 @@ const CIUDAD_Q = {
       ${p.img?`<img src="img/web/${esc(p.img)}" alt="${esc(p.n)}" loading="lazy" decoding="async">`:''}
       <div class="poiCuerpo">
         <div class="cat">${esc(p.cat)}</div>
-        <h4>${p.f||''} ${esc(p.n)}</h4>
+        <h3>${p.f||''} ${esc(p.n)}</h3>
         <div class="desc">${esc(p.d||'')}</div>
         ${p.h?`<div class="horario">${esc(p.h)}</div>`:''}
         ${p.w?`<div class="desc" style="margin-top:9px; font-size:13px">💡 ${esc(p.w)}</div>`:''}
@@ -1212,7 +1236,7 @@ const CIUDAD_Q = {
     html += `<article class="poi">
       ${it.img?`<img src="${esc(it.img)}" alt="${esc(it.tit)}" loading="lazy" decoding="async">`:''}
       <div class="poiCuerpo">
-        <h4>${esc(it.tit)}</h4>
+        <h3>${esc(it.tit)}</h3>
         <div class="desc">${esc(it.desc)}</div>
         ${it.precio?`<div class="precio">${esc(it.precio)}</div>`:''}
         ${it.horario?`<div class="horario">${esc(it.horario)}</div>`:''}
@@ -1263,7 +1287,7 @@ const CIUDAD_Q = {
   let guardado = {}; try{ guardado = JSON.parse(localStorage.getItem('japon-check')||'{}'); }catch(e){}
   let html = '', total = 0;
   CHECK_DATA.forEach((grupo, gi) => {
-    html += `<div class="grupo"><h4>${esc(grupo[0])}</h4>`;
+    html += `<div class="grupo"><h3>${esc(grupo[0])}</h3>`;
     (grupo[1]||[]).forEach((it, ii) => {
       const id = gi+'-'+ii; total++;
       const hecho = !!guardado[id];
@@ -1371,6 +1395,11 @@ const CIUDAD_Q = {
   calcular();
 
   ScrollTrigger.refresh();
+// ★ nombre accesible en español para el control de capas de Leaflet
+try{
+  var __lc = document.querySelector('.leaflet-control-layers-toggle');
+  if (__lc){ __lc.setAttribute('aria-label','Capas del mapa'); __lc.setAttribute('title','Capas del mapa'); }
+}catch(e){}
   addEventListener('load', () => setTimeout(()=>ScrollTrigger.refresh(), 300));
 })();
 
