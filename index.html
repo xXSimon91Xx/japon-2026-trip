@@ -1304,10 +1304,10 @@ initChart();
           { opacity: 0, y: 90, z: -520, rotateX: 15, rotateY: (idx%2 ? 10 : -10), scale: 0.9 },
           { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
             scrollTrigger: { trigger: el, start: 'top 101%', end: 'top 76%', scrub: 0.7 } });
-        // salida: la atravesamos (se acerca y se desvanece) — rango corto
+        // salida SUTIL: se acerca un poco (profundidad) pero SIN perder legibilidad
         gsap.to(el,
-          { opacity: 0.28, y: -46, z: 210, rotateX: -6, scale: 1.035, ease: 'power2.in',
-            scrollTrigger: { trigger: el, start: 'bottom 78%', end: 'bottom 48%', scrub: 0.8 } });
+          { opacity: 0.88, y: -18, z: 90, rotateX: -3, scale: 1.012, ease: 'power2.in',
+            scrollTrigger: { trigger: el, start: 'bottom 74%', end: 'bottom 40%', scrub: 0.8 } });
       });
       if(sec.dataset) sec.dataset.cineListo = '1';
       try{ ScrollTrigger.refresh(); }catch(e){}
