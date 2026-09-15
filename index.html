@@ -501,13 +501,7 @@ const __rimA = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5
 const __rimB = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7); escena.add(__rimB);
 const __rimC = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3); escena.add(__rimC);
 window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};
-// ★★ ILUMINACIÓN 3 PUNTOS + RIM LIGHTS (look "low key backlight")
-const __clave   = new THREE.DirectionalLight(0xffffff, 2.3); __clave.position.set(4, 7, 6);   escena.add(__clave);
-const __relleno = new THREE.DirectionalLight(0x8fb6ff, 0.8); __relleno.position.set(-5, 2, 4); escena.add(__relleno);
-const __rimA    = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5, 3, -6);   escena.add(__rimA);
-const __rimB    = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7);   escena.add(__rimB);
-const __rimC    = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3);   escena.add(__rimC);
-window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};;
+;
 const key = new THREE.DirectionalLight(0xfff0de, 1.5); key.position.set(5, 9, 6); escena.add(key);
 const ne = new THREE.PointLight(0xff3b5c, 3.2, 34); ne.position.set(-6, 2.4, -3); escena.add(ne);
 const ne2 = new THREE.PointLight(0x7c5cff, 2.6, 34); ne2.position.set(7, -1.4, -6); escena.add(ne2);
