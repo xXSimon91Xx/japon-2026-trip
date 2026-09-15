@@ -1290,13 +1290,15 @@ initChart();
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
 (function(){
-  var cv = document.getElementById('heroCanvas'); if(!cv) return;
+  window.__HERO3D = {started:true, renderer:false, frames:0, err:null};
+  var cv = document.getElementById('heroCanvas'); if(!cv){ window.__HERO3D.err='sin canvas'; return; }
   var hero = document.getElementById('hero3d');
   var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var W = hero.clientWidth || innerWidth, H = hero.clientHeight || innerHeight;
   var renderer;
-  try{ renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true}); }
-  catch(e){ console.warn('WebGL no disponible', e); return; }
+  try{ renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, preserveDrawingBuffer:true}); }
+  catch(e){ window.__HERO3D.err='WebGL: '+e.message; console.warn('WebGL no disponible', e); return; }
+  window.__HERO3D.renderer = true;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 1.5));
   renderer.setSize(W, H, false);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1383,8 +1385,12 @@ import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
     l1.intensity = 55 + Math.sin(t*1.7)*15;
     for(var k=0;k<toriiList.length;k++) toriiList[k].rotation.y = Math.sin(t*.34 + k)*.06;
     renderer.render(scene, camera);
+    window.__HERO3D.frames++;
   }
   requestAnimationFrame(frame);
+  // render manual (util para verificar en pestanas no visibles / headless)
+  window.__HERO3D_ONCE = function(n){ n = n || 1; for(var k=0;k<n;k++){ renderer.render(scene, camera); window.__HERO3D.frames++; } return window.__HERO3D.frames; };
+  window.__HERO3D_ONCE(1);
   addEventListener('resize', function(){
     W = hero.clientWidth; H = hero.clientHeight;
     camera.aspect = W/H; camera.updateProjectionMatrix();
