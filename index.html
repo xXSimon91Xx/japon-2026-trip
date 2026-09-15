@@ -1029,15 +1029,38 @@ var CONTENIDO_CUMPLE = "\n    <div class=\"nota\">🤫 Plan sorpresa del día 10
 })();
 
 // ══════ ROLLO: navegación suave a cada sección ══════
+// ══════ NAVEGACIÓN: ir a la sección con respaldo (Lenis puede quedarse colgado si su rAF no corre)
+function irA(selector){
+  var t = (typeof selector === 'string') ? document.querySelector(selector) : selector;
+  if(!t) return false;
+  var destino = Math.max(0, Math.round(t.getBoundingClientRect().top + (window.scrollY||window.pageYOffset||0) - 70));
+  var y0 = window.scrollY || 0;
+  try{ if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(destino, {duration:1.0}); }catch(e){}
+  // ★ respaldo: si a los 320ms el scroll no se ha movido (Lenis colgado / rAF pausado), vamos a pelo
+  setTimeout(function(){
+    if (Math.abs((window.scrollY||0) - y0) < 10){
+      try{ window.scrollTo({top: destino, behavior:'smooth'}); }
+      catch(e){ window.scrollTo(0, destino); }
+      // segundo intento duro si tampoco hay movimiento
+      setTimeout(function(){
+        if (Math.abs((window.scrollY||0) - y0) < 10) window.scrollTo(0, destino);
+      }, 420);
+    }
+  }, 320);
+  return destino;
+}
+window.__irA = irA;
 document.querySelectorAll('#navlinks a').forEach(function(a){
   a.addEventListener('click', function(ev){
     ev.preventDefault();
-    var t=document.querySelector(a.getAttribute('href'));
-    if(!t) return;
-    if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(t, {offset:-70, duration:1.1});
-    else t.scrollIntoView({behavior:'smooth', block:'start'});
+    irA(a.getAttribute('href'));
   });
 });
+// el botón del hero
+var __cta = document.getElementById('ctaBajar');
+if (__cta) __cta.addEventListener('click', function(ev){ ev.preventDefault(); irA('#ruta'); });
+var __cta2 = document.getElementById('ctaMapa');
+if (__cta2) __cta2.addEventListener('click', function(ev){ ev.preventDefault(); irA('#mapa'); });
 
 /* ══════════════════════════════════════════════════════════════
    RENDERIZADO DE CONTENIDO — todo sale de los datos de la v1.0
@@ -1375,15 +1398,7 @@ const CIUDAD_Q = {
   });
 })();
 
-/* ── 12) CTA del hero ── */
-(function(){
-  const b = document.getElementById('ctaBajar');
-  if (b) b.addEventListener('click', () => {
-    const t = document.getElementById('ruta');
-    if (window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(t, {offset:-70, duration:1.2});
-    else t.scrollIntoView({behavior:'smooth'});
-  });
-})();
+/* ── 12) CTA del hero: se maneja desde el sistema de navegación con respaldo ── */
 
 </script>
 
