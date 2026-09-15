@@ -1105,7 +1105,7 @@ initChart();
   // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
   var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
   if(hoverOK){
-    var MAXD = 11, cur = null, raf = 0, lastEv = null;
+    var MAXD = 11, cur = null, raf = 0, lastEv = null, lastT = 0;
     function glareOf(el){
       var g = el.querySelector(':scope > .glare');
       if(!g){ g = document.createElement('div'); g.className = 'glare'; el.appendChild(g); }
@@ -1119,7 +1119,6 @@ initChart();
       var g = el.querySelector(':scope > .glare'); if(g) g.style.opacity = 0;
     }
     function apply(){
-      raf = 0;
       if(!cur || !lastEv) return;
       var r = cur.getBoundingClientRect();
       var px = (lastEv.clientX - r.left) / r.width - .5;
@@ -1136,7 +1135,11 @@ initChart();
       var t = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
       if(t !== cur){ reset(cur); cur = t; if(cur) cur.classList.add('tilting'); }
       lastEv = e;
-      if(cur && !raf) raf = requestAnimationFrame(apply);
+      if(!cur) return;
+      var _now = (window.performance && performance.now) ? performance.now() : Date.now();
+      if(_now - lastT < 14) return;   // ~60fps, sin rAF (se cuelga en pestanas no visibles)
+      lastT = _now;
+      apply();
     }, { passive: true });
     document.addEventListener('mouseleave', function(){ reset(cur); cur = null; }, { passive: true });
     // al hacer scroll, quitar el tilt (evita transform peleando con el reveal)
