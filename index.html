@@ -1059,6 +1059,7 @@ function loop(now){
           o.position.lerp(new THREE.Vector3(0, -0.05, -0.4), 0.08);
           o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
           o.rotation.y = estado.t * 0.16;
+          if (m._tumbado) o.rotation.x = -Math.PI / 2;   // v10.3 — no perder el enderezado
         } else if (m.cineGuardado){
           o.position.copy(m.cineGuardado);
           o.scale.setScalar(m.cineEscala);
@@ -2316,27 +2317,22 @@ try{
       CUADROS.forEach(function(c, i){
         loader.load('glb/' + c.f, function(g){
           var o = g.scene;
-          // v10.2 — los GLB con KHR_mesh_quantization pueden tener el bbox sin des-cuantizar
-          // en el instante de la carga: forzamos el recalculo de la geometria primero
-          o.traverse(function(nn){
-            if (nn.isMesh && nn.geometry){
-              nn.geometry.computeBoundingBox();
-              nn.geometry.computeBoundingSphere();
-            }
-          });
           o.updateMatrixWorld(true);
+          // v10.3 — NO llamar a computeBoundingBox(): con KHR_mesh_quantization las posiciones
+          // son 0..65534 y la de-cuantizacion va en el mesh -> leerlas crudas rompe el bbox.
+          // Box3.setFromObject ya lo hace bien.
           var box = new THREE.Box3().setFromObject(o);
           var size = box.getSize(new THREE.Vector3());
-          // v10.2 — si el eje Y es el MAS FINO, el modelo viene TUMBADO (escaneo con Z arriba):
-          // lo ponemos de pie antes de medir
-          if (size.y < size.x * 0.75 && size.y < size.z * 0.75){
+          // v10.3 — los escaneos vienen con Z hacia arriba: si Y es el eje MAS FINO, esta TUMBADO
+          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8);
+          if (tumbado){
             o.rotation.x = -Math.PI / 2;
             o.updateMatrixWorld(true);
             box = new THREE.Box3().setFromObject(o);
             size = box.getSize(new THREE.Vector3());
-            c.enderezado = true;
           }
-          // v10.2 — normalizar MULTIPLICANDO: el bbox ya es el correcto, setScalar lo daba por bueno
+          c.enderezado = tumbado;
+          // v10.3 — normalizar MULTIPLICANDO (no setScalar): el bbox ya es el correcto
           var max = Math.max(size.x, size.y, size.z) || 1;
           var k = 3.4 / max;
           o.scale.multiplyScalar(k);
@@ -2344,7 +2340,8 @@ try{
           box = new THREE.Box3().setFromObject(o);
           var centro = box.getCenter(new THREE.Vector3());
           o.position.sub(centro);
-          c.escalaBase = o.scale.x;                 // v10.2 — la escala REAL para el cine
+          c.escalaBase = o.scale.x;                 // v10.3 — la escala REAL para el cine
+          c._tumbado = tumbado;
           c.escalaEnderezado = !!c.enderezado;
           // repartidos a los LADOS del titular, dentro del cono de la cámara del hero
           var lado  = (i % 2 === 0) ? -1 : 1;
