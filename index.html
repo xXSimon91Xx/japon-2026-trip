@@ -697,6 +697,9 @@ const __rimA = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5
 const __rimB = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7); escena.add(__rimB);
 const __rimC = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3); escena.add(__rimC);
 window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};
+// ★ v10.0 — relleno frontal suave: los escaneos de museo son irregulares y con 3 puntos
+//   se pierden; esta luz los modela sin lavar la escena
+const __frontal = new THREE.DirectionalLight(0xfff4e8, 1.15); __frontal.position.set(0, 2, 8); escena.add(__frontal);
 
 // ★★★ v9.5 — ENVIRONMENT MAP: sin esto los materiales metálicos se ven NEGROS
 // (un metal solo refleja el entorno; sin entorno no hay nada que reflejar).
@@ -2341,7 +2344,7 @@ try{
               if (!mat) return;
               if (mat.metalness !== undefined && mat.metalness > 0.25) mat.metalness = 0.18;
               if (mat.roughness !== undefined && mat.roughness > 0.85) mat.roughness = 0.62;
-              mat.envMapIntensity = 1.25;
+              mat.envMapIntensity = 2.2;   // v10: los escaneos del Smithsonian necesitan más entorno
               mat.needsUpdate = true;
             });
           });
