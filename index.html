@@ -659,7 +659,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';;
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';;
 
 /* ══════════════════════════════════════════════════════════════
    MOTOR 3D INMERSIVO — un solo canvas que acompaña todo el scroll
@@ -696,6 +697,22 @@ const __rimA = new THREE.DirectionalLight(0xff3b5c, 3.0); __rimA.position.set(-5
 const __rimB = new THREE.DirectionalLight(0x3ddcff, 2.2); __rimB.position.set(6, -2, -7); escena.add(__rimB);
 const __rimC = new THREE.DirectionalLight(0xf5c518, 1.4); __rimC.position.set(0, -5, -3); escena.add(__rimC);
 window.__luces = {clave:__clave, relleno:__relleno, rimA:__rimA, rimB:__rimB, rimC:__rimC};
+
+// ★★★ v9.5 — ENVIRONMENT MAP: sin esto los materiales metálicos se ven NEGROS
+// (un metal solo refleja el entorno; sin entorno no hay nada que reflejar).
+// RoomEnvironment genera un estudio neutro procedural: no pesa nada y da reflejos reales.
+try{
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  const entorno = pmrem.fromScene(new RoomEnvironment(renderer), 0.04);
+  escena.environment = entorno.texture;
+  // un toque de intensidad para que los reflejos no se coman la escena oscura
+  if ('environmentIntensity' in escena) escena.environmentIntensity = 0.58;
+  window.__entorno = {textura: entorno.texture, pmrem: pmrem};
+  console.log('[v9.5] environment map generado (RoomEnvironment) — los metales ya reflejan');
+}catch(e){
+  console.warn('[v9.5] environment map no disponible:', e.message);
+}
 
 // ★★ v9.1 — ANILLO DE LUZ de la sección cinematográfica (el del short del museo)
 const anilloCine = new THREE.Mesh(
@@ -2314,7 +2331,20 @@ try{
           // lo descarta por frustum culling (visible=true pero no se dibuja). Se desactiva
           // el culling para estos 6 objetos y se recalculan sus esferas.
           o.frustumCulled = false;
-          o.traverse(function(mm){ if (mm.isMesh){ mm.castShadow = true; mm.receiveShadow = true; } });
+          o.traverse(function(mm){
+            if (!mm.isMesh) return;
+            mm.castShadow = true; mm.receiveShadow = true;
+            // ★ v9.5 — los GLB de TripoSR traen metalness=1 y sin textura: se ven NEGROS.
+            //   Se limita y se sube el roughness para que la luz les dé forma.
+            var mats = Array.isArray(mm.material) ? mm.material : [mm.material];
+            mats.forEach(function(mat){
+              if (!mat) return;
+              if (mat.metalness !== undefined && mat.metalness > 0.25) mat.metalness = 0.18;
+              if (mat.roughness !== undefined && mat.roughness > 0.85) mat.roughness = 0.62;
+              mat.envMapIntensity = 1.25;
+              mat.needsUpdate = true;
+            });
+          });
           o.traverse(function(hijo){
             if (hijo.isMesh && hijo.geometry){
               try{ hijo.geometry.computeBoundingSphere(); hijo.geometry.computeBoundingBox(); }catch(e){}
