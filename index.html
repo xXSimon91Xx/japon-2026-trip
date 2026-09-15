@@ -1068,6 +1068,23 @@ function loop(now){
       });
     }
 
+    // ★ v10.6 — LUZ DEDICADA al Buda: con MeshBasicMaterial se veia (600x400px) pero con
+    //   MeshStandardMaterial no -> ninguna luz le llegaba con fuerza. Key + fill + rim.
+    if (!window.__luzBuda){
+      const lk = new THREE.DirectionalLight(0xfff0d8, 3.2); lk.position.set(3.2, 5.0, 4.5);
+      const lf = new THREE.DirectionalLight(0x9fc4ff, 1.3); lf.position.set(-4.0, 1.6, 3.0);
+      const lr = new THREE.DirectionalLight(0xff8a5c, 1.1); lr.position.set(0, 2.4, -5.0);
+      const lp = new THREE.PointLight(0xffe6c0, 12, 12, 2); lp.position.set(0, 1.6, 2.2);
+      window.__luzBuda = [lk, lf, lr, lp];
+      var _esc = window.__escena3d.escena;
+      window.__luzBuda.forEach(function(l){
+        l.visible = false;
+        _esc.add(l);
+      });
+    }
+    // solo encendidas en la seccion de cine
+    window.__luzBuda.forEach(function(l){ l.visible = (p > 0.002); });
+
     // dolly-in de la cámara hacia el buda
     cam.position.set(0, 0.75 + suave*0.35, 8.6 - suave*5.0);
     cam.lookAt(0, 0.75 + suave*0.30, -1.0);   // v10.5 — encuadre mas alto para que el Buda quede libre
@@ -2372,11 +2389,11 @@ try{
               // ★ v10.5 — el Gran Buda del Todai-ji es DE BRONCE y el escaneo no trae material:
               //   con el material por defecto (blanco, metalness 1) se veia NEGRO sobre fondo negro.
               if (esBudaMat && mat.color){
-                mat.color.setHex(0xb98a4e);   // bronce calido
-                if (mat.metalness !== undefined) mat.metalness = 0.55;
-                if (mat.roughness !== undefined) mat.roughness = 0.42;
+                mat.color.setHex(0xd9a862);   // bronce claro
+                if (mat.metalness !== undefined) mat.metalness = 0.15;  // v10.6 — poco metal: el metal puro sin entorno sale negro
+                if (mat.roughness !== undefined) mat.roughness = 0.55;
                 mat.envMapIntensity = 2.6;
-                mat.emissive = new THREE.Color(0x2a1a08);   // un pelin de emision para que no sea un agujero
+                mat.emissive = new THREE.Color(0x1a0f04);
                 mat.emissiveIntensity = 1.0;
               }
               mat.needsUpdate = true;
