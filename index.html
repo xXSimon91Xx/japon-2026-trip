@@ -14,7 +14,7 @@
 <style>
 :root{
   --bg:#08090f; --bg2:#0d1018; --panel:#11141d; --panel2:#161a25;
-  --txt:#eef1f7; --muted:#98a3b8; --line:rgba(255,255,255,.09);
+  --txt:#eef1f7; --muted:#aab5c8; --line:rgba(255,255,255,.09);
   --neon:#ff3b5c; --gold:#f5c518; --violet:#7c5cff; --cyan:#3ddcff;
   --glow:0 0 40px rgba(255,59,92,.45);
 }
@@ -86,7 +86,7 @@ h2.big em{font-style:normal; color:var(--neon)}
 .cta.sec:hover{border-color:var(--neon); color:var(--neon)}
 #avionInfo{margin-top:34px; display:flex; gap:26px; justify-content:center; flex-wrap:wrap; color:var(--muted); font-size:14px}
 #avionInfo b{color:var(--txt); font-size:19px; display:block; font-weight:900}
-.scrollcue{position:absolute; bottom:4vh; left:50%; transform:translateX(-50%); color:var(--muted); font-size:12.5px; letter-spacing:.24em; text-transform:uppercase}
+.scrollcue{position:absolute; bottom:4vh; left:50%; transform:translateX(-50%); color:var(--txt); opacity:.75; font-size:12.5px; letter-spacing:.24em; text-transform:uppercase}
 .scrollcue i{display:block; width:1px; height:34px; margin:9px auto 0; background:linear-gradient(var(--neon),transparent)}
 
 /* ── RUTA (timeline 3D) ── */
@@ -263,7 +263,7 @@ h2.big em{font-style:normal; color:var(--neon)}
     <div id="avionInfo">
       <div><b>21</b>días</div>
       <div><b>6</b>viajeros</div>
-      <div><b>8.700</b>km</div>
+      <div><b>10.400</b>km</div>
       <div><b>4</b>ciudades</div>
       <div><b>~620 €</b>presupuesto</div>
     </div>
@@ -486,7 +486,7 @@ function construirAvion(){
   deriva.position.set(-1.44, 0.5, 0); deriva.rotation.z = -0.22; g.add(deriva);
   const derivaTop = new THREE.Mesh(new THREE.BoxGeometry(0.34,0.3,0.08), rojo); derivaTop.position.set(-1.6,0.92,0); g.add(derivaTop);
   const estab = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.07,1.5), blanco); estab.position.set(-1.5,0,0); g.add(estab);
-  g.scale.setScalar(0.92);
+  g.scale.setScalar(1.25);
   return g;
 }
 const avion = construirAvion();
@@ -502,23 +502,41 @@ const estela = new THREE.Points(eGeo, new THREE.PointsMaterial({color:0xff8fa3, 
 escena.add(estela);
 
 /* ── ARCO DE RUTA España -> Japón ── */
+/* recorrido del avión: arranca DELANTE de la cámara (bien visible) y se aleja hacia Japón */
 const curva = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(-13, -1.5, -4),
-  new THREE.Vector3(-7, 3.4, -10),
-  new THREE.Vector3( 0, 5.2, -16),
-  new THREE.Vector3( 7, 3.0, -22),
-  new THREE.Vector3( 13, -1.2, -28),
+  new THREE.Vector3( 6.2, 1.4,  3.0),
+  new THREE.Vector3( 4.4, 2.6, -1.5),
+  new THREE.Vector3( 1.2, 3.4, -7.0),
+  new THREE.Vector3(-2.6, 2.6, -13.0),
+  new THREE.Vector3(-6.0, 1.2, -19.0),
+  new THREE.Vector3(-8.5, 0.2, -25.0),
 ]);
 const puntosRuta = new THREE.Points(
   new THREE.BufferGeometry().setFromPoints(curva.getPoints(140)),
   new THREE.PointsMaterial({color:0x3ddcff, size:0.13, transparent:true, opacity:0.9, depthWrite:false})
 );
 escena.add(puntosRuta);
-// esferas en los extremos (España / Japón)
-const esfEsp = new THREE.Mesh(new THREE.SphereGeometry(0.3,16,12), new THREE.MeshStandardMaterial({color:0xff3b5c, emissive:0xff3b5c, emissiveIntensity:1.1}));
+// extremos del viaje: España y Japón (con etiqueta)
+function etiqueta(txt, color){
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 96;
+  const c = cv.getContext('2d');
+  c.fillStyle = 'rgba(8,9,15,0.72)'; c.fillRect(0,0,256,96);
+  c.strokeStyle = color; c.lineWidth = 6; c.strokeRect(3,3,250,90);
+  c.font = 'bold 52px Inter, Arial, sans-serif'; c.fillStyle = color;
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillText(txt, 128, 52);
+  const tex = new THREE.CanvasTexture(cv);
+  if (THREE.SRGBColorSpace && tex.colorSpace !== undefined) tex.colorSpace = THREE.SRGBColorSpace;
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:tex, transparent:true, depthWrite:false}));
+  spr.scale.set(1.9, 0.72, 1);
+  return spr;
+}
+const esfEsp = new THREE.Mesh(new THREE.SphereGeometry(0.22,16,12), new THREE.MeshStandardMaterial({color:0xff3b5c, emissive:0xff3b5c, emissiveIntensity:1.4}));
 esfEsp.position.copy(curva.getPoint(0)); escena.add(esfEsp);
-const esfJp = new THREE.Mesh(new THREE.SphereGeometry(0.3,16,12), new THREE.MeshStandardMaterial({color:0xf5c518, emissive:0xf5c518, emissiveIntensity:1.2}));
+const lEsp = etiqueta('BCN', '#ff3b5c'); lEsp.position.copy(curva.getPoint(0)).add(new THREE.Vector3(0,0.75,0)); escena.add(lEsp);
+const esfJp = new THREE.Mesh(new THREE.SphereGeometry(0.26,16,12), new THREE.MeshStandardMaterial({color:0xf5c518, emissive:0xf5c518, emissiveIntensity:1.5}));
 esfJp.position.copy(curva.getPoint(1)); escena.add(esfJp);
+const lJp = etiqueta('JAPÓN', '#f5c518'); lJp.position.copy(curva.getPoint(1)).add(new THREE.Vector3(0,0.85,0)); escena.add(lJp);
 
 /* ── TORII de ciudad (aparecen en la sección de ruta) ── */
 const grupoCiudad = new THREE.Group(); grupoCiudad.visible = false; escena.add(grupoCiudad);
@@ -609,7 +627,7 @@ addEventListener('resize', ()=>{
 
 /* posiciones de cámara por sección */
 const CAM = {
-  hero:        {p:[0,1.1,9],      look:[0,0.3,-6]},
+  hero:        {p:[1.2,1.5,7.5],  look:[0.6,1.6,-2]},
   ruta:        {p:[0,-2.2,8],     look:[0,-2.6,-12]},
   mapa:        {p:[0,7.5,10],     look:[0,-1.5,-8]},
   comida:      {p:[0,0.4,7],      look:[0,0.2,-8]},
