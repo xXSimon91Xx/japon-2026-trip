@@ -538,10 +538,21 @@ body.cine-puro #bg3d{background:#000}
   .city, .badge, .bl span, .eye, .kicker{ font-size:max(11.5px, .78rem) !important }
   #cineTexto .ficha span{ font-size:11.5px !important }
 }
+
+/* ★ v17.2 — accesibilidad: skip-link y utilidad sr-only */
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0}
+#saltar:focus{
+  position:fixed; top:10px; left:10px; z-index:9999; width:auto; height:auto; clip:auto; margin:0;
+  padding:12px 18px; background:var(--neon); color:#0b0e14; font-weight:900; border-radius:10px;
+  clip-path:none; white-space:normal;
+}
 </style>
 </head>
 <body>
-<div id="bg3d" aria-hidden="true"></div>
+<!-- ★ v17.2 — skip-link: el teclado puede saltar la nav (10 enlaces) e ir directo al contenido -->
+<a href="#contenido" id="saltar" class="sr-only">Saltar al contenido</a>
+<div id="bg3d" aria-hidden="true" role="img" aria-label="Escena 3D de fondo con seis objetos japoneses: una pagoda, un torii, un farol, el Gran Buda, una tarta y un ramen."></div>
 <div id="velo" aria-hidden="true"></div>
 <div id="progreso" aria-hidden="true"></div>
 
@@ -563,6 +574,7 @@ body.cine-puro #bg3d{background:#000}
     <button class="iconbtn" id="btnTema" title="Modo día / noche" aria-label="Cambiar modo día y noche">🌙</button>
   </div>
 </nav>
+<main id="contenido">
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -623,7 +635,7 @@ body.cine-puro #bg3d{background:#000}
     <div class="eye">Día a día</div>
     <h2 class="big">La <em>ruta</em> de 21 días</h2>
     <p class="sub" style="margin-bottom:40px">Cada día con lo que hacemos por la mañana, tarde y noche. Pincha el botón de Google Maps para ver dónde es.</p>
-    <div id="rutaLista"></div>
+    <div id="rutaLista" role="list"></div>
   </div>
 </section>
 
@@ -686,7 +698,7 @@ body.cine-puro #bg3d{background:#000}
     <h2 class="big">El <em>presupuesto</em></h2>
     <p class="sub" style="margin-bottom:26px">Reparto estimado por persona para los 21 días.</p>
     <div class="dospaneles">
-      <div class="panel"><canvas id="graficoBudget" height="260"></canvas></div>
+      <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto del presupuesto por persona para los 21 días: transporte, alojamiento, comida y actividades."></canvas></div>
       <div class="panel" id="budgetDetalle"></div>
     </div>
   </div>
@@ -729,6 +741,7 @@ body.cine-puro #bg3d{background:#000}
     </div>
   </div>
 </section>
+</main>
 
 
 <script type="importmap">{"imports":{"lenis":"https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs","three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -1773,7 +1786,7 @@ const CIUDAD_Q = {
   host.innerHTML = ROUTE.map(d => {
     const q = CIUDAD_Q[(d.city||'').toUpperCase()] || ((d.city||'') + ', Japón');
     const filas = [['MAÑANA',d.m],['TARDE',d.t],['NOCHE',d.n]].filter(x=>x[1]);
-    return `<article class="dia" data-ciudad="${esc(d.city)}">
+    return `<article class="dia" role="listitem" data-ciudad="${esc(d.city)}">
       <div>
         <div class="num">${String(d.d).padStart(2,'0')}</div>
         <div class="fecha">${esc(d.fecha)}</div>
