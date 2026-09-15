@@ -1669,7 +1669,7 @@ try{
       .replace('#include <common>', '#include <common>\nuniform float uFade;')
       .replace('#include <dithering_fragment>',
         '#include <dithering_fragment>\n' +
-        '  float __d = length(vViewPosition);\n' +
+        '  float fadeD = length(vViewPosition);\n' +
         '  float __f = smoothstep(4.0, 36.0, __d);\n' +
         '  gl_FragColor.rgb *= mix(1.0, 0.22, __f);\n' +
         '  gl_FragColor.a *= mix(0.94, 0.0, __f);\n');
@@ -1730,9 +1730,9 @@ try{
               .replace('#include <common>', '#include <common>\nuniform float uRimInt; uniform float uRimPow; uniform vec3 uRimCol; uniform vec3 uRimCol2;')
               .replace('#include <dithering_fragment>',
                 '#include <dithering_fragment>\n' +
-                '  vec3 __n = normalize(vNormal);\n' +
-                '  vec3 __v = normalize(vViewPosition);\n' +
-                '  float __f = 1.0 - clamp(dot(__n, __v), 0.0, 1.0);\n' +
+                '  vec3 rimN = normalize(vNormal);\n' +
+                '  vec3 rimV = normalize(vViewPosition);\n' +
+                '  float rimF = 1.0 - clamp(dot(rimN, rimV), 0.0, 1.0);\n' +
                 '  float __rim = pow(__f, uRimPow) * uRimInt;\n' +
                 '  vec3 __c = mix(uRimCol2, uRimCol, clamp(__f, 0.0, 1.0));\n' +
                 '  gl_FragColor.rgb += __c * __rim;\n');
@@ -1831,11 +1831,11 @@ try{
             .replace('#include <common>', '#include <common>\nuniform float uRimInt; uniform float uRimPow; uniform vec3 uRimCol; uniform vec3 uRimCol2;')
             .replace('#include <dithering_fragment>',
               '#include <dithering_fragment>\n' +
-              '  vec3 __n = normalize(vNormal);\n' +
-              '  vec3 __v = normalize(vViewPosition);\n' +
-              '  float __f = 1.0 - clamp(dot(__n, __v), 0.0, 1.0);\n' +
-              '  float __r = pow(__f, uRimPow) * uRimInt;\n' +
-              '  gl_FragColor.rgb += mix(uRimCol2, uRimCol, clamp(__f,0.0,1.0)) * __r;\n');
+              '  vec3 rimN = normalize(vNormal);\n' +
+              '  vec3 rimV = normalize(vViewPosition);\n' +
+              '  float rimF = 1.0 - clamp(dot(rimN, rimV), 0.0, 1.0);\n' +
+              '  float rimR = pow(rimF, uRimPow) * uRimInt;\n' +
+              '  gl_FragColor.rgb += mix(uRimCol2, uRimCol, clamp(rimF,0.0,1.0)) * rimR;\n');
           mat.userData.__sh = sh;
         };
         mat.needsUpdate = true; n++;
@@ -1855,10 +1855,10 @@ try{
           .replace('#include <common>', '#include <common>\nuniform float uFade;')
           .replace('#include <dithering_fragment>',
             '#include <dithering_fragment>\n' +
-            '  float __d = length(vViewPosition);\n' +
-            '  float __fa = smoothstep(4.0, 36.0, __d);\n' +
-            '  gl_FragColor.rgb *= mix(1.0, 0.22, __fa);\n' +
-            '  gl_FragColor.a *= mix(0.94, 0.0, __fa);\n');
+            '  float fadeD = length(vViewPosition);\n' +
+            '  float fadeA = smoothstep(4.0, 36.0, fadeD);\n' +
+            '  gl_FragColor.rgb *= mix(1.0, 0.22, fadeA);\n' +
+            '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
       plano.rotation.x = -Math.PI/2; plano.position.y = -3.3;
