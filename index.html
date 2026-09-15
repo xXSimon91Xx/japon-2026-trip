@@ -2334,10 +2334,13 @@ try{
       // ★ v10.8 — material del Buda: MeshBasicMaterial (visible sin luces) con
       // sombreado falso calculado de las normales -> bronce con volumen.
       function budaMat(geo){
-        var g2 = geo.clone();
-        var pos = g2.attributes.position;
-        g2.computeVertexNormals();
-        var nor = g2.attributes.normal;
+        // ★ v10.9 — la geometria del GLB NO TRAE NORMALES (attrs=position y ya).
+        //   Sin normales, MeshStandardMaterial no puede iluminar -> salia NEGRO.
+        //   Y los colores de vertice hay que ponerlos en la geometria DE VERDAD
+        //   (v10.8 los ponia en un clon que se tiraba -> seguia negro).
+        if (!geo.attributes.normal) geo.computeVertexNormals();
+        var pos = geo.attributes.position;
+        var nor = geo.attributes.normal;
         var col = new Float32Array(pos.count * 3);
         var cA = new THREE.Color(0x4a3418);   // bronce en sombra
         var cB = new THREE.Color(0xf0c583);   // bronce iluminado
@@ -2350,7 +2353,7 @@ try{
           col[i2*3+1] = cA.g + (cB.g - cA.g) * t;
           col[i2*3+2] = cA.b + (cB.b - cA.b) * t;
         }
-        g2.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
         return new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
       }
 
@@ -2402,6 +2405,11 @@ try{
             mm.castShadow = true; mm.receiveShadow = true;
             // ★ v9.5 — los GLB de TripoSR traen metalness=1 y sin textura: se ven NEGROS.
             //   Se limita y se sube el roughness para que la luz les dé forma.
+            // ★ v10.9 — los GLB del Smithsonian/poly no traen normales: sin ellas
+            //   MeshStandardMaterial no ilumina y el modelo sale negro.
+            if (mm.geometry && !mm.geometry.attributes.normal){
+              try{ mm.geometry.computeVertexNormals(); }catch(e){}
+            }
             var mats = Array.isArray(mm.material) ? mm.material : [mm.material];
             var esBudaMat = /buda/i.test(c.n || '');
             mats.forEach(function(mat){
