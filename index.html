@@ -1039,11 +1039,15 @@ function irA(selector){
   // ★ respaldo: si a los 320ms el scroll no se ha movido (Lenis colgado / rAF pausado), vamos a pelo
   setTimeout(function(){
     if (Math.abs((window.scrollY||0) - y0) < 10){
-      try{ window.scrollTo({top: destino, behavior:'smooth'}); }
-      catch(e){ window.scrollTo(0, destino); }
+      // ★ sincronizar Lenis para que NO revierta el scroll nativo en su siguiente frame
+      try{ if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(destino,{immediate:true, force:true}); }catch(e){}
+      try{ window.scrollTo({top: destino, behavior:'smooth'}); } catch(e){ window.scrollTo(0, destino); }
       // segundo intento duro si tampoco hay movimiento
       setTimeout(function(){
-        if (Math.abs((window.scrollY||0) - y0) < 10) window.scrollTo(0, destino);
+        if (Math.abs((window.scrollY||0) - y0) < 10){
+          try{ if(window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(destino,{immediate:true, force:true}); }catch(e){}
+          window.scrollTo(0, destino);
+        }
       }, 420);
     }
   }, 320);
