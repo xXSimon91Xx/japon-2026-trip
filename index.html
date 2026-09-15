@@ -2198,24 +2198,60 @@ try{
     CUADROS.forEach(function(c, i){
       loader.load('glb/' + c.f, function(g){
         const o = g.scene;
+        // ★ v11.0 — los GLB no traen NORMALES: sin ellas cualquier material con luz sale NEGRO
+        o.traverse(function(nn){
+          if (nn.isMesh && nn.geometry && !nn.geometry.attributes.normal){
+            try{ nn.geometry.computeVertexNormals(); }catch(e){}
+          }
+        });
+        o.updateMatrixWorld(true);
         // normalizar tamaño y centrar
-        const box = new THREE.Box3().setFromObject(o);
-        const size = box.getSize(new THREE.Vector3());
-        const centro = box.getCenter(new THREE.Vector3());
+        var box = new THREE.Box3().setFromObject(o);
+        var size = box.getSize(new THREE.Vector3());
+        // ★ v11.0 — los escaneos vienen con Z arriba: el Buda esta TUMBADO -> ponerlo de pie
+        if (/buda/i.test(c.n || '')){
+          o.rotation.x = -Math.PI / 2;
+          o.updateMatrixWorld(true);
+          box = new THREE.Box3().setFromObject(o);
+          size = box.getSize(new THREE.Vector3());
+        }
+        var centro = box.getCenter(new THREE.Vector3());
         const max = Math.max(size.x, size.y, size.z) || 1;
-        const escala = 1.5 / max;
+        const escala = 3.4 / max;
         o.position.sub(centro.multiplyScalar(escala));
-        o.scale.setScalar(escala);
+        o.scale.multiplyScalar(escala);
         o.userData.girando = true;
         o.userData.nombre = c.n;
-        aplicarRim(o);
+        // ★ v11.0 — el Buda con material visible sin luces (bronce + sombreado falso por normales)
+        if (/buda/i.test(c.n || '')){
+          o.traverse(function(nn){
+            if (!nn.isMesh || !nn.geometry) return;
+            var geo = nn.geometry;
+            if (!geo.attributes.normal) geo.computeVertexNormals();
+            var pos = geo.attributes.position, nor = geo.attributes.normal;
+            var col = new Float32Array(pos.count * 3);
+            var cA = new THREE.Color(0x3d2a12), cB = new THREE.Color(0xf2c98a);
+            var lz = new THREE.Vector3(0.35, 0.62, 0.70).normalize();
+            for (var k2 = 0; k2 < pos.count; k2++){
+              var d = Math.max(0, nor.getX(k2)*lz.x + nor.getY(k2)*lz.y + nor.getZ(k2)*lz.z);
+              var t2 = 0.20 + 0.80 * Math.pow(d, 0.8);
+              col[k2*3] = cA.r + (cB.r-cA.r)*t2;
+              col[k2*3+1] = cA.g + (cB.g-cA.g)*t2;
+              col[k2*3+2] = cA.b + (cB.b-cA.b)*t2;
+            }
+            geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+            nn.material = new THREE.MeshBasicMaterial({vertexColors: true, toneMapped: false});
+            nn.frustumCulled = false;
+          });
+        }
+        // ⛔ v11.0 — NO aplicarRim: rompia el shader de los GLB (Shader Error) y no se dibujaban
         // colocar en un arco detrás de la escena, repartidos
         const ang = (i / CUADROS.length) * Math.PI * 2;
         const radio = 5.2;
         o.position.x += Math.cos(ang) * radio;
         o.position.z += -5.2 + Math.sin(ang) * 2.0;
         o.position.y += 0.2 + (i % 2) * 0.7;
-        o.visible = false;   // se muestran en la sección de POIs
+        o.visible = true;    // v11.0 — el sistema de secciones ya los oculta/muestra por grupo
         esc.add(o);
         window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d});
         window.__galeria3d.listos = ++listo;
