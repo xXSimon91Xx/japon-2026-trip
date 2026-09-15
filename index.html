@@ -1145,6 +1145,7 @@ initChart();
       seen.add(el);
       el.style.setProperty('--d', Math.min(i++ * 55, 330));
       el.classList.add('in');
+      seen.add(el);
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
 
@@ -1178,6 +1179,7 @@ initChart();
       el.classList.add('in'); seen.add(el);
     });
   };
+  window.__revealAhora = _revealAhora;   // disponible para el cambio de tab
   if(window.MutationObserver){
     var _mo = new MutationObserver(function(muts){
       var conts = [];
@@ -1217,7 +1219,14 @@ initChart();
   if(typeof _goTab === 'function'){
     window.goTab = function(n){
       var r = _goTab.apply(this, arguments);
-      setTimeout(function(){ scan(); mapFree(); if(lenis) lenis.resize(); }, 60);
+      setTimeout(function(){
+        scan(); mapFree(); if(lenis) lenis.resize();
+        if(window.__revealAhora){
+          var t = document.getElementById('tab-' + n);
+          if(t) window.__revealAhora(t);          // revelar ya lo de la tab abierta
+          setTimeout(function(){ window.__revealAhora(t); }, 120);   // y otra pasada por si el render es async
+        }
+      }, 60);
       return r;
     };
   }
