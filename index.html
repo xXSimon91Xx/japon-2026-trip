@@ -1807,14 +1807,22 @@ try{
 
   function aplicarRim(raiz, THREE){
     var n = 0;
+    var SUELO = window.__suelo && window.__suelo.plano;
+    var REJILLA = window.__suelo && window.__suelo.rejilla;
     raiz.traverse(function(ob){
       if (!ob.isMesh) return;
+      if (ob === SUELO || ob === REJILLA) return;          // el suelo ya tiene su propio shader
+      if (ob.userData && ob.userData.__sinRim) return;
       var mats = Array.isArray(ob.material) ? ob.material : [ob.material];
       mats.forEach(function(mat){
         if (!mat || mat.__rimListo) return;
         if (!mat.isMeshStandardMaterial && !mat.isMeshPhysicalMaterial) return;
         mat.__rimListo = true;
+        var __shaderBase = mat.fragmentShader || '';
         mat.onBeforeCompile = function(sh){
+          // ⛔ si el shader no tiene los anclajes o no usa normales, no tocamos nada (evita shaders rotos)
+          if (sh.fragmentShader.indexOf('#include <dithering_fragment>') < 0 ||
+              sh.fragmentShader.indexOf('vViewPosition') < 0) { return; }
           sh.uniforms.uRimInt  = {value: 0.62};
           sh.uniforms.uRimPow  = {value: 2.5};
           sh.uniforms.uRimCol  = {value: new THREE.Color(0x6fd6ff)};
@@ -1858,6 +1866,7 @@ try{
       var grid = new THREE.GridHelper(150, 75, 0x1c2740, 0x141a28);
       grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.45;
       esc.add(grid);
+      plano.userData.__sinRim = true; grid.userData.__sinRim = true;
       window.__suelo = {plano:plano, rejilla:grid};
       console.log('[v6.1] suelo OK');
     }
