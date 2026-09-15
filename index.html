@@ -1053,7 +1053,9 @@ function loop(now){
         if (!o) return;
         o.visible = esBuda;                          // solo el buda durante esta sección
         if (esBuda){
-          if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = o.scale.x; }
+          // v10.2 — la escala base se guarda en la CARGA (m.escalaBase), no aqui:
+          // antes se capturaba la escala ya animada por el hero -> el x2.05 daba un valor sin sentido
+          if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = (m.escalaBase || o.scale.x); }
           o.position.lerp(new THREE.Vector3(0, -0.05, -0.4), 0.08);
           o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
           o.rotation.y = estado.t * 0.16;
@@ -2314,14 +2316,36 @@ try{
       CUADROS.forEach(function(c, i){
         loader.load('glb/' + c.f, function(g){
           var o = g.scene;
+          // v10.2 — los GLB con KHR_mesh_quantization pueden tener el bbox sin des-cuantizar
+          // en el instante de la carga: forzamos el recalculo de la geometria primero
+          o.traverse(function(nn){
+            if (nn.isMesh && nn.geometry){
+              nn.geometry.computeBoundingBox();
+              nn.geometry.computeBoundingSphere();
+            }
+          });
+          o.updateMatrixWorld(true);
           var box = new THREE.Box3().setFromObject(o);
           var size = box.getSize(new THREE.Vector3());
-          var centro = box.getCenter(new THREE.Vector3());
+          // v10.2 — si el eje Y es el MAS FINO, el modelo viene TUMBADO (escaneo con Z arriba):
+          // lo ponemos de pie antes de medir
+          if (size.y < size.x * 0.75 && size.y < size.z * 0.75){
+            o.rotation.x = -Math.PI / 2;
+            o.updateMatrixWorld(true);
+            box = new THREE.Box3().setFromObject(o);
+            size = box.getSize(new THREE.Vector3());
+            c.enderezado = true;
+          }
+          // v10.2 — normalizar MULTIPLICANDO: el bbox ya es el correcto, setScalar lo daba por bueno
           var max = Math.max(size.x, size.y, size.z) || 1;
           var k = 3.4 / max;
-          o.scale.setScalar(k);
-          centro.multiplyScalar(k);
+          o.scale.multiplyScalar(k);
+          o.updateMatrixWorld(true);
+          box = new THREE.Box3().setFromObject(o);
+          var centro = box.getCenter(new THREE.Vector3());
           o.position.sub(centro);
+          c.escalaBase = o.scale.x;                 // v10.2 — la escala REAL para el cine
+          c.escalaEnderezado = !!c.enderezado;
           // repartidos a los LADOS del titular, dentro del cono de la cámara del hero
           var lado  = (i % 2 === 0) ? -1 : 1;
           var fila  = Math.floor(i / 2);            // 0,1,2
