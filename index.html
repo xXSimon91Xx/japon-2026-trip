@@ -1014,5 +1014,64 @@ setTheme(document.documentElement.dataset.theme);
 initMap();
 initChart();
 </script>
-<style>.poi .poi-go{display:block;margin-top:8px;color:var(--accent);font-weight:700;font-size:.78rem}.poi-dir{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none}</style></body>
+<style>.poi .poi-go{display:block;margin-top:8px;color:var(--accent);font-weight:700;font-size:.78rem}.poi-dir{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none}</style>
+<!-- ═══ MOTION PREMIUM (14-sep-2026): Lenis smooth scroll + GSAP reveals ═══ -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+(function(){
+  var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(rm || !window.gsap){ document.documentElement.classList.add('no-motion'); return; }
+
+  // ── Lenis: scroll sedoso (se apaga solo si prefiere menos movimiento)
+  var lenis = null;
+  try{
+    if(window.Lenis){
+      lenis = new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 1 });
+      (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+      window.__lenis = lenis;
+    }
+  }catch(e){ console.warn('lenis off', e); }
+
+  // ── Reveals robustos (IntersectionObserver → funciona con tabs dinámicos)
+  var seen = new WeakSet();
+  var io = new IntersectionObserver(function(entries){
+    var i = 0;
+    entries.forEach(function(en){
+      var el = en.target;
+      if(!en.isIntersecting || seen.has(el)) return;
+      seen.add(el);
+      gsap.set(el, { autoAlpha: 0, y: 26 });
+      gsap.to(el, { autoAlpha: 1, y: 0, duration: .55, ease: 'power2.out', delay: Math.min(i++ * .05, .25), clearProps: 'transform' });
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
+
+  function scan(){
+    document.querySelectorAll('.tab .card, .sec-title, .slot, .slide, .day').forEach(function(el){
+      if(!seen.has(el)) io.observe(el);
+    });
+  }
+  scan();
+
+  // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
+  function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
+  mapFree(); setTimeout(mapFree, 800);
+
+  // ── Al cambiar de tab: re-escanear y refrescar el scroll
+  var _goTab = window.goTab;
+  if(typeof _goTab === 'function'){
+    window.goTab = function(n){
+      var r = _goTab.apply(this, arguments);
+      setTimeout(function(){ scan(); mapFree(); if(lenis) lenis.resize(); }, 60);
+      return r;
+    };
+  }
+
+  // ── Entrada del hero (primer tab visible)
+  var hero = document.querySelector('.tab.active .tab-head, .tab.active h1');
+  if(hero){ gsap.fromTo(hero, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: 'power2.out' }); }
+})();
+</script>
+
+</body>
 </html>
