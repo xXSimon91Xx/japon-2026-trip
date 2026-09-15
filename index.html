@@ -2331,6 +2331,29 @@ try{
         d.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
         loader.setDRACOLoader(d);
       }
+      // ★ v10.8 — material del Buda: MeshBasicMaterial (visible sin luces) con
+      // sombreado falso calculado de las normales -> bronce con volumen.
+      function budaMat(geo){
+        var g2 = geo.clone();
+        var pos = g2.attributes.position;
+        g2.computeVertexNormals();
+        var nor = g2.attributes.normal;
+        var col = new Float32Array(pos.count * 3);
+        var cA = new THREE.Color(0x4a3418);   // bronce en sombra
+        var cB = new THREE.Color(0xf0c583);   // bronce iluminado
+        var lz = new THREE.Vector3(0.35, 0.62, 0.70).normalize();  // direccion de la "luz" falsa
+        for (var i2 = 0; i2 < pos.count; i2++){
+          var nx = nor.getX(i2), ny = nor.getY(i2), nz = nor.getZ(i2);
+          var d = Math.max(0, nx*lz.x + ny*lz.y + nz*lz.z);
+          var t = 0.22 + 0.78 * Math.pow(d, 0.85);
+          col[i2*3]   = cA.r + (cB.r - cA.r) * t;
+          col[i2*3+1] = cA.g + (cB.g - cA.g) * t;
+          col[i2*3+2] = cA.b + (cB.b - cA.b) * t;
+        }
+        g2.setAttribute('color', new THREE.BufferAttribute(col, 3));
+        return new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
+      }
+
       CUADROS.forEach(function(c, i){
         loader.load('glb/' + c.f, function(g){
           var o = g.scene;
@@ -2388,19 +2411,14 @@ try{
               mat.envMapIntensity = 2.2;   // v10: los escaneos del Smithsonian necesitan más entorno
               // ★ v10.5 — el Gran Buda del Todai-ji es DE BRONCE y el escaneo no trae material:
               //   con el material por defecto (blanco, metalness 1) se veia NEGRO sobre fondo negro.
-              if (esBudaMat && mat.color){
-                // ★ v10.7 — MATERIAL AUTOCONTENIDO. Medido: con MeshBasicMaterial rojo
-                //   (sin luz) el Buda aparece 610x430px; con MeshStandardMaterial no aparece
-                //   NI con 4 luces dedicadas -> la luz no llega al canvas #bg3d.
-                //   Solucion: emision fuerte del propio color de bronce. Se ve sin depender
-                //   de luces externas y conserva el sombreado -> tiene volumen.
-                mat.color.setHex(0x8a6a3a);
-                if (mat.metalness !== undefined) mat.metalness = 0.0;
-                if (mat.roughness !== undefined) mat.roughness = 0.65;
-                mat.envMapIntensity = 1.4;
-                mat.emissive = new THREE.Color(0xc98f4a);   // brilla por si mismo
-                mat.emissiveIntensity = 0.62;
-                mat.toneMapped = false;
+              if (esBudaMat){
+                // ★ v10.8 — MEDIDO: el canvas #bg3d NO recibe la luz de la escena
+                //   (con MeshBasicMaterial el Buda aparece 610x430px; con
+                //   MeshStandardMaterial no aparece ni con 4 luces ni con emissive).
+                //   Solucion: material que no depende de luces, con sombreado falso
+                //   a partir de las NORMALES para que conserve volumen.
+                mat.dispose && mat.dispose();
+                mm.material = budaMat(mm.geometry);
               }
               mat.needsUpdate = true;
             });
