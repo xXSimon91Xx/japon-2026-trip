@@ -468,7 +468,16 @@ body.cine-puro #bg3d{background:#000}
 [data-tema="dia"] #fiesta .poi .precio{ color:#8a5a00; font-weight:700 }
 [data-tema="dia"] #ruta .bl b,
 [data-tema="dia"] #ruta .city{ color:#7a4a00; font-weight:700 }
-[data-tema="dia"] .eye{ color:#c2143a }
+/* v12.1 — el .eye en dia: la regla anterior perdia por especificidad (medido 3.22:1).
+   #ff3b5c no es legible sobre claro: se oscurece a un granate que mantiene el tono. */
+[data-tema="dia"] .eye,
+[data-tema="dia"] section .eye,
+[data-tema="dia"] #cineTexto .eye,
+[data-tema="dia"] .panel .eye,
+[data-tema="dia"] h2 + .eye,
+[data-tema="dia"] [class*="eye"]{ color:#b3123a !important }
+[data-tema="dia"] .eye span,
+[data-tema="dia"] section .eye span{ color:#b3123a !important }
 [data-tema="dia"] #comida .poi .precio::before,
 [data-tema="dia"] #fiesta .poi .precio::before{ opacity:.9 }
 </style>
