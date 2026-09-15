@@ -273,6 +273,32 @@ h2.big em{font-style:normal; color:var(--neon)}
 #mapaLista{position:relative; z-index:3}
 @media (max-width: 860px){ #mapaMarco{height:440px; border-radius:16px} }
 @media (max-width: 520px){ #mapaMarco{height:360px} }
+
+/* ══ TILT 3D AL CURSOR (animación de hover) ══ */
+.tilt-in{
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:transform .45s cubic-bezier(.22,.61,.36,1);
+}
+.tilt-activo .tilt-in{
+  transition:transform .07s linear;   /* mientras el ratón está encima: respuesta inmediata */
+}
+/* brillo que sigue al cursor */
+.tilt-glare{
+  position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  opacity:0; transition:opacity .35s ease;
+  background:radial-gradient(600px circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.13), transparent 42%);
+  mix-blend-mode:screen;
+}
+.tilt-activo .tilt-glare{opacity:1; transition:opacity .12s ease}
+/* las tarjetas deben poder contener el brillo */
+.dia, .poi, .vid, .tarjeta, .comida, .fiesta{position:relative}
+@media (prefers-reduced-motion: reduce){
+  .tilt-in{transition:none !important; transform:none !important}
+  .tilt-glare{display:none}
+}
+/* en táctil no hay cursor: fuera */
+@media (hover: none){ .tilt-in{transform:none !important} .tilt-glare{display:none} }
 </style>
 </head>
 <body>
@@ -1501,6 +1527,106 @@ try{
     window.__lenisST = true;
   } else { (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0); }
 }catch(e){ console.warn('lenis off', e); }
+
+/* ══════════════════════════════════════════════════════════════
+   TILT 3D AL CURSOR (la "animación del cursor")
+   - Interpola hacia un objetivo con UN temporizador por tarjeta.
+   - No usa rAF (puede estar pausado) ni re-dispara animaciones.
+   - El tilt vive en .tilt-in (interior): no pelea con GSAP.
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  if (matchMedia('(hover: none)').matches) return;            // táctil: fuera
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const MAX = 5.5;          // grados máximos (sutil, como pidió Simon)
+  const SEL = '.dia, .poi, .vid, .tarjeta, .comida, .fiesta';
+
+  function preparar(tarjeta){
+    if (tarjeta.dataset.tiltListo) return;
+    // envolver el contenido en .tilt-in (si no está ya)
+    if (!tarjeta.querySelector(':scope > .tilt-in')){
+      const wrap = document.createElement('div');
+      wrap.className = 'tilt-in';
+      while (tarjeta.firstChild) wrap.appendChild(tarjeta.firstChild);
+      tarjeta.appendChild(wrap);
+    }
+    // capa de brillo
+    if (!tarjeta.querySelector(':scope > .tilt-glare')){
+      const g = document.createElement('div');
+      g.className = 'tilt-glare';
+      g.setAttribute('aria-hidden','true');
+      tarjeta.appendChild(g);
+    }
+    const inner = tarjeta.querySelector(':scope > .tilt-in');
+    const glare = tarjeta.querySelector(':scope > .tilt-glare');
+
+    let objX = 0, objY = 0, actX = 0, actY = 0, timer = null, dentro = false;
+    let ultimo = 0;
+
+    function animar(){
+      // interpolación exponencial hacia el objetivo
+      actX += (objX - actX) * 0.18;
+      actY += (objY - actY) * 0.18;
+      if (inner) inner.style.transform = 'perspective(950px) rotateY(' + actY.toFixed(2) + 'deg) rotateX(' + actX.toFixed(2) + 'deg) translateZ(0)';
+      const quieto = Math.abs(objX - actX) < 0.03 && Math.abs(objY - actY) < 0.03;
+      if (quieto && !dentro){
+        actX = objX; actY = objY;
+        if (inner) inner.style.transform = '';
+        timer = null;                    // se para solo: no consume nada en reposo
+        return;
+      }
+      timer = setTimeout(animar, 16);    // ~60fps sin rAF
+    }
+    function arrancar(){
+      if (timer) return;                 // ⬅️ un único bucle: imposible la cascada de animaciones
+      ultimo = performance.now();
+      timer = setTimeout(animar, 16);
+    }
+
+    tarjeta.addEventListener('pointerenter', function(){
+      dentro = true;
+      tarjeta.classList.add('tilt-activo');
+    });
+    tarjeta.addEventListener('pointermove', function(ev){
+      const r = tarjeta.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const px = (ev.clientX - r.left) / r.width;
+      const py = (ev.clientY - r.top) / r.height;
+      objY = (px - 0.5) * 2 * MAX;        // izquierda/derecha
+      objX = -(py - 0.5) * 2 * MAX;       // arriba/abajo
+      if (glare){
+        glare.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
+        glare.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
+      }
+      arrancar();
+    }, {passive:true});
+    tarjeta.addEventListener('pointerleave', function(){
+      dentro = false;
+      objX = 0; objY = 0;
+      tarjeta.classList.remove('tilt-activo');
+      if (glare) glare.style.setProperty('--gx','50%'), glare.style.setProperty('--gy','50%');
+      arrancar();
+    });
+
+    tarjeta.dataset.tiltListo = '1';
+  }
+
+  function revisar(){
+    document.querySelectorAll(SEL).forEach(function(t){
+      if (t.closest('#mapaCaja')) return;                 // nunca dentro del mapa (Leaflet necesita su geometría)
+      if (t.querySelector('canvas, .leaflet-container, #viewer3d')) return;
+      preparar(t);
+    });
+  }
+  revisar();
+  setTimeout(revisar, 2500);
+  setTimeout(revisar, 6000);
+  // las tarjetas se pintan con innerHTML
+  try{
+    new MutationObserver(function(){ revisar(); }).observe(document.body, {childList:true, subtree:true});
+  }catch(e){}
+  window.__tilt = {revisar: revisar, max: MAX};
+})();
 </script>
 
 </body>
