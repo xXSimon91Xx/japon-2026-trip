@@ -394,7 +394,10 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
    ══════════════════════════════════════════════════════════════════════ */
 #cine{
   position:relative; min-height:100vh; display:flex;
-  align-items:center; justify-content:center;
+  /* ★ v13.0 — el texto abajo (ficha de museo) para que NO tape al Buda, que
+     queda arriba y centrado, como en los shorts de referencia. */
+  align-items:flex-end; justify-content:center;
+  padding-bottom:clamp(28px, 7vh, 90px);
   background:transparent; overflow:hidden;
 }
 /* durante esta sección, fuera la interfaz: solo el objeto */
@@ -1079,7 +1082,7 @@ function loop(now){
           // v10.2 — la escala base se guarda en la CARGA (m.escalaBase), no aqui:
           // antes se capturaba la escala ya animada por el hero -> el x2.05 daba un valor sin sentido
           if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = (m.escalaBase || o.scale.x); }
-          o.position.lerp(new THREE.Vector3(0, 0.15, -1.5), 0.08);  // v11.1 — mas atras y centrado
+          o.position.lerp(new THREE.Vector3(0, 0.95, -1.5), 0.08);  // ★ v13.0 — arriba: el texto ya no lo tapa
           o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
           o.rotation.y = estado.t * 0.16;
           o.rotation.x = -Math.PI / 2;                   // v10.4 — el Buda siempre de pie en el cine
@@ -1110,7 +1113,7 @@ function loop(now){
 
     // dolly-in de la cámara hacia el buda
     cam.position.set(0, 0.75 + suave*0.30, 9.0 - suave*3.6);   // v11.1 — menos dolly-in: la figura cabe
-    cam.lookAt(0, 0.75 + suave*0.30, -1.0);   // v10.5 — encuadre mas alto para que el Buda quede libre
+    cam.lookAt(0, 1.05 + suave*0.25, -1.0);   // ★ v13.0 — encuadre al Buda, que ahora esta arriba
 
     // el anillo aparece al principio y se desvanece al acercarse
     if (window.__anilloCine){
