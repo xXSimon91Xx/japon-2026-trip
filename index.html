@@ -2389,12 +2389,18 @@ try{
               // ★ v10.5 — el Gran Buda del Todai-ji es DE BRONCE y el escaneo no trae material:
               //   con el material por defecto (blanco, metalness 1) se veia NEGRO sobre fondo negro.
               if (esBudaMat && mat.color){
-                mat.color.setHex(0xd9a862);   // bronce claro
-                if (mat.metalness !== undefined) mat.metalness = 0.15;  // v10.6 — poco metal: el metal puro sin entorno sale negro
-                if (mat.roughness !== undefined) mat.roughness = 0.55;
-                mat.envMapIntensity = 2.6;
-                mat.emissive = new THREE.Color(0x1a0f04);
-                mat.emissiveIntensity = 1.0;
+                // ★ v10.7 — MATERIAL AUTOCONTENIDO. Medido: con MeshBasicMaterial rojo
+                //   (sin luz) el Buda aparece 610x430px; con MeshStandardMaterial no aparece
+                //   NI con 4 luces dedicadas -> la luz no llega al canvas #bg3d.
+                //   Solucion: emision fuerte del propio color de bronce. Se ve sin depender
+                //   de luces externas y conserva el sombreado -> tiene volumen.
+                mat.color.setHex(0x8a6a3a);
+                if (mat.metalness !== undefined) mat.metalness = 0.0;
+                if (mat.roughness !== undefined) mat.roughness = 0.65;
+                mat.envMapIntensity = 1.4;
+                mat.emissive = new THREE.Color(0xc98f4a);   // brilla por si mismo
+                mat.emissiveIntensity = 0.62;
+                mat.toneMapped = false;
               }
               mat.needsUpdate = true;
             });
