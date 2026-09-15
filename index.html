@@ -2499,7 +2499,11 @@ try{
           //   parche para el Buda del Smithsonian (que venía con Z arriba). El Buda actual
           //   (TripoSR) YA viene de pie: forzarle -90º lo tumbaba.
           //   Criterio: si Y es claramente el eje más fino, el modelo está tumbado.
-          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8);
+          // ★ v16.2 — umbral ESTRICTO (0.4). Un Buda SENTADO es más ancho que alto:
+          //   con 0.8 se marcaba "tumbado" y se tumbaba de verdad (rotX=-1.57 en vivo).
+          //   Solo se endereza si Y es <40% del eje mayor (objeto claramente acostado).
+          var ejeMayor = Math.max(size.x, size.z);
+          var tumbado = (size.y < ejeMayor * 0.4);
           if (tumbado){
             o.rotation.order = 'YXZ';                  // ★ v15.2 — el mismo fix en la carga
             o.rotation.x = -Math.PI / 2;
