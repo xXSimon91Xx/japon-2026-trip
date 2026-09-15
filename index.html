@@ -1155,8 +1155,13 @@ initChart();
       }
       if(need) scan();
     });
-    _mo.observe(document.body, { childList: true, subtree: true });
   }
+  // ★ Red de seguridad: si algo falla (observer bloqueado, JS a medias), a los 3s se revela todo.
+  setTimeout(function(){
+    document.querySelectorAll('.tab .card, .sec-title, .slot, .slide, .day').forEach(function(el){
+      if(getComputedStyle(el).opacity === '0') el.classList.add('in');
+    });
+  }, 3000);
 
   // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
   function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
