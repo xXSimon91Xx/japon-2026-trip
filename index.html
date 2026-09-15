@@ -1075,16 +1075,16 @@ initChart();
   if(!window.gsap){ document.documentElement.classList.add('no-motion'); montarBarra(false); return; }
 
   // ── Barra de intensidad del 3D (se guarda y se recuerda) ──
-  var NIVELES = { suave: {deg: 7, lift: 14}, normal: {deg: 14, lift: 30}, bestia: {deg: 22, lift: 44} };
-  window.__FX = NIVELES.normal;
+  var NIVELES = { mini: {deg: 3.5, lift: 8}, suave: {deg: 6, lift: 14}, normal: {deg: 12, lift: 26}, bestia: {deg: 20, lift: 42} };
+  window.__FX = NIVELES.suave;
   function montarBarra(activo){
     var b = document.createElement('div'); b.id = 'fx-bar';
-    b.innerHTML = '<b>3D</b>' + ['suave','normal','bestia'].map(function(n){
+    b.innerHTML = '<b>3D</b>' + ['mini','suave','normal','bestia'].map(function(n){
       return '<button data-fx="'+n+'">'+n+'</button>';
     }).join('') + '<button data-fx="off" title="Desactivar">✕</button>';
     document.body.appendChild(b);
-    var pref = 'normal';
-    try{ pref = localStorage.getItem('jpfx') || 'normal'; }catch(e){}
+    var pref = 'suave';
+    try{ pref = localStorage.getItem('jpfx') || 'suave'; }catch(e){}
     function setUI(n){
       b.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x.dataset.fx === n); });
     }
@@ -1138,6 +1138,25 @@ initChart();
     });
   }
   scan();
+  // ★ FIX: cuando JS re-renderiza (ej. marcar "Grabado" en Videos) las cards nuevas se quedaban invisibles.
+  // Un MutationObserver las re-observa al instante.
+  if(window.MutationObserver){
+    var _mo = new MutationObserver(function(muts){
+      var need = false;
+      for(var i = 0; i < muts.length && !need; i++){
+        var nds = muts[i].addedNodes;
+        for(var j = 0; j < nds.length; j++){
+          var n = nds[j];
+          if(n && n.nodeType === 1){
+            if(n.classList && n.classList.contains('card')){ need = true; break; }
+            if(n.querySelector && n.querySelector('.card, .slide, .slot, .sec-title')){ need = true; break; }
+          }
+        }
+      }
+      if(need) scan();
+    });
+    _mo.observe(document.body, { childList: true, subtree: true });
+  }
 
   // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
   function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
@@ -1157,7 +1176,7 @@ initChart();
   // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
   var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
   if(hoverOK){
-    var MAXD = (window.__FX && window.__FX.deg) || 14, LIFT = (window.__FX && window.__FX.lift) || 30;
+    var MAXD = (window.__FX && window.__FX.deg) || 6, LIFT = (window.__FX && window.__FX.lift) || 14;
     var cur = null, raf = 0, lastEv = null, lastT = 0;
     window.__applyFX = function(fx){ MAXD = fx.deg; LIFT = fx.lift; };
     function glareOf(el){
@@ -1181,12 +1200,11 @@ initChart();
       cur.style.transform = 'perspective(1000px) rotateY(' + (px * MAXD * 2).toFixed(2) + 'deg) rotateX(' + (-py * MAXD * 2).toFixed(2) + 'deg) translateZ(' + LIFT + 'px) scale(1.025)';
       cur.style.setProperty('--mx', px.toFixed(3));
       cur.style.setProperty('--my', py.toFixed(3));
-      var g = glareOf(cur);
-      g.style.opacity = 1;
-      g.style.background = 'radial-gradient(340px circle at ' + ((px + .5) * 100).toFixed(1) + '% ' + ((py + .5) * 100).toFixed(1) + '%, rgba(255,255,255,.17), rgba(255,255,255,.05) 40%, transparent 62%)';
+      /* glare retirado a peticion de Simon (molestaba sobre "Como llegar") */
     }
     document.addEventListener('mousemove', function(e){
       var t = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
+      if(t && t.closest('#tab-trailer')) t = null;   // el trailer NO lleva 3D
       if(t !== cur){ reset(cur); cur = t; if(cur) cur.classList.add('tilting'); }
       lastEv = e;
       if(!cur) return;
@@ -1206,7 +1224,8 @@ initChart();
   // ── EFECTO 3D AL SELECCIONAR: la card "salta" en 3D al hacer click ──
   document.addEventListener('pointerdown', function(e){
     var el = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
-    if(!el || (e.target.closest && e.target.closest('a'))) return;
+    if(!el || el.closest('#tab-trailer')) return;
+    if(e.target.closest && e.target.closest('a')) return;
     if(el.closest('#viewer3d, .leaflet-container')) return;
     try{
       el.animate([
