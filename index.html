@@ -1056,7 +1056,7 @@ function loop(now){
           // v10.2 — la escala base se guarda en la CARGA (m.escalaBase), no aqui:
           // antes se capturaba la escala ya animada por el hero -> el x2.05 daba un valor sin sentido
           if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = (m.escalaBase || o.scale.x); }
-          o.position.lerp(new THREE.Vector3(0, -0.05, -0.4), 0.08);
+          o.position.lerp(new THREE.Vector3(0, 0.55, -0.4), 0.08);   // v10.5 — mas alto: el titular pasa por debajo
           o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
           o.rotation.y = estado.t * 0.16;
           o.rotation.x = -Math.PI / 2;                   // v10.4 — el Buda siempre de pie en el cine
@@ -1070,7 +1070,7 @@ function loop(now){
 
     // dolly-in de la cámara hacia el buda
     cam.position.set(0, 0.75 + suave*0.35, 8.6 - suave*5.0);
-    cam.lookAt(0, 0.35 + suave*0.25, -1.0);
+    cam.lookAt(0, 0.75 + suave*0.30, -1.0);   // v10.5 — encuadre mas alto para que el Buda quede libre
 
     // el anillo aparece al principio y se desvanece al acercarse
     if (window.__anilloCine){
@@ -2363,11 +2363,22 @@ try{
             // ★ v9.5 — los GLB de TripoSR traen metalness=1 y sin textura: se ven NEGROS.
             //   Se limita y se sube el roughness para que la luz les dé forma.
             var mats = Array.isArray(mm.material) ? mm.material : [mm.material];
+            var esBudaMat = /buda/i.test(c.n || '');
             mats.forEach(function(mat){
               if (!mat) return;
               if (mat.metalness !== undefined && mat.metalness > 0.25) mat.metalness = 0.18;
               if (mat.roughness !== undefined && mat.roughness > 0.85) mat.roughness = 0.62;
               mat.envMapIntensity = 2.2;   // v10: los escaneos del Smithsonian necesitan más entorno
+              // ★ v10.5 — el Gran Buda del Todai-ji es DE BRONCE y el escaneo no trae material:
+              //   con el material por defecto (blanco, metalness 1) se veia NEGRO sobre fondo negro.
+              if (esBudaMat && mat.color){
+                mat.color.setHex(0xb98a4e);   // bronce calido
+                if (mat.metalness !== undefined) mat.metalness = 0.55;
+                if (mat.roughness !== undefined) mat.roughness = 0.42;
+                mat.envMapIntensity = 2.6;
+                mat.emissive = new THREE.Color(0x2a1a08);   // un pelin de emision para que no sea un agujero
+                mat.emissiveIntensity = 1.0;
+              }
               mat.needsUpdate = true;
             });
           });
