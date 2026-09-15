@@ -1319,11 +1319,12 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   var hero = document.getElementById('hero3d');
   var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var W = hero.clientWidth || innerWidth, H = hero.clientHeight || innerHeight;
+  function esMovilInicial(){ return (innerWidth < 820) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent); }
   var renderer;
   try{ renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, preserveDrawingBuffer:true}); }
   catch(e){ window.__HERO3D.err='WebGL: '+e.message; console.warn('WebGL no disponible', e); return; }
   window.__HERO3D.renderer = true;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, esMovilInicial() ? 1.25 : 1.5));
   renderer.setSize(W, H, false);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1370,7 +1371,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   });
 
   // petalos de sakura
-  var N = (innerWidth < 700) ? 420 : 950;
+  var N = (innerWidth < 820) ? 260 : 950;
   var pos = new Float32Array(N*3), vel = new Float32Array(N);
   for(var i=0;i<N;i++){ pos[i*3]=(Math.random()-.5)*62; pos[i*3+1]=Math.random()*27-3; pos[i*3+2]=Math.random()*-92+6; vel[i]=.008+Math.random()*.026; }
   var pg = new THREE.BufferGeometry();
@@ -1398,7 +1399,9 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   if(window.IntersectionObserver) new IntersectionObserver(function(e){ visible = e[0].isIntersecting; }, {threshold:0}).observe(hero);
   // bloom: el neon de verdad
   var composer = null;
+  var esMovil = (innerWidth < 820) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   try{
+    if(esMovil) throw new Error('bloom off en movil');
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
     var bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.42, 0.65, 0.4);
