@@ -631,6 +631,7 @@ addEventListener('scroll', ()=>{
 /* ══ LOOP ══ */
 let ultimo = performance.now();
 function loop(now){
+  window.__frames = (window.__frames||0) + 1; __ultimoFrame = now;
   const dt = Math.min((now - ultimo)/1000, 0.05); ultimo = now;
   estado.t += dt;
 
@@ -691,7 +692,7 @@ function loop(now){
   ne3.intensity = 1.6 + Math.sin(estado.t*1.7+2.1)*0.7;
 
   // cámara: se desliza suavemente hacia la sección activa
-  cam.position.lerp(objetivo.p, 0.045);
+  cam.position.lerp(objetivo.p, 0.075);
   cam.lookAt(objetivo.look);
   cam.position.y += Math.sin(estado.t*0.55)*0.03;
 
@@ -736,8 +737,20 @@ setInterval(()=>{
 window.__setSeccion = setSeccion;
 window.__escena3d = {escena, cam, avion, estado};
 
+window.__frames = 0;
+let __ultimoFrame = performance.now();
+function __watchdog(){
+  const ahora = performance.now();
+  if (ahora - __ultimoFrame > 900){
+    // el rAF se ha parado (pestana oculta / ahorro de energia): reanudamos
+    __ultimoFrame = ahora; ultimo = ahora;
+    requestAnimationFrame(loop);
+  }
+}
+setInterval(__watchdog, 700);
+// si el documento vuelve a estar visible, seguimos de inmediato
+document.addEventListener('visibilitychange', () => { if(!document.hidden){ ultimo = performance.now(); requestAnimationFrame(loop); } });
 requestAnimationFrame(loop);
-window.__motor3d = {ok:true, movil, partículas:N_P};
 
 </script>
 <script>
