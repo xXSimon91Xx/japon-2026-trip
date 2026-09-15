@@ -41,6 +41,27 @@
 #fx-warn button{margin-top:6px;background:#f5c518;color:#1a1204;border:0;border-radius:8px;padding:5px 10px;font-weight:800;cursor:pointer}
 @media(max-width:600px){#fx-warn{left:8px;right:8px;bottom:14px;max-width:none}}
 /* Reveal por CSS (GSAP se peleaba con el tilt: borraba el transform). Solo actua si html.js-anim */
+/* ═══ v3.0 SCROLL CINEMATOGRAFICO 3D ═══ */
+main{ perspective: 1900px; perspective-origin: 50% 42%; }
+.tab, .cine-block { transform-style: preserve-3d; }
+.cine-block{ backface-visibility: hidden; will-change: transform, opacity; }
+#cineFloor{ position: fixed; left:0; right:0; bottom:-42vh; height:42vh; pointer-events:none; z-index:0;
+  background:
+    linear-gradient(to bottom, rgba(11,14,20,0) 0%, rgba(11,14,20,.55) 38%, rgba(11,14,20,.92) 100%),
+    repeating-linear-gradient(to right, rgba(255,59,92,.16) 0 1px, transparent 1px 78px),
+    repeating-linear-gradient(to bottom, rgba(255,59,92,.10) 0 1px, transparent 1px 62px);
+  transform: perspective(700px) rotateX(66deg);
+  transform-origin: 50% 100%;
+  opacity:.55;
+  mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000);
+}
+#cinePetals{ position: fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden }
+#cinePetals i{ position:absolute; display:block; width:9px; height:9px; border-radius:60% 40% 55% 45%;
+  background: linear-gradient(135deg,#ff6b86,#ff3b5c 55%,#f5c518); opacity:.5; }
+html.no-motion #cineFloor, html.no-motion #cinePetals{ display:none }
+html.no-motion .cine-block{ transform:none !important; opacity:1 !important }
+
 html.js-anim .card,html.js-anim .slide,html.js-anim .slot,html.js-anim .sec-title{
   opacity:0;transform:translateY(36px) rotateX(-13deg) translateZ(-60px);transform-origin:50% 100%;
   transition:opacity .6s ease,transform .8s cubic-bezier(.22,.61,.36,1);
@@ -500,6 +521,8 @@ html,body{overflow-x:clip}
     </div>
   </div>
 </section>
+<div id="cineFloor" aria-hidden="true"></div>
+<div id="cinePetals" aria-hidden="true"></div>
 </main>
 
 <footer><div style="margin-bottom:6px;font-weight:700;color:var(--accent)">v23 · 3D activo</div>Hecho con 💜 por la tripulación · Vuelos ZH (PNR QWKX47) · Bases Osaka/Tokyo · 620 € en destino · shinkansen Nozomi 14.720¥ · Tabelog verificado — ¡nos vemos en Japón! ⛩️</footer>
@@ -1220,6 +1243,14 @@ initChart();
         frag += '<i style="left:'+(Math.random()*100).toFixed(1)+'%;animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+(Math.random()*dur).toFixed(1)+'s;--dx:'+dx+'px;transform:scale('+(0.6+Math.random()*0.9).toFixed(2)+')"></i>';
       }
       pj.innerHTML = frag;
+      // animacion de caida (por JS: no depende de keyframes externos)
+      [].forEach.call(pj.querySelectorAll('i'), function(el, k){
+        var dur = (9 + Math.random()*11);
+        var dx = (Math.random()*180-90);
+        gsap.fromTo(el, { y: '-10vh', x: 0, rotate: 0, opacity: 0 },
+          { y: '112vh', x: dx, rotate: 540, opacity: 0.5, duration: dur, repeat: -1, ease: 'none', delay: -Math.random()*dur,
+            onUpdate: function(){ if(this.progress() > 0.86) this.targets()[0].style.opacity = (1-this.progress())*3.4; } });
+      });
     }
     var fl = document.getElementById('cineFloor');
     if(fl){
