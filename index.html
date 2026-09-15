@@ -2298,13 +2298,10 @@ try{
         // normalizar tamaño y centrar
         var box = new THREE.Box3().setFromObject(o);
         var size = box.getSize(new THREE.Vector3());
-        // ★ v11.0 — los escaneos vienen con Z arriba: el Buda esta TUMBADO -> ponerlo de pie
-        if (/buda/i.test(c.n || '')){
-          o.rotation.x = -Math.PI / 2;
-          o.updateMatrixWorld(true);
-          box = new THREE.Box3().setFromObject(o);
-          size = box.getSize(new THREE.Vector3());
-        }
+        // ★ v16.4 — ROTACIÓN HARDCODEADA RETIRADA. Era un parche de v11.0 para el Buda
+        //   del Smithsonian (que venía con Z arriba). El Buda actual (TripoSR) YA viene
+        //   de pie, así que esto lo tumbaba: medido rotX=-1.57 en el hero.
+        //   No hay nada que enderezar en los 6 modelos actuales.
         var centro = box.getCenter(new THREE.Vector3());
         const max = Math.max(size.x, size.y, size.z) || 1;
         // ★ v11.1 — el Buda a 3.4 ocupaba TODO el encuadre (medido: 3.7u de alto a ~4u
