@@ -33,7 +33,7 @@ body{
 #bg3d{position:fixed; inset:0; z-index:0; pointer-events:none}
 #bg3d canvas{display:block; width:100%; height:100%}
 #velo{position:fixed; inset:0; z-index:1; pointer-events:none;
-  background:linear-gradient(180deg, transparent 0%, rgba(8,9,15,.35) 35%, rgba(8,9,15,.72) 100%)}
+  background:linear-gradient(180deg, transparent 0%, rgba(8,9,15,.18) 40%, rgba(8,9,15,.40) 100%)}
 :root[data-tema="dia"] #navlinks a{color:#38445c; border-color:rgba(56,68,92,.22)}
 [data-tema="dia"] #navlinks a.on{color:#0b0e14; background:var(--neon); border-color:var(--neon)}
 [data-tema="dia"] #navlinks a:hover{color:#0b0e14; background:rgba(11,14,20,.07)}
@@ -368,8 +368,10 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
    entre el fondo del hero y el de la sección siguiente. */
 #hero{position:relative}
 #hero::after{
-  content:''; position:absolute; left:0; right:0; bottom:-2px; height:180px;
-  background:linear-gradient(180deg, transparent 0%, var(--bg) 92%);
+  content:''; position:absolute; left:0; right:0; bottom:-2px; height:110px;
+  /* ★ v8.8 — era var(--bg) casi opaco y 180px: TAPABA el suelo 3D del hero.
+     Ahora es un velo suave que difumina la unión sin ocultar la escena. */
+  background:linear-gradient(180deg, transparent 0%, rgba(11,14,20,.55) 70%, var(--bg) 100%);
   pointer-events:none; z-index:3;
 }
 /* y la sección siguiente entra con un degradado en vez de un corte */
@@ -1928,10 +1930,10 @@ try{
         '  gl_FragColor.a *= mix(0.97, 0.10, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
-  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.35; sueloMesh.receiveShadow = true;
+  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.15; sueloMesh.receiveShadow = true;
   esc.add(sueloMesh);
   const grid = new THREE.GridHelper(150, 75, 0x4d6a9e, 0x33445f);
-  grid.position.y = -1.33; grid.material.transparent = true; grid.material.opacity = 0.85;
+  grid.position.y = -1.13; grid.material.transparent = true; grid.material.opacity = 0.85;
   esc.add(grid);
   window.__suelo = {plano: sueloMesh, rejilla: grid};
 })();
@@ -2113,7 +2115,7 @@ try{
             '  gl_FragColor.a *= mix(0.97, 0.10, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
-      plano.rotation.x = -Math.PI/2; plano.position.y = -1.35; plano.receiveShadow = true;
+      plano.rotation.x = -Math.PI/2; plano.position.y = -1.15; plano.receiveShadow = true;
       esc.add(plano);
       var grid = new THREE.GridHelper(150, 75, 0x4d6a9e, 0x33445f);
       grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.85;
