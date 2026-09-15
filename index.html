@@ -692,7 +692,7 @@ function loop(now){
   ne3.intensity = 1.6 + Math.sin(estado.t*1.7+2.1)*0.7;
 
   // cámara: se desliza suavemente hacia la sección activa
-  cam.position.lerp(objetivo.p, 0.075);
+  cam.position.lerp(objetivo.p, 0.14);
   cam.lookAt(objetivo.look);
   cam.position.y += Math.sin(estado.t*0.55)*0.03;
 
@@ -747,7 +747,7 @@ let __enLoop = false;
 function __tick(forzado){
   const ahora = performance.now();
   if (__enLoop) return;
-  if (!forzado && ahora - __ultimoFrame < 200) return;   // el rAF ya va fino
+  if (!forzado && ahora - __ultimoFrame < 90) return;   // el rAF ya va fino
   __enLoop = true;
   try { loop(ahora); } catch(e){ console.warn('motor', e); }
   __enLoop = false;
@@ -1248,12 +1248,24 @@ const CIUDAD_Q = {
       scrollTrigger:{trigger:h, start:'top 100%', end:'top 74%', scrub:0.55}});
   });
 
-  // Cambio de escena 3D según la sección
-  ['hero','ruta','mapa','comida','actividades','fiesta','videos','presupuesto','checklist','cumple'].forEach(id => {
-    const s = document.getElementById(id); if(!s) return;
-    ScrollTrigger.create({trigger:s, start:'top 85%', end:'bottom 15%',
-      onToggle: self => { if(self.isActive && window.__setSeccion) window.__setSeccion(id); }});
-  });
+  // ★ Cambio de escena 3D: detección directa por posición (fiable y sin retrasos)
+  const ORDEN = ['hero','ruta','mapa','comida','actividades','fiesta','videos','presupuesto','checklist','cumple'];
+  const nodos = ORDEN.map(id => document.getElementById(id)).filter(Boolean);
+  let activa = '';
+  function calcular(){
+    const y = (window.scrollY || document.documentElement.scrollTop || 0) + innerHeight*0.42;
+    let id = ORDEN[0];
+    nodos.forEach(n => { if (n.offsetTop <= y) id = n.id; });
+    if (id !== activa){
+      activa = id;
+      if (window.__setSeccion) window.__setSeccion(id);
+    }
+  }
+  addEventListener('scroll', calcular, {passive:true});
+  addEventListener('resize', calcular);
+  if (window.__lenis) window.__lenis.on('scroll', calcular);
+  setInterval(calcular, 350);   // red de seguridad (también si el scroll lo mueve Lenis)
+  calcular();
 
   ScrollTrigger.refresh();
   addEventListener('load', () => setTimeout(()=>ScrollTrigger.refresh(), 300));
