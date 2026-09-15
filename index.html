@@ -16,9 +16,9 @@
 /* ═══ HERO 3D (v2.0) — portada cinematografica con Three.js ═══ */
 #hero3d{position:relative;height:100vh;min-height:560px;overflow:hidden;background:#05060c}
 #hero3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#hero3d .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;pointer-events:none;z-index:2;padding:20px}
+#hero3d .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;pointer-events:none;z-index:2;padding:20px;transform:translateY(-4vh)}
 #hero3d .hero-kicker{font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;color:#ff8ea3;font-weight:700;margin-bottom:14px;text-shadow:0 0 18px rgba(255,59,92,.8)}
-#hero3d h1.hero-title{font-size:clamp(2.4rem,9vw,6.4rem);font-weight:900;line-height:.95;letter-spacing:-.02em;color:#fff;margin:0;text-shadow:0 0 30px rgba(255,59,92,.55),0 0 90px rgba(255,59,92,.28)}
+#hero3d h1.hero-title{font-size:clamp(2.4rem,9vw,6.4rem);font-weight:900;line-height:.95;letter-spacing:-.02em;color:#fff;margin:0;text-shadow:0 2px 18px rgba(0,0,0,.85),0 0 26px rgba(255,59,92,.35)}
 #hero3d h1.hero-title em{font-style:normal;color:#ff3b5c}
 #hero3d .hero-sub{margin-top:16px;font-size:clamp(.85rem,2.1vw,1.15rem);color:#c9cede;max-width:640px;line-height:1.5;text-shadow:0 2px 14px rgba(0,0,0,.9)}
 #hero3d .hero-sub b{color:#f5c518}
@@ -1348,7 +1348,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     return g;
   }
   var toriiList = [];
-  [[0,-7,1.05],[3.8,-16,.96],[-4.4,-26,.9],[2.6,-37,.84],[-3.2,-49,.78],[1.4,-62,.72]].forEach(function(p){
+  [[-3.9,-8,1.22],[4.1,-17,1.06],[-4.6,-27,.95],[3.1,-38,.87],[-3.6,-50,.8],[1.9,-63,.74]].forEach(function(p){
     var t = torii(p[0], p[1], p[2]); scene.add(t); toriiList.push(t);   // FIX: era (x, s, z) -> escala negativa
   });
 
@@ -1384,7 +1384,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   try{
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    var bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.85, 0.85, 0.22);
+    var bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.55, 0.7, 0.34);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
     window.__HERO3D.bloom = true;
@@ -1397,7 +1397,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     var tz = 7 - prog*48;
     camera.position.z += (tz - camera.position.z)*0.09;
     camera.position.x += ((prog-.5)*3.4 - camera.position.x)*0.05;
-    camera.position.y = 1.2 + Math.sin(t*.5)*.13 + prog*.95;
+    camera.position.y = 1.55 + Math.sin(t*.5)*.13 + prog*1.1;
     camera.lookAt((prog-.5)*2.2, .55 + prog*.5, camera.position.z - 12);
     if(!rm){ points.rotation.y = t*.012; }
     var arr = pg.attributes.position.array;
