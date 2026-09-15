@@ -400,7 +400,7 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
 /* durante esta sección, fuera la interfaz: solo el objeto */
 body.cine-puro #navlinks,
 body.cine-puro #btnTema,
-body.cine-puro .logo,
+body.cine-puro .marca, body.cine-puro .logo,
 body.cine-puro #velo,
 body.cine-puro #progreso,
 body.cine-puro #cineProg,
@@ -457,6 +457,20 @@ body.cine-puro #bg3d{background:#000}
   #cineTexto .ficha{gap:18px}
   #cineTexto .ficha div{min-width:74px}
 }
+
+/* ★ v12.0 — CONTRASTE EN MODO DÍA (auditoría WCAG, medido):
+     .precio dorado sobre tarjeta blanca ....... 1.63:1  (mín 4.5)
+     .bl b / .city dorado sobre fondo claro .... 1.51:1
+     .eye rojo neón sobre claro ................ 3.22:1
+   En noche los tres pasan (11.28 / 12.20 / 5.71), así que solo se corrige
+   la paleta de día: se oscurecen los acentos manteniendo el tono. */
+[data-tema="dia"] #comida .poi .precio,
+[data-tema="dia"] #fiesta .poi .precio{ color:#8a5a00; font-weight:700 }
+[data-tema="dia"] #ruta .bl b,
+[data-tema="dia"] #ruta .city{ color:#7a4a00; font-weight:700 }
+[data-tema="dia"] .eye{ color:#c2143a }
+[data-tema="dia"] #comida .poi .precio::before,
+[data-tema="dia"] #fiesta .poi .precio::before{ opacity:.9 }
 </style>
 </head>
 <body>
@@ -2578,7 +2592,21 @@ try{
 
   function fase(p){
     var f = p < 0.10 ? 'f0' : (p < 0.38 ? 'f1' : (p < 0.68 ? 'f2' : 'f3'));
-    if (sec.dataset.fase !== f){ sec.dataset.fase = f; sec.className = f; }
+    if (sec.dataset.fase !== f){
+      sec.dataset.fase = f; sec.className = f;
+      // ★ v12.0 — accesibilidad: los hijos con opacity:0 seguian en el DOM sin aria-hidden
+      //   -> el lector de pantalla leia el texto invisible y las 4 fases a la vez.
+      try{
+        var ct2 = document.getElementById('cineTexto');
+        if (ct2){
+          var nf = parseInt(String(f).replace('f',''), 10) || 0;
+          [].slice.call(ct2.children).forEach(function(el, k3){
+            el.setAttribute('aria-hidden', (k3 <= nf) ? 'false' : 'true');
+          });
+          ct2.setAttribute('aria-hidden', 'false');
+        }
+      }catch(e){}
+    }
   }
 
   ScrollTrigger.create({
