@@ -7,6 +7,17 @@
 <title>JAPÓN 2026 — La Misión de los 6</title>
 <meta name="description" content="Viaje de 21 días a Japón: Osaka · Kioto · Nara · Tokyo. 6 héroes, un país, una misión. 12 - 30 dic 2026.">
 <style>
+/* ═══ 3D INTERACTIVO (15-sep-2026): tilt con raton + profundidad al scroll ═══ */
+.grid{perspective:1400px}
+.card,.slide,.slot{transform-style:preserve-3d;position:relative;transition:transform .35s cubic-bezier(.22,.61,.36,1),box-shadow .35s}
+.card.tilting,.slide.tilting,.slot.tilting{transition:transform .08s linear}
+.card .glare,.slide .glare,.slot .glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;z-index:3}
+.card.tilting .glare,.slide.tilting .glare,.slot.tilting .glare{opacity:1}
+.card.tilting,.slide.tilting,.slot.tilting{box-shadow:0 22px 45px -18px rgba(0,0,0,.75),0 0 0 1px var(--accent-soft,rgba(255,59,92,.22));z-index:4}
+.card img.tf{backface-visibility:hidden}
+@media (prefers-reduced-motion: reduce){.card,.slide,.slot{transition:none!important}}
+.no-tilt .card,.no-tilt .slide,.no-tilt .slot{transform:none!important}
+
 :root{
   --bg:#0b0e14; --bg2:#0f141d; --card:#141b28; --card2:#1a2332;
   --text:#e8ecf4; --muted:#94a0b5; --accent:#ff3b5c; --accent2:#ffb020;
@@ -1052,8 +1063,8 @@ initChart();
       var el = en.target;
       if(!en.isIntersecting || seen.has(el)) return;
       seen.add(el);
-      gsap.set(el, { autoAlpha: 0, y: 26 });
-      gsap.to(el, { autoAlpha: 1, y: 0, duration: .55, ease: 'power2.out', delay: Math.min(i++ * .05, .25), clearProps: 'transform' });
+      gsap.set(el, { autoAlpha: 0, y: 40, z: -70, rotateX: -14, transformPerspective: 1100, transformOrigin: '50% 100%' });
+      gsap.to(el, { autoAlpha: 1, y: 0, z: 0, rotateX: 0, duration: .8, ease: 'power3.out', delay: Math.min(i++ * .06, .3), clearProps: 'transform' });
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
 
@@ -1076,6 +1087,47 @@ initChart();
       setTimeout(function(){ scan(); mapFree(); if(lenis) lenis.resize(); }, 60);
       return r;
     };
+  }
+
+
+  // ── TILT 3D con el raton (delegado: 1 solo listener, rAF) ──
+  var hoverOK = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(hoverOK){
+    var MAXD = 8, cur = null, raf = 0, lastEv = null;
+    function glareOf(el){
+      var g = el.querySelector(':scope > .glare');
+      if(!g){ g = document.createElement('div'); g.className = 'glare'; el.appendChild(g); }
+      return g;
+    }
+    function reset(el){
+      if(!el) return;
+      el.classList.remove('tilting');
+      el.style.transform = '';
+      var g = el.querySelector(':scope > .glare'); if(g) g.style.opacity = 0;
+    }
+    function apply(){
+      raf = 0;
+      if(!cur || !lastEv) return;
+      var r = cur.getBoundingClientRect();
+      var px = (lastEv.clientX - r.left) / r.width - .5;
+      var py = (lastEv.clientY - r.top) / r.height - .5;
+      px = Math.max(-.5, Math.min(.5, px)); py = Math.max(-.5, Math.min(.5, py));
+      cur.style.transform = 'perspective(1000px) rotateY(' + (px * MAXD * 2).toFixed(2) + 'deg) rotateX(' + (-py * MAXD * 2).toFixed(2) + 'deg) translateZ(14px) scale(1.015)';
+      var g = glareOf(cur);
+      g.style.opacity = 1;
+      g.style.background = 'radial-gradient(340px circle at ' + ((px + .5) * 100).toFixed(1) + '% ' + ((py + .5) * 100).toFixed(1) + '%, rgba(255,255,255,.17), rgba(255,255,255,.05) 40%, transparent 62%)';
+    }
+    document.addEventListener('mousemove', function(e){
+      var t = e.target && e.target.closest ? e.target.closest('.card, .slide, .slot') : null;
+      if(t !== cur){ reset(cur); cur = t; if(cur) cur.classList.add('tilting'); }
+      lastEv = e;
+      if(cur && !raf) raf = requestAnimationFrame(apply);
+    }, { passive: true });
+    document.addEventListener('mouseleave', function(){ reset(cur); cur = null; }, { passive: true });
+    // al hacer scroll, quitar el tilt (evita transform peleando con el reveal)
+    window.addEventListener('scroll', function(){ if(cur){ reset(cur); cur = null; } }, { passive: true });
+  } else {
+    document.documentElement.classList.add('no-tilt');
   }
 
   // ── Entrada del hero (primer tab visible)
