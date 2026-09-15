@@ -345,6 +345,9 @@ h2.big em{font-style:normal; color:var(--neon)}
   background:linear-gradient(90deg,var(--neon),var(--acento2,#f5c518));
   z-index:6; opacity:0; transition:opacity .4s ease;
 }
+/* ★ la línea de progreso de la PÁGINA se oculta durante el cine: era el segundo
+   indicador que contradecía a la pastilla (3.6% vs 55%) */
+body.cine-ficha #progreso, body.cine-activo #progreso{opacity:0 !important}
 #cineBarra.on{opacity:1}
 
 /* ══ v8.1 — menos es más: el titular respira y nada compite con él ══ */
@@ -359,6 +362,23 @@ body.cine-ficha #avionInfo,
 body.cine-ficha #hero .metricas,
 body.cine-ficha #hero .stats,
 body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
+
+/* ══ v8.4 — sin costura: el hero se funde con la siguiente sección ══
+   El análisis lo marcó como "bug visual, no estilo": había un corte recto duro
+   entre el fondo del hero y el de la sección siguiente. */
+#hero{position:relative}
+#hero::after{
+  content:''; position:absolute; left:0; right:0; bottom:-2px; height:180px;
+  background:linear-gradient(180deg, transparent 0%, var(--bg) 92%);
+  pointer-events:none; z-index:3;
+}
+/* y la sección siguiente entra con un degradado en vez de un corte */
+#ruta{position:relative}
+#ruta::before{
+  content:''; position:absolute; left:0; right:0; top:-1px; height:140px;
+  background:linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+  pointer-events:none; z-index:2;
+}
 </style>
 </head>
 <body>
@@ -1903,10 +1923,10 @@ try{
         '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
-  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.9; sueloMesh.receiveShadow = true;
+  sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.35; sueloMesh.receiveShadow = true;
   esc.add(sueloMesh);
   const grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
-  grid.position.y = -1.88; grid.material.transparent = true; grid.material.opacity = 0.62;
+  grid.position.y = -1.33; grid.material.transparent = true; grid.material.opacity = 0.62;
   esc.add(grid);
   window.__suelo = {plano: sueloMesh, rejilla: grid};
 })();
@@ -2088,7 +2108,7 @@ try{
             '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
-      plano.rotation.x = -Math.PI/2; plano.position.y = -1.9; plano.receiveShadow = true;
+      plano.rotation.x = -Math.PI/2; plano.position.y = -1.35; plano.receiveShadow = true;
       esc.add(plano);
       var grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
       grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.62;
@@ -2133,7 +2153,7 @@ try{
           var fila  = Math.floor(i / 2);            // 0,1,2
           o.position.x += lado * 3.5 + (Math.random()-0.5) * 0.4;
           o.position.z += 6.2 - fila * 2.6;          // +6.2, +3.6, +1.0  (la camara esta en z=9)
-          o.position.y += (fila === 0 ? 1.7 : fila === 1 ? -0.4 : 2.0);
+          o.position.y += (fila === 0 ? 0.9 : fila === 1 ? -0.5 : 1.5);
           o.userData.nombre = c.n;
           o.userData.offsetBase = o.position.z;
           // ★ BUG: al escalar/mover el objeto, su bounding sphere NO se recalcula y Three.js
@@ -2214,7 +2234,8 @@ try{
       }catch(e){}
       var ficha = el('cineFicha');
       if (ficha) ficha.classList.toggle('on', p > 0.42);
-      document.body.classList.toggle('cine-ficha', p > 0.42);   // ← oculta la fila duplicada
+      document.body.classList.toggle('cine-ficha', p > 0.42);
+      document.body.classList.add('cine-activo');   // ← oculta la barra de página durante el cine   // ← oculta la fila duplicada
     },
     onLeave: function(){
       window.__cineP = undefined;
