@@ -8,6 +8,15 @@
 <meta name="description" content="Viaje de 21 días a Japón: Osaka · Kioto · Nara · Tokyo. 6 héroes, un país, una misión. 12 - 30 dic 2026.">
 <style>
 /* ═══ 3D INTERACTIVO (15-sep-2026): tilt con raton + profundidad al scroll ═══ */
+/* Reveal por CSS (GSAP se peleaba con el tilt: borraba el transform). Solo actua si html.js-anim */
+html.js-anim .card,html.js-anim .slide,html.js-anim .slot,html.js-anim .sec-title{
+  opacity:0;transform:translateY(36px) rotateX(-13deg) translateZ(-60px);transform-origin:50% 100%;
+  transition:opacity .6s ease,transform .8s cubic-bezier(.22,.61,.36,1);
+  transition-delay:calc(var(--d,0) * 1ms)}
+html.js-anim .card.in,html.js-anim .slide.in,html.js-anim .slot.in,html.js-anim .sec-title.in{
+  opacity:1;transform:none}
+html.no-motion .card,html.no-motion .slide,html.no-motion .slot,html.no-motion .sec-title,
+html.no-motion .card.in{opacity:1!important;transform:none!important}
 .grid{perspective:1400px}
 .card,.slide,.slot{transform-style:preserve-3d;position:relative;transition:transform .35s cubic-bezier(.22,.61,.36,1),box-shadow .35s}
 .card.tilting,.slide.tilting,.slot.tilting{transition:transform .08s linear}
@@ -1057,7 +1066,8 @@ initChart();
   initLenis();
   window.addEventListener('lenis-ready', initLenis);
 
-  // ── Reveals robustos (IntersectionObserver → funciona con tabs dinámicos)
+  // ── Reveals robustos (IntersectionObserver + clase .in; sin GSAP en las cards)
+  document.documentElement.classList.add('js-anim');
   var seen = new WeakSet();
   var io = new IntersectionObserver(function(entries){
     var i = 0;
@@ -1065,8 +1075,8 @@ initChart();
       var el = en.target;
       if(!en.isIntersecting || seen.has(el)) return;
       seen.add(el);
-      gsap.set(el, { autoAlpha: 0, y: 40, z: -70, rotateX: -14, transformPerspective: 1100, transformOrigin: '50% 100%' });
-      gsap.to(el, { autoAlpha: 1, y: 0, z: 0, rotateX: 0, duration: .8, ease: 'power3.out', delay: Math.min(i++ * .06, .3), clearProps: 'transform' });
+      el.style.setProperty('--d', Math.min(i++ * 55, 330));
+      el.classList.add('in');
     });
   }, { rootMargin: '0px 0px -8% 0px', threshold: .01 });
 
