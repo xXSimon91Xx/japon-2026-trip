@@ -1130,12 +1130,41 @@ initChart();
       if(need) scan();
     });
   }
-  // ★ Red de seguridad: si algo falla (observer bloqueado, JS a medias), a los 3s se revela todo.
-  setTimeout(function(){
-    document.querySelectorAll('.tab .card, .sec-title, .slot, .slide, .day').forEach(function(el){
-      if(getComputedStyle(el).opacity === '0') el.classList.add('in');
+  // ★ Re-render (marcar "Grabado", filtrar, buscar): revelar YA las cards nuevas de ese contenedor.
+  var _revealAhora = function(cont){
+    (cont || document).querySelectorAll('.card, .slide, .slot, .sec-title').forEach(function(el){
+      el.classList.add('in'); seen.add(el);
     });
-  }, 3000);
+  };
+  if(window.MutationObserver){
+    var _mo = new MutationObserver(function(muts){
+      var conts = [];
+      for(var i = 0; i < muts.length; i++){
+        var nds = muts[i].addedNodes;
+        for(var j = 0; j < nds.length; j++){
+          var n = nds[j];
+          if(n && n.nodeType === 1 && (n.classList.contains('card') || n.querySelector('.card, .slide, .slot, .sec-title'))){
+            conts.push(muts[i].target); break;
+          }
+        }
+      }
+      if(conts.length){
+        requestAnimationFrame(function(){
+          conts.forEach(function(c){ _revealAhora(c); });
+          scan();
+        });
+      }
+    });
+    _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
+  }
+  // ★ Red de seguridad: si algo falla, a los 3s se revela todo lo que siga oculto.
+  setTimeout(function(){ _revealAhora(document); }, 3000);
+  // ★ Y otra a los 8s por si el usuario interactua tarde
+  setTimeout(function(){
+    document.querySelectorAll('.card:not(.in), .slide:not(.in), .slot:not(.in)').forEach(function(el){
+      if(el.offsetParent && getComputedStyle(el).opacity === '0'){ el.classList.add('in'); seen.add(el); }
+    });
+  }, 8000);
 
   // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
   function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
