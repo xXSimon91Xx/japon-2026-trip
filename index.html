@@ -41,6 +41,14 @@
 #fx-warn button{margin-top:6px;background:#f5c518;color:#1a1204;border:0;border-radius:8px;padding:5px 10px;font-weight:800;cursor:pointer}
 @media(max-width:600px){#fx-warn{left:8px;right:8px;bottom:14px;max-width:none}}
 /* Reveal por CSS (GSAP se peleaba con el tilt: borraba el transform). Solo actua si html.js-anim */
+/* ═══ v3.2 SCROLL CINEMATOGRAFICO 3D (recorrido real) ═══ */
+main > section.tab{ padding-bottom: 6vh; }
+main > section.tab > * + *{ margin-top: 14px; }
+.cine-prof{ position: relative; }
+#cineDeep{ position: fixed; inset:-10%; pointer-events:none; z-index:0; opacity:0;
+  background: radial-gradient(60% 50% at 50% 45%, rgba(255,59,92,.16), transparent 70%),
+              radial-gradient(45% 40% at 72% 70%, rgba(245,197,24,.12), transparent 72%);
+  filter: blur(30px); }
 /* ═══ v3.0 SCROLL CINEMATOGRAFICO 3D ═══ */
 main{ perspective: 1900px; perspective-origin: 50% 42%; }
 .tab, .cine-block { transform-style: preserve-3d; }
@@ -522,6 +530,7 @@ html,body{overflow-x:clip}
   </div>
 </section>
 <div id="cineFloor" aria-hidden="true"></div>
+<div id="cineDeep" aria-hidden="true"></div>
 <div id="cinePetals" aria-hidden="true"></div>
 </main>
 
@@ -1151,7 +1160,16 @@ initChart();
     if(lenis || !window.Lenis) return;
     try{
       lenis = new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 1 });
-      (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+      // ★ CRITICO: sincronizar Lenis con ScrollTrigger; sin esto los ScrollTrigger NO se actualizan
+      //   al hacer scroll (Lenis sustituye el scroll nativo) y el 3D cinematografico nunca avanza.
+      if(window.ScrollTrigger && window.gsap){
+        lenis.on('scroll', function(){ ScrollTrigger.update(); });
+        gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+        gsap.ticker.lagSmoothing(0);
+        window.__lenisST = true;
+      } else {
+        (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+      }
       window.__lenis = lenis;
       if(typeof window.__onLenis === 'function') window.__onLenis();
     }catch(e){ console.warn('lenis off', e); }
@@ -1252,6 +1270,18 @@ initChart();
             delay: -Math.random()*dur });
       });
     }
+    // ★ profundidad global: al bajar, el contenido se acerca (sensacion de avanzar) y aparece el glow
+    if(document.getElementById('cineDeep')){
+      gsap.fromTo('#cineDeep', { opacity: 0 }, { opacity: 1, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'50% top', scrub: 1 } });
+      gsap.to('#cineDeep', { opacity: 0.25, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'60% top', end:'bottom bottom', scrub: 1 } });
+    }
+    var mainEl = document.querySelector('main');
+    if(mainEl){
+      gsap.fromTo(mainEl, { z: -80 }, { z: 30, ease:'none',
+        scrollTrigger:{ trigger: document.body, start:'top top', end:'bottom bottom', scrub: 1.4 } });
+    }
     // suelo cinematografico
     if(document.getElementById('cineFloor')){
       gsap.to('#cineFloor', { yPercent: 7, opacity: 0.26, ease:'none',
@@ -1269,15 +1299,15 @@ initChart();
       });
       hijos.forEach(function(el, idx){
         el.classList.add('cine-block');
-        // entrada: llega desde el fondo, girada y pequena -> se coloca delante
+        // entrada: llega desde el fondo, girada y pequena -> se coloca delante (rangos cortos: funciona con poco scroll)
         gsap.fromTo(el,
-          { opacity: 0, y: 120, z: -560, rotateX: 16, rotateY: (idx%2 ? 10 : -10), scale: 0.88 },
+          { opacity: 0, y: 90, z: -520, rotateX: 15, rotateY: (idx%2 ? 10 : -10), scale: 0.9 },
           { opacity: 1, y: 0, z: 0, rotateX: 0, rotateY: 0, scale: 1, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 97%', end: 'top 55%', scrub: 0.85 } });
-        // salida: la atravesamos (se acerca y se desvanece)
+            scrollTrigger: { trigger: el, start: 'top 101%', end: 'top 76%', scrub: 0.7 } });
+        // salida: la atravesamos (se acerca y se desvanece) — rango corto
         gsap.to(el,
-          { opacity: 0.22, y: -80, z: 300, rotateX: -7, scale: 1.04, ease: 'power2.in',
-            scrollTrigger: { trigger: el, start: 'bottom 60%', end: 'bottom 2%', scrub: 1.0 } });
+          { opacity: 0.28, y: -46, z: 210, rotateX: -6, scale: 1.035, ease: 'power2.in',
+            scrollTrigger: { trigger: el, start: 'bottom 78%', end: 'bottom 48%', scrub: 0.8 } });
       });
       if(sec.dataset) sec.dataset.cineListo = '1';
       try{ ScrollTrigger.refresh(); }catch(e){}
