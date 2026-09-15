@@ -1366,7 +1366,7 @@ import * as THREE from 'https://unpkg.com/three@0.170.0/build/three.module.js';
   var t0 = performance.now();
   function frame(now){
     requestAnimationFrame(frame);
-    if(!visible || document.hidden) return;
+    if(!visible) return;   // (document.hidden bloqueaba el render en pestanas no enfocadas)
     var t = (now - t0)/1000;
     var tz = 7 - prog*48;
     camera.position.z += (tz - camera.position.z)*0.09;
