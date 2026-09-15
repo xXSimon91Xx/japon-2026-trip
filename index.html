@@ -1015,8 +1015,15 @@ initMap();
 initChart();
 </script>
 <style>.poi .poi-go{display:block;margin-top:8px;color:var(--accent);font-weight:700;font-size:.78rem}.poi-dir{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none}</style>
+<script type="module">
+  // Lenis por ESM: el bundle UMD minificado renombra la clase a "L" y PISA window.L de Leaflet (bug detectado en test)
+  import('https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.mjs')
+    .then(function(m){ window.Lenis = m.default || m.Lenis || window.Lenis; })
+    .catch(function(e){ console.warn('lenis no carga', e); })
+    .finally(function(){ window.dispatchEvent(new Event('lenis-ready')); });
+</script>
 <!-- ═══ MOTION PREMIUM (14-sep-2026): Lenis smooth scroll + GSAP reveals ═══ -->
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script>
 (function(){
@@ -1025,13 +1032,17 @@ initChart();
 
   // ── Lenis: scroll sedoso (se apaga solo si prefiere menos movimiento)
   var lenis = null;
-  try{
-    if(window.Lenis){
+  function initLenis(){
+    if(lenis || !window.Lenis) return;
+    try{
       lenis = new Lenis({ duration: 1.05, smoothWheel: true, wheelMultiplier: 1 });
       (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
       window.__lenis = lenis;
-    }
-  }catch(e){ console.warn('lenis off', e); }
+      if(typeof window.__onLenis === 'function') window.__onLenis();
+    }catch(e){ console.warn('lenis off', e); }
+  }
+  initLenis();
+  window.addEventListener('lenis-ready', initLenis);
 
   // ── Reveals robustos (IntersectionObserver → funciona con tabs dinámicos)
   var seen = new WeakSet();
