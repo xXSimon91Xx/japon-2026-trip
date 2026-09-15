@@ -1327,7 +1327,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   var grid = new THREE.GridHelper(260, 130, 0x2b1a24, 0x1b2233);  // sin linea central cantosa
   grid.position.y = -3.2; scene.add(grid);
   var floor = new THREE.Mesh(new THREE.PlaneGeometry(320,320),
-    new THREE.MeshStandardMaterial({color:0x070a12, metalness:.92, roughness:.32}));
+    new THREE.MeshStandardMaterial({color:0x080b13, metalness:.6, roughness:.55}));
   floor.rotation.x = -Math.PI/2; floor.position.y = -3.26; scene.add(floor);
 
   // torii procedural
@@ -1349,7 +1349,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   }
   var toriiList = [];
   [[0,-7,1.05],[3.8,-16,.96],[-4.4,-26,.9],[2.6,-37,.84],[-3.2,-49,.78],[1.4,-62,.72]].forEach(function(p){
-    var t = torii(p[0], p[2], p[1]); scene.add(t); toriiList.push(t);
+    var t = torii(p[0], p[1], p[2]); scene.add(t); toriiList.push(t);   // FIX: era (x, s, z) -> escala negativa
   });
 
   // petalos de sakura
