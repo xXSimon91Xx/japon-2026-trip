@@ -1911,22 +1911,22 @@ try{
   const THREE = window.__THREE__;
   const esc = window.__escena3d.escena;
   if (window.__suelo) return;
-  const mat = new THREE.MeshStandardMaterial({color:0x141a28, roughness:0.42, metalness:0.55, transparent:true, opacity:0.85});
+  const mat = new THREE.MeshStandardMaterial({color:0x2b3550, roughness:0.52, metalness:0.28, transparent:true, opacity:0.95});
   mat.onBeforeCompile = function(sh){
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform float uFade;')
       .replace('#include <dithering_fragment>',
         '#include <dithering_fragment>\n' +
         '  float fadeD = length(vViewPosition);\n' +
-        '  float fadeA = smoothstep(4.0, 36.0, fadeD);\n' +
+        '  float fadeA = smoothstep(9.0, 44.0, fadeD);\n' +
         '  gl_FragColor.rgb *= mix(1.0, 0.22, fadeA);\n' +
         '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
   };
   const sueloMesh = new THREE.Mesh(new THREE.PlaneGeometry(130, 130), mat);
   sueloMesh.rotation.x = -Math.PI/2; sueloMesh.position.y = -1.35; sueloMesh.receiveShadow = true;
   esc.add(sueloMesh);
-  const grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
-  grid.position.y = -1.33; grid.material.transparent = true; grid.material.opacity = 0.62;
+  const grid = new THREE.GridHelper(150, 75, 0x4d6a9e, 0x33445f);
+  grid.position.y = -1.33; grid.material.transparent = true; grid.material.opacity = 0.85;
   esc.add(grid);
   window.__suelo = {plano: sueloMesh, rejilla: grid};
 })();
@@ -2103,15 +2103,15 @@ try{
           .replace('#include <dithering_fragment>',
             '#include <dithering_fragment>\n' +
             '  float fadeD = length(vViewPosition);\n' +
-            '  float fadeA = smoothstep(4.0, 36.0, fadeD);\n' +
+            '  float fadeA = smoothstep(9.0, 44.0, fadeD);\n' +
             '  gl_FragColor.rgb *= mix(1.0, 0.22, fadeA);\n' +
             '  gl_FragColor.a *= mix(0.94, 0.0, fadeA);\n');
       };
       var plano = new THREE.Mesh(new THREE.PlaneGeometry(130,130), mat);
       plano.rotation.x = -Math.PI/2; plano.position.y = -1.35; plano.receiveShadow = true;
       esc.add(plano);
-      var grid = new THREE.GridHelper(150, 75, 0x2a3a5c, 0x1b2438);
-      grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.62;
+      var grid = new THREE.GridHelper(150, 75, 0x4d6a9e, 0x33445f);
+      grid.position.y = -3.28; grid.material.transparent = true; grid.material.opacity = 0.85;
       esc.add(grid);
       plano.userData.__sinRim = true; grid.userData.__sinRim = true;
       window.__suelo = {plano:plano, rejilla:grid};
