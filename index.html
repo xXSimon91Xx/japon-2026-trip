@@ -1350,6 +1350,14 @@ const CIUDAD_Q = {
     if (id !== activa){
       activa = id;
       if (window.__setSeccion) window.__setSeccion(id);
+      // ★ marcar el enlace de navegación activo (la clase .on existía en CSS pero nunca se aplicaba)
+      try{
+        document.querySelectorAll('#navlinks a').forEach(function(a){
+          var on = (a.getAttribute('href') === '#' + id);
+          a.classList.toggle('on', on);
+          if(on) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+        });
+      }catch(e){}
     }
   }
   addEventListener('scroll', calcular, {passive:true});
