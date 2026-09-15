@@ -1194,10 +1194,11 @@ initChart();
         }
       }
       if(conts.length){
-        requestAnimationFrame(function(){
-          conts.forEach(function(c){ _revealAhora(c); });
-          scan();
-        });
+        // directo, sin rAF (rAF no corre en pestanas no visibles y dejaba las cards invisibles)
+        conts.forEach(function(c){ _revealAhora(c); });
+        scan();
+        setTimeout(function(){ conts.forEach(function(c){ _revealAhora(c); }); }, 80);   // respaldo
+        setTimeout(function(){ conts.forEach(function(c){ _revealAhora(c); }); }, 400);
       }
     });
     _mo.observe(document.body, { childList: true, subtree: true });   // <-- linea que faltaba (se perdio al anadir la red de seguridad)
@@ -1212,8 +1213,9 @@ initChart();
       }
     });
   }
-  setTimeout(_blindaje, 3000);
-  setTimeout(_blindaje, 8000);
+  setTimeout(_blindaje, 2500);
+  setTimeout(_blindaje, 6000);
+  setInterval(_blindaje, 4000);   // red permanente: cualquier card que se quede oculta se revela en <=4s
 
   // ── El mapa no se secuestra: scroll nativo dentro de Leaflet
   function mapFree(){ document.querySelectorAll('#map, .leaflet-container').forEach(function(m){ m.setAttribute('data-lenis-prevent',''); }); }
