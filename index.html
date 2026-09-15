@@ -426,8 +426,8 @@ escena.add(rej);
 const grupoAmbiente = new THREE.Group(); escena.add(grupoAmbiente);
 function linterna(x,y,z,color){
   const g = new THREE.Group();
-  const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.30,0.30,0.62,16,1,true),
-    new THREE.MeshStandardMaterial({color:color, emissive:color, emissiveIntensity:1.15, transparent:true, opacity:0.92, side:THREE.DoubleSide}));
+  const cuerpo = new THREE.Mesh(new THREE.CylinderGeometry(0.38,0.38,0.78,16,1,true),
+    new THREE.MeshStandardMaterial({color:color, emissive:color, emissiveIntensity:1.9, transparent:true, opacity:0.95, side:THREE.DoubleSide}));
   g.add(cuerpo);
   const tapa = new THREE.MeshStandardMaterial({color:0x1a1e28, metalness:0.6, roughness:0.4});
   [0.32,-0.32].forEach(dy=>{ const t = new THREE.Mesh(new THREE.CylinderGeometry(0.19,0.19,0.07,14), tapa); t.position.y=dy; g.add(t); });
@@ -448,8 +448,8 @@ function kanji(txt, color){
 }
 const ambiente = [];
 // linternas a los lados de la "avenida"
-[[-5.5,0.6,2,0xff3b5c],[-4.2,2.6,-3,0xf5c518],[5.5,1.2,1,0xff6b86],[4.6,-0.4,-5,0x3ddcff],
- [-6.2,2.0,-9,0x7c5cff],[6.0,2.4,-8,0xf5c518]].forEach(p=>{
+[[-3.1,0.6,1.5,0xff3b5c],[-2.6,2.7,-3,0xf5c518],[3.0,1.2,0.5,0xff6b86],[2.7,-0.6,-4,0x3ddcff],
+ [-3.4,2.1,-8,0x7c5cff],[3.2,2.5,-7,0xf5c518]].forEach(p=>{
   const l = linterna(p[0],p[1],p[2],p[3]); grupoAmbiente.add(l); ambiente.push(l);
 });
 // kanjis flotantes (japonés real: 日本 = Japón)
@@ -544,8 +544,8 @@ escena.add(estela);
 /* ── ARCO DE RUTA España -> Japón ── */
 /* recorrido del avión: arranca DELANTE de la cámara (bien visible) y se aleja hacia Japón */
 const curva = new THREE.CatmullRomCurve3([
-  new THREE.Vector3( 3.6, 1.5,  3.6),
-  new THREE.Vector3( 3.0, 2.5, -0.5),
+  new THREE.Vector3( 2.1, 1.5,  2.6),
+  new THREE.Vector3( 1.9, 2.4, -1.4),
   new THREE.Vector3( 1.4, 3.2, -6.0),
   new THREE.Vector3(-1.4, 2.6, -12.0),
   new THREE.Vector3(-4.4, 1.4, -18.0),
@@ -667,7 +667,7 @@ addEventListener('resize', ()=>{
 
 /* posiciones de cámara por sección */
 const CAM = {
-  hero:        {p:[0.2,1.7,8.4],  look:[1.2,1.7,-1.2]},
+  hero:        {p:[0,1.7,9.2],  look:[0.9,1.7,-2.2]},
   ruta:        {p:[0,-2.2,8],     look:[0,-2.6,-12]},
   mapa:        {p:[0,7.5,10],     look:[0,-1.5,-8]},
   comida:      {p:[0,0.4,7],      look:[0,0.2,-8]},
