@@ -697,8 +697,9 @@ function loop(now){
   cam.position.y += Math.sin(estado.t*0.55)*0.03;
 
   renderer.render(escena, cam);
-  requestAnimationFrame(loop);
+  if (window.__frames % 2 === 0) requestAnimationFrame(__tick0);   // rAF cuando está disponible
 }
+function __tick0(t){ __ultimoFrame = t; __tick(true); }
 
 /* ── cambia de escena según la sección visible ── */
 const VIS = {
@@ -739,18 +740,22 @@ window.__escena3d = {escena, cam, avion, estado};
 
 window.__frames = 0;
 let __ultimoFrame = performance.now();
-function __watchdog(){
+let __enLoop = false;
+
+// ★ MODO DUAL: el rAF es lo ideal, pero si el navegador lo pausa (pestaña oculta,
+//   ahorro de energía, headless) el respaldo por interval mantiene el mundo vivo.
+function __tick(forzado){
   const ahora = performance.now();
-  if (ahora - __ultimoFrame > 900){
-    // el rAF se ha parado (pestana oculta / ahorro de energia): reanudamos
-    __ultimoFrame = ahora; ultimo = ahora;
-    requestAnimationFrame(loop);
-  }
+  if (__enLoop) return;
+  if (!forzado && ahora - __ultimoFrame < 200) return;   // el rAF ya va fino
+  __enLoop = true;
+  try { loop(ahora); } catch(e){ console.warn('motor', e); }
+  __enLoop = false;
 }
-setInterval(__watchdog, 700);
-// si el documento vuelve a estar visible, seguimos de inmediato
-document.addEventListener('visibilitychange', () => { if(!document.hidden){ ultimo = performance.now(); requestAnimationFrame(loop); } });
-requestAnimationFrame(loop);
+requestAnimationFrame(function arranque(t){ __ultimoFrame = t; __tick(true); });
+setInterval(function(){ __tick(false); }, 100);   // respaldo: máx 10 fps si el rAF está parado
+document.addEventListener('visibilitychange', () => { if(!document.hidden){ ultimo = performance.now(); __tick(true); } });
+addEventListener('focus', () => { ultimo = performance.now(); __tick(true); });
 
 </script>
 <script>
@@ -1246,7 +1251,7 @@ const CIUDAD_Q = {
   // Cambio de escena 3D según la sección
   ['hero','ruta','mapa','comida','actividades','fiesta','videos','presupuesto','checklist','cumple'].forEach(id => {
     const s = document.getElementById(id); if(!s) return;
-    ScrollTrigger.create({trigger:s, start:'top 55%', end:'bottom 45%',
+    ScrollTrigger.create({trigger:s, start:'top 85%', end:'bottom 15%',
       onToggle: self => { if(self.isActive && window.__setSeccion) window.__setSeccion(id); }});
   });
 
