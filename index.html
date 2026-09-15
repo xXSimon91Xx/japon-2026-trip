@@ -423,20 +423,22 @@ body.cine-puro #bg3d{background:#000}
   transition:opacity .6s ease, transform .6s ease; transform:translateY(14px);
 }
 #cineTexto h2{
-  margin:16px 0 0; font:800 clamp(40px,7.6vw,118px)/.94 ui-sans-serif,system-ui;
+  /* ★ v15.3 — de clamp(40,7.6vw,118) a clamp(26,4.4vw,72): el titular ocupaba
+     214px de alto y tapaba el 72% del Buda. Ahora es una ficha, no un cartel. */
+  margin:12px 0 0; font:800 clamp(26px,4.4vw,72px)/.98 ui-sans-serif,system-ui;
   letter-spacing:-.035em; color:#fff; opacity:0;
   transition:opacity .7s ease, transform .7s ease; transform:translateY(20px);
   text-shadow:0 10px 60px rgba(0,0,0,.75);
 }
 #cineTexto h2 em{font-style:normal; color:var(--neon)}
 #cineTexto .sub{
-  margin:18px auto 0; max-width:560px; font:500 clamp(14px,1.5vw,17px)/1.65 ui-sans-serif,system-ui;
+  margin:12px auto 0; max-width:520px; font:500 clamp(13px,1.25vw,15px)/1.6 ui-sans-serif,system-ui;
   color:#aab5c8; opacity:0; transition:opacity .7s ease .1s, transform .7s ease .1s;
   transform:translateY(16px);
 }
 #cineTexto .ficha{
-  display:flex; gap:30px; justify-content:center; flex-wrap:wrap;
-  margin-top:34px; opacity:0; transition:opacity .7s ease .2s;
+  display:flex; gap:26px; justify-content:center; flex-wrap:wrap;
+  margin-top:20px; opacity:0; transition:opacity .7s ease .2s;   /* v15.3 — 34->20 */
 }
 #cineTexto .ficha div{min-width:92px}
 #cineTexto .ficha b{display:block; font:800 clamp(20px,2.6vw,38px)/1 ui-sans-serif,system-ui; color:#fff}
@@ -1064,7 +1066,48 @@ function loop(now){
     window.__sombrasInfo = {luces: __hechas};
     console.log('[v8.3] sombras activadas en', __hechas, 'luces + todos los meshes');
   }
-  if (cinePass) cinePass.uniforms.uTime.value = estado.t;
+  if (cinePass) cinePass.uniforms.uTime.value = estado.t;   // (original, se conserva)
+    // ══════════════════════════════════════════════════════════════════
+    // ★ v15.0 — SENDAS DE CÁMARA CONTINUAS (la técnica del informe).
+    //   Medido: la cámara se hundía bajo el suelo (y=-1.26 con el suelo en
+    //   -1.15), daba dos saltos de 1.14 y 2.80, y del 54% al 100% del scroll
+    //   estaba CONGELADA. Ahora una sola spline gobierna todo el viaje.
+    // ══════════════════════════════════════════════════════════════════
+    if (!window.__sendas){
+      const pts = [
+        //  progreso  cámara (x,y,z)                 mira a (x,y,z)
+        [0.000,   0,   1.90,  10.60,     0,  1.00,   0.00],  // hero: plano general
+        [0.055,   0,   2.30,   7.40,     0,  0.90,  -2.00],  // hero: se acerca
+        [0.120,   0,   1.55,   7.60,     0,  0.90,  -1.20],  // entrada al cine
+        [0.165,   0,   1.45,   6.90,     0,  0.72,  -1.50],  // ★ v15.1 — más atrás y mirando
+                                                              //   más bajo: el Buda sube en el
+                                                              //   encuadre y libra el texto
+        [0.225,   0,   1.85,   7.90,     0,  0.95,  -2.00],  // saliendo del cine
+        [0.320,  -1.6, 2.55,   8.60,     0,  1.20,  -3.00],  // trav. lateral izq
+        [0.460,   1.9, 2.95,   9.30,     0,  1.30,  -3.60],  // trav. lateral der
+        [0.600,  -1.3, 2.20,   8.90,     0,  1.10,  -2.80],  // vuelve a la izq
+        [0.740,   1.5, 2.60,   9.70,     0,  1.25,  -3.20],  // suave a la der
+        [0.870,  -0.7, 2.10,   9.60,     0,  1.10,  -2.60],  // se centra
+        [1.000,   0,   2.35,  10.70,     0,  1.35,  -3.00]   // cierre
+      ];
+      const curvaPos = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(p[1], p[2], p[3])), false, 'centripetal', 0.5);
+      const curvaMira = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(p[4], p[5], p[6])), false, 'centripetal', 0.5);
+      window.__sendas = {pos: curvaPos, mira: curvaMira, pts: pts};
+      window.__camPunto = 0;
+      console.log('[v15.0] sendas de camara continuas listas (', pts.length, 'puntos )');
+    }
+    const SD = window.__sendas;
+    // progreso REAL del documento (0-1). Los pins no lo falsean: el scroll sí avanza.
+    const progDoc = Math.min(1, Math.max(0, window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight)));
+    // suavizado: la cámara "persigue" el progreso (sensación de travelling, no de teletransporte)
+    window.__camPunto += (progDoc - window.__camPunto) * 0.16;
+    const cp = Math.min(1, Math.max(0, window.__camPunto));
+    SD.pos.getPointAt(cp, cam.position);
+    SD.mira.getPointAt(cp, window.__camMira || (window.__camMira = new THREE.Vector3()));
+    cam.lookAt(window.__camMira);
+
+
+  // ★ v14.0 (retirado) — la transición la hace la senda continua de arriba.
   // ★★ v9.1 — SECCIÓN CINEMATOGRÁFICA: aquí el objeto es el protagonista
   if (window.__cine2P !== undefined){
     const p = window.__cine2P;
@@ -1079,13 +1122,27 @@ function loop(now){
         if (!o) return;
         o.visible = esBuda;                          // solo el buda durante esta sección
         if (esBuda){
+          // ★ v16.1 — m es el objeto de modelos[] (creado al cargar), no la entrada de
+          //   CUADROS: el flag _tumbado hay que copiarlo ahi o no llega.
+          if (m._tumbado === undefined && buda && buda.__tumbado !== undefined) m._tumbado = buda.__tumbado;
           // v10.2 — la escala base se guarda en la CARGA (m.escalaBase), no aqui:
           // antes se capturaba la escala ya animada por el hero -> el x2.05 daba un valor sin sentido
           if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = (m.escalaBase || o.scale.x); }
-          o.position.lerp(new THREE.Vector3(0, 0.95, -1.5), 0.08);  // ★ v13.0 — arriba: el texto ya no lo tapa
-          o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 2.05, 0.08));
+          // ★ v15.3 — subido de 0.95 a 2.4: MEDIDO en pantalla, con 0.95 el Buda
+          //   caia en y 360-780 y el texto empieza en 477 -> 72% tapado.
+          //   lerp mas rapido (0.14) para que la posicion se asiente de verdad.
+          o.position.lerp(new THREE.Vector3(0, 2.40, -1.5), 0.14);
+          o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 1.75, 0.08));   // ★ v15.1 — 1.75: a 2.05 no libraba el bloque de texto
+          // ★ v15.2 — ORDEN YXZ. Medido: con el orden por defecto ('XYZ') Three.js
+          //   aplica X al final, así que el giro alrededor de Y TUMBABA el Buda y el
+          //   enderezado no servía. Con 'YXZ' se endereza primero y gira después sobre
+          //   el eje vertical. bbox: tumbado (4.13 x 2.53) -> de pie (1.01 x 3.85).
+          o.rotation.order = 'YXZ';
           o.rotation.y = estado.t * 0.16;
-          o.rotation.x = -Math.PI / 2;                   // v10.4 — el Buda siempre de pie en el cine
+          // ★ v16.1 — solo se endereza si el modelo venía tumbado. Forzar SIEMPRE el
+          //   -90º tumbaba el modelo actual (que ya viene de pie).
+          if (m._tumbado) o.rotation.x = -Math.PI / 2;
+          else o.rotation.x = 0;
         } else if (m.cineGuardado){
           o.position.copy(m.cineGuardado);
           o.scale.setScalar(m.cineEscala);
@@ -1116,25 +1173,10 @@ function loop(now){
     //     position (-0.67, 1.8, 5.2)  lookAt (0, 1.7, -7.0)
     //   Pose del cine: position (0, 0.75+, 9.0-)  lookAt (0, 1.05+, -1.0)
     //   Sin esto la camara saltaba 3.8 unidades hacia atrás de golpe al entrar.
-    const mezcla = Math.min(1, p / 0.15);          // 0 = pose de entrada, 1 = pose del cine
-    // ★ v14.1 — capturar la pose REAL de la camara en el primer frame del cine.
-    //   Medido: el hero acaba en z=9.00 (no en 5.2 como asumi) -> con constantes
-    //   inventadas el blend daba un salto de 1.9. Asi el salto es 0 siempre.
-    if (!window.__poseEntrada){
-      const dir = new THREE.Vector3();
-      cam.getWorldDirection(dir);
-      window.__poseEntrada = {
-        p: cam.position.clone(),
-        // un punto de mira a 10 unidades por delante: sirve como lookAt equivalente
-        l: cam.position.clone().add(dir.multiplyScalar(10))
-      };
-    }
-    const P0 = window.__poseEntrada.p, L0 = window.__poseEntrada.l;
-    const CX = 0, CY = 0.75 + suave*0.30, CZ = 9.0 - suave*3.6;
-    const CLy = 1.05 + suave*0.25, CLz = -1.0;
-    const e = mezcla*mezcla*(3 - 2*mezcla);        // smoothstep: entrada/salida suaves
-    cam.position.set(P0.x + (CX - P0.x)*e, P0.y + (CY - P0.y)*e, P0.z + (CZ - P0.z)*e);
-    cam.lookAt(0, L0.y + (CLy - L0.y)*e, L0.z + (CLz - L0.z)*e);
+    // ★ v15.0 — la cámara la gobierna la SENDA CONTINUA (arriba). Aquí solo quedan
+    //   los efectos locales de esta sección (Buda, anillo, fases). El bloque de
+    //   cámara de v14.1 se retiró: era un parche para el salto, y la senda lo
+    //   resuelve de raíz porque NUNCA hay dos sistemas peleándose.
 
     // el anillo aparece al principio y se desvanece al acercarse
     if (window.__anilloCine){
@@ -1153,13 +1195,7 @@ function loop(now){
   // ★ v8.0 — el scroll dirige la escena del hero (pin + scrub)
   if (window.__cineP !== undefined && estado.seccion === 'hero'){
     const p = window.__cineP;
-    cam.position.z = 10.6 - p * 5.4;
-    cam.position.y = 1.8 + Math.sin(p * Math.PI) * 0.85;
-    // ★ v14.0 — el balanceo en x se apaga al final del pin, para llegar a la pose
-    //   exacta (-0.67) desde la que arranca el blend del cine: si sigue bailando,
-    //   la transicion vuelve a notarse.
-    cam.position.x = Math.sin(p * Math.PI * 1.4) * 0.7 * (1 - Math.max(0, (p - 0.85) / 0.15));
-    cam.lookAt(0, 1.35 + p * 0.35, -4.0 - p * 3.0);
+    // ★ v15.0 — la cámara la gobierna la SENDA CONTINUA (ver arriba).
     if (window.__galeria3d && window.__galeria3d.modelos){
       window.__galeria3d.modelos.forEach(function(m, i){
         if (!m.nodo || m.offsetBase === undefined) return;
@@ -1175,6 +1211,11 @@ function loop(now){
       var __gm = window.__galeria3d.modelos[__gi];
       var __go = __gm.nodo;
       if (!__go) continue;
+      // ★ v15.4 — MEDIDO: este bucle ponía position.y y rotation.y a TODOS los modelos
+      //   en cada frame, y durante #cine pisaba los lerps de la sección (el Buda se
+      //   quedaba en y=0.07 en vez de 2.40, se tumbaba al girar y la escala no asentaba).
+      //   Mientras el Buda está en la sección cinematográfica, manda la sección.
+      if (/buda/i.test(__gm.nombre || '') && window.__cine2P !== undefined) continue;
       if (__gm.baseY === undefined) __gm.baseY = __go.position.y;
       __gm.baseEje = __gm.baseEje === undefined ? (__go.rotation.y || 0) : __gm.baseEje;
       __go.rotation.y = __gm.baseEje + estado.t * (0.26 + (__gi % 3) * 0.06);
@@ -2454,11 +2495,13 @@ try{
           // Box3.setFromObject ya lo hace bien.
           var box = new THREE.Box3().setFromObject(o);
           var size = box.getSize(new THREE.Vector3());
-          // v10.4 — enderezar DETERMINISTA por nombre: la deteccion por bbox no se dispara
-          // con los GLB cuantizados. El Gran Buda del Smithsonian viene con Z hacia arriba.
-          var nom = (c.n || '') + ' ' + (c.f || '');
-          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8) || /buda/i.test(nom);
+          // ★ v16.1 — detección por bbox, NO por nombre. El forzado por nombre era un
+          //   parche para el Buda del Smithsonian (que venía con Z arriba). El Buda actual
+          //   (TripoSR) YA viene de pie: forzarle -90º lo tumbaba.
+          //   Criterio: si Y es claramente el eje más fino, el modelo está tumbado.
+          var tumbado = (size.y < size.x * 0.8 && size.y < size.z * 0.8);
           if (tumbado){
+            o.rotation.order = 'YXZ';                  // ★ v15.2 — el mismo fix en la carga
             o.rotation.x = -Math.PI / 2;
             o.updateMatrixWorld(true);
             box = new THREE.Box3().setFromObject(o);
@@ -2474,7 +2517,7 @@ try{
           var centro = box.getCenter(new THREE.Vector3());
           o.position.sub(centro);
           c.escalaBase = o.scale.x;                 // v10.3 — la escala REAL para el cine
-          c._tumbado = tumbado;
+          c._tumbado = tumbado;                     // v16.1 — si venia tumbado, el cine lo endereza
           c.escalaEnderezado = !!c.enderezado;
           // repartidos a los LADOS del titular, dentro del cono de la cámara del hero
           var lado  = (i % 2 === 0) ? -1 : 1;
@@ -2527,7 +2570,7 @@ try{
           });
           // aplicarRim(o, THREE);  // ⛔ rompía el shader de los GLB (Shader Error 0) -> las 3 rim lights de color hacen el trabajo
           esc.add(o);
-          window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d, girando:true});
+          window.__galeria3d.modelos.push({nodo:o, nombre:c.n, desc:c.d, girando:true, _tumbado: tumbado, escalaBase: o.scale.x});
           window.__galeria3d.listos++;
           if (window.__galeria3d.listos === CUADROS.length) console.log('[v6.1] 6/6 modelos 3D cargados');
         }, undefined, function(e){ console.warn('[v6.1] fallo al cargar', c.f, String(e).slice(0,90)); });
@@ -2661,6 +2704,16 @@ try{
     onLeave: function(){
       window.__cine2P = undefined;
       window.__poseEntrada = null;   // v14.1 — la proxima entrada vuelve a capturar la pose
+      // ★ v15.4 — al salir del cine, el Buda vuelve a su base para que el bucle
+      //   de flotación no arranque desde y=2.40 (daria un salto visible).
+      try{
+        (window.__galeria3d.modelos || []).forEach(function(mm){
+          if (/buda/i.test(mm.nombre || '') && mm.cineGuardado){
+            mm.baseY = mm.cineGuardado.y;
+            mm.baseEje = 0;
+          }
+        });
+      }catch(e){}
       document.body.classList.remove('cine-puro');
       sec.className = 'f3';
     },
