@@ -8,6 +8,26 @@
 <meta name="theme-color" content="#08090f">
 <meta property="og:title" content="JAPÓN 2026 — La Misión de los 6">
 <meta property="og:description" content="Ruta de 21 días en una experiencia 3D: Osaka · Kioto · Nara · Tokio.">
+<meta property="og:url" content="https://xxsimon91xx.github.io/japon-2026-trip/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JAPÓN 2026">
+<meta property="og:locale" content="es_ES">
+<!-- ★ v29.0 — la imagen de previsualización. Sin esto, al compartir la web en
+     WhatsApp/Telegram/Twitter no salía NINGUNA imagen. 1200x630 (1.91:1, el
+     estándar universal), con la paleta de la web y una foto real del viaje. -->
+<meta property="og:image" content="https://xxsimon91xx.github.io/japon-2026-trip/og-image.png">
+<meta property="og:image:secure_url" content="https://xxsimon91xx.github.io/japon-2026-trip/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JAPÓN 2026 — 21 días por Osaka, Kioto, Nara y Tokio">
+<!-- Twitter/X: tarjeta grande (más clics que la pequeña) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JAPÓN 2026 — La Misión de los 6">
+<meta name="twitter:description" content="Ruta de 21 días en una experiencia 3D: Osaka · Kioto · Nara · Tokio.">
+<meta name="twitter:image" content="https://xxsimon91xx.github.io/japon-2026-trip/og-image.png">
+<meta name="twitter:image:alt" content="JAPÓN 2026 — 21 días por Osaka, Kioto, Nara y Tokio">
+<link rel="canonical" href="https://xxsimon91xx.github.io/japon-2026-trip/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛩️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -1692,7 +1712,9 @@ var CONTENIDO_CUMPLE = "\n    <div class=\"nota\">🤫 Plan sorpresa del <b>10 d
     btn.textContent = t==='dia' ? '☀️' : '🌙';
     if(save){ try{ localStorage.setItem('japon-tema', t); }catch(e){} }
   }
-  set(guardado || 'noche', false);
+  /* ★ v29.1 — antes: set(guardado || 'noche', false). Un valor raro en
+       localStorage ("marciano") se aplicaba tal cual y el tema quedaba roto. */
+  set((guardado==='dia' || guardado==='noche') ? guardado : 'noche', false);
   btn.addEventListener('click', function(){ set(document.documentElement.getAttribute('data-tema')==='dia'?'noche':'dia', true); });
 })();
 
@@ -2179,8 +2201,8 @@ const CIUDAD_Q = {
       // ★ v20.2 — enlaces con su texto, como en la v1.0:
       //   it[5] = reservar/comprar (con el texto de it[7]) · it[6] = cómo llegar
       const enlaces = [
-        it[5] ? `<a href="${esc(it[5])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(it[7] || '🔗 Reservar / comprar')}</a>` : '',
-        it[6] ? `<a class="mapa" href="${esc(it[6])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍 Cómo llegar</a>` : ''
+        it[5] ? `<a href="${esc(it[5])}" target="_blank" rel="noopener">${esc(it[7] || '🔗 Reservar / comprar')}</a>` : '',
+        it[6] ? `<a class="mapa" href="${esc(it[6])}" target="_blank" rel="noopener">📍 Cómo llegar</a>` : ''
       ].filter(Boolean).join('');
       html += `<label class="chk${hecho?' hecho':''}" data-id="${id}">
         <input type="checkbox" ${hecho?'checked':''}>
@@ -2201,6 +2223,13 @@ const CIUDAD_Q = {
     if (t) t.textContent = `${marcados} / ${total} completadas · ${pct}%`;
   }
   const pinta = actualizaBarra;                 // compatibilidad
+  // ★ v29.0 — los enlaces de dentro llevaban onclick="event.stopPropagation()".
+  //   Ahora se hace por delegación: si el click viene de un enlace, no se marca
+  //   la casilla (antes el onclick solo paraba la propagación, pero el <label>
+  //   seguía envolviendo el enlace y algunos navegadores lo activaban igual).
+  host.addEventListener('click', e => {
+    if (e.target.closest('a')) e.stopPropagation();
+  }, true);
   host.addEventListener('change', e => {
     const lbl = e.target.closest('.chk'); if(!lbl) return;
     const id = lbl.getAttribute('data-id');
@@ -2210,6 +2239,38 @@ const CIUDAD_Q = {
   });
   window.__pintaCheck = pinta;
   pinta();
+})();
+
+/* ★ v29.1 — ENLACE DIRECTO A UNA SECCIÓN.
+   No había NADA que mirara location.hash, así que .../#mapa (o recargar estando
+   abajo) te dejaba arriba del todo: el salto nativo del navegador ocurre antes
+   de que el JS pinte las secciones y se pierde. Se reintenta hasta que la
+   sección existe de verdad y se usa irA() (que ya trae respaldo si Lenis falla). */
+(function(){
+  var intentos = 0;
+  function irAlHash(){
+    var h = location.hash;
+    if (!h || h.length < 2) return;
+    var t = null;
+    try{ t = document.querySelector(h); }catch(e){ return; }   // hash inválido -> fuera
+    if (!t) return;
+    if (typeof irA === 'function') irA(t);
+    else window.scrollTo(0, Math.max(0, t.getBoundingClientRect().top + window.scrollY - 70));
+  }
+  function intentar(){
+    var h = location.hash;
+    if (!h || h.length < 2) return;
+    var t = null;
+    try{ t = document.querySelector(h); }catch(e){ return; }
+    if (t){ irAlHash(); return; }
+    if (++intentos < 12) setTimeout(intentar, 400);   // hasta ~5s
+  }
+  window.addEventListener('hashchange', function(){ intentos = 0; setTimeout(intentar, 60); });
+  window.addEventListener('load', function(){ setTimeout(intentar, 500); });
+  setTimeout(intentar, 1200);
+  /* al recargar estando abajo, el navegador a veces restaura el scroll antes de
+     que exista el contenido; si hay hash, mandamos nosotros. */
+  window.addEventListener('pageshow', function(e){ if(e.persisted) setTimeout(intentar, 400); });
 })();
 
 /* ── 9) CUMPLE DE MARC (candado) ── */
