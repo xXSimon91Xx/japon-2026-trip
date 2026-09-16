@@ -666,7 +666,7 @@ body.cine-puro #bg3d{background:#000}
   <div class="wrap">
     <div class="eye">Qué hacemos</div>
     <h2 class="big">Las <em>actividades</em></h2>
-    <p class="sub" style="margin-bottom:30px">Templos, miradores, barrios y experiencias — con horarios y precio cuando lo hay.</p>
+    <p class="sub" style="margin-bottom:30px">Las experiencias concretas del viaje — karaoke, Golden Gai, barbería, cyber café, iluminaciones... con el día, el precio y cómo llegar.</p>
     <div id="actLista" class="rejilla"></div>
   </div>
 </section>
@@ -1883,9 +1883,43 @@ const CIUDAD_Q = {
 /* ── 4) ACTIVIDADES + TIPS ── */
 (function(){
   const host = $('#actLista'); if(!host) return;
+  // ★ v19.0 — ANTES esto filtraba el array POIS, así que la sección "Actividades"
+  //   mostraba LOS MISMOS 17 puntos que pinta el mapa: contenido duplicado.
+  //   Las actividades de verdad (karaoke, Golden Gai, barbería, cyber café,
+  //   iluminaciones, Nara, Fushimi...) estaban SOLO dentro del checklist.
+  //   Ahora la sección se alimenta de ese grupo, como en la v1.0.
   const cats = ['Ciudad y ocio','Cultura','Naturaleza','Museos y parques'];
   const pois = (typeof POIS!=='undefined' ? POIS : []).filter(p => cats.includes(p.cat));
-  host.innerHTML = pois.map(p => `
+  const grupoAct = (typeof CHECK_DATA !== 'undefined' ? CHECK_DATA : [])
+    .filter(g => /ACTIVIDADES/i.test(g[0] || ''))[0];
+  const acts = grupoAct ? (grupoAct[1] || []) : [];
+
+  if (acts.length){
+    host.innerHTML = acts.map(a => {
+      const emoji = a[0]||'', nombre = a[1]||'', desc = a[2]||'', precio = a[3]||'';
+      const web = a[5], gmap = a[6], boton = a[7];
+      const enlaces = [
+        web ? `<a class="gmap" href="${esc(web)}" target="_blank" rel="noopener">${esc(boton||'🔗 Ver')}</a>` : '',
+        gmap ? `<a class="gmap" href="${esc(gmap)}" target="_blank" rel="noopener">📍 Cómo llegar</a>` : ''
+      ].filter(Boolean).join(' ');
+      return `
+    <article class="poi">
+      <div class="poiCuerpo">
+        <h3 style="font-size:19px">${emoji} ${esc(nombre)}</h3>
+        <div class="desc" style="margin-top:6px">${esc(desc)}</div>
+        ${precio && precio !== '—' && precio !== '-' ? `<div class="horario" style="margin-top:9px"><b>${esc(precio)}</b></div>` : ''}
+        ${enlaces ? `<div class="meta" style="margin-top:11px">${enlaces}</div>` : ''}
+      </div>
+    </article>`;
+    }).join('');
+    // y los POIs de estas categorías siguen en el MAPA, con un aviso de dónde verlos
+    host.innerHTML += `<div class="panel" style="grid-column:1/-1; margin-top:4px">
+      <div class="desc">Estas son las actividades concretas del viaje. Los <b>17 puntos de interés</b> (templos, miradores, barrios) con su mapa interactivo están en la sección
+      <a href="#mapa" style="color:var(--neon); font-weight:800">🗺️ Puntos de interés</a>.</div></div>`;
+    console.log('[v19.0] actividades reales:', acts.length, '(antes se pintaban los', pois.length, 'POIs del mapa)');
+  } else {
+    // respaldo: si no encuentro el grupo, dejo el comportamiento anterior
+    host.innerHTML = pois.map(p => `
     <article class="poi">
       ${p.img?`<img src="img/web/${esc(p.img)}" alt="${esc(p.n)}" loading="lazy" decoding="async">`:''}
       <div class="poiCuerpo">
@@ -1893,10 +1927,10 @@ const CIUDAD_Q = {
         <h3>${p.f||''} ${esc(p.n)}</h3>
         <div class="desc">${esc(p.d||'')}</div>
         ${p.h?`<div class="horario">${esc(p.h)}</div>`:''}
-        ${p.w?`<div class="desc" style="margin-top:9px; font-size:13px">💡 ${esc(p.w)}</div>`:''}
         <div class="meta"><a class="gmap" href="${maps(p.n + ', Japón')}" target="_blank" rel="noopener">📍 Cómo llegar</a></div>
       </div>
     </article>`).join('');
+  }
   // tips
   const tips = $('#tipsLista');
   if (tips && typeof TIPS!=='undefined') {
