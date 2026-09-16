@@ -214,6 +214,7 @@ h2.big em{font-style:normal; color:var(--neon)}
 /* ══ acceso rápido por teclado ══ */
 :focus-visible{outline:3px solid var(--neon); outline-offset:3px; border-radius:8px}
 .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.sr-only:focus{position:fixed; top:10px; left:10px; width:auto; height:auto; clip:auto; padding:10px 16px; margin:0; background:#0b0e14; color:#fff; font-weight:800; z-index:9999; border-radius:8px; outline:3px solid #f5c518}
 
 .precio{font-size:17px;font-weight:900;color:var(--gold);margin-top:8px}
 .pie{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}
@@ -362,6 +363,135 @@ h2.big em{font-style:normal; color:var(--neon)}
 #hero .avionInfo, #avionInfo{opacity:.85}
 /* el brillo del titular, más contenido */
 #hero .big em{text-shadow:0 0 26px rgba(255,59,92,.42)}
+
+/* ★ v22.0 — CONTRASTE EN MODO DÍA, segunda pasada (medida de verdad).
+   La auditoría anterior daba por bueno el modo día porque componía mal los
+   fondos. Compuesto bien (alpha sobre alpha + color(srgb...)):
+     82x  a.gmap "📍 Cómo llegar" .... cian #3ddcff sobre blanco .. 1.53:1
+     54x  .horario del mapa .......... cian sobre blanco .......... 1.63:1
+     27x  .coste del checklist ....... dorado sobre blanco ........ 1.63:1
+     21x  .tag.p / .eye de la ruta ... rosa sobre blanco .......... 3.19:1
+     14x  enlaces de reserva ......... dorado sobre blanco ........ 1.63:1
+   Total: 232 elementos por debajo de AA. Aquí van sus equivalentes oscuros. */
+[data-tema="dia"] #ruta a.gmap,
+[data-tema="dia"] .horario,
+[data-tema="dia"] #actividades b,
+[data-tema="dia"] #mapaLeyenda span,
+[data-tema="dia"] .poi .meta,
+[data-tema="dia"] #comida .poi b,
+[data-tema="dia"] #fiesta .poi b,
+[data-tema="dia"] .vid .vidDatos b{ color:#0b6a87 }
+
+[data-tema="dia"] span.coste,
+[data-tema="dia"] #checklist .resLinks a,
+[data-tema="dia"] #checklist a.res,
+[data-tema="dia"] #presupuesto b,
+[data-tema="dia"] .kicker,
+[data-tema="dia"] #ruta .tr,
+[data-tema="dia"] .vid .vidDatos span{ color:#7a5a00 }
+[data-tema="dia"] #checklist .resLinks a:hover,
+[data-tema="dia"] #ruta a.gmap:hover{ color:#084c61; text-decoration:underline }
+
+[data-tema="dia"] span.tag.p,
+[data-tema="dia"] div.eye,
+[data-tema="dia"] #actividades a,
+[data-tema="dia"] .heroStat span,
+[data-tema="dia"] .stats span,
+[data-tema="dia"] .nav .marca b,
+[data-tema="dia"] .marca b,
+[data-tema="dia"] #ruta .dia.on .num,
+[data-tema="dia"] .badge.p{ color:#b4002b }
+
+/* el "0" del contador salía BLANCO sobre blanco (1.08:1): hereda el color del texto */
+[data-tema="dia"] .vid .marcar b,
+[data-tema="dia"] .progreso b,
+[data-tema="dia"] b[style*="color:#fff"],
+[data-tema="dia"] b[style*="color: #fff"]{ color:#0b0e14 }
+
+/* los números grandes de día: eran decorativos con contraste 1.06:1.
+   Se les da un tono tenue pero perceptible. */
+/* (v22.3) revertido: .num es texto con degradado */
+
+
+/* ★ v22.1 — CONTRASTE EN MODO DÍA, tercera pasada: overrides generados
+   automáticamente para TODAS las reglas que pintan texto con los acentos
+   neón (imposibles de leer sobre claro). Prefijo :root para ganar en
+   especificidad a las reglas originales (que usan #id). */
+:root[data-tema="dia"] #nav .marca b{color:#b4002b}
+:root[data-tema="dia"] .eye{color:#b4002b}
+:root[data-tema="dia"] h2.big em{color:#b4002b}
+:root[data-tema="dia"] #hero h1 .r{color:#b4002b}
+:root[data-tema="dia"] #hero .kicker{color:#7a5a00}
+:root[data-tema="dia"] .cta.sec:hover{color:#b4002b}
+:root[data-tema="dia"] .dia .city{color:#7a5a00}
+:root[data-tema="dia"] .bl b{color:#7a5a00}
+:root[data-tema="dia"] .tag.p{color:#b4002b}
+:root[data-tema="dia"] .gmap{color:#0b6a87}
+:root[data-tema="dia"] .poi .cat{color:#7a5a00}
+:root[data-tema="dia"] .horario{color:#0b6a87}
+:root[data-tema="dia"] .grupo > h4{color:#b4002b}
+:root[data-tema="dia"] .chk .coste{color:#7a5a00}
+:root[data-tema="dia"] .leaflet-popup-content a{color:#0b6a87}
+:root[data-tema="dia"] .err{color:#b4002b}
+:root[data-tema="dia"] .regalo li b{color:#7a5a00}
+:root[data-tema="dia"] .vid .dia{color:#7a5a00}
+:root[data-tema="dia"] .precio{color:#7a5a00}
+:root[data-tema="dia"] .slot b{color:#b4002b}
+:root[data-tema="dia"] .panel .price, .panel .precio{color:#7a5a00}
+:root[data-tema="dia"] #cineFicha span{color:#b4002b}
+:root[data-tema="dia"] #mapaCiudades button:hover{color:#b4002b}
+:root[data-tema="dia"] #mapaCiudades button.casa{color:#7a5a00}
+:root[data-tema="dia"] .vid .vidLinks a:hover{color:#b4002b}
+:root[data-tema="dia"] .vid .vidLinks a.ejemplo{color:#7a5a00}
+:root[data-tema="dia"] .chk .resLinks a{color:#7a5a00}
+:root[data-tema="dia"] .chk .resLinks a:hover{color:#b4002b}
+
+/* ★ v22.2 — los 4 ultimos del modo día, ya con nombre y apellidos:
+     .dia .num ...... el número del día activo, gris claro sobre la tarjeta rosa (1.94:1)
+     #actividades a . el enlace "🗺️ Puntos de interés", rosa sobre blanco (3.48:1)
+     #presupuesto b . el "620 €", dorado sobre blanco (1.63:1)
+     #cineProg b .... el "0" del contador del hero, BLANCO sobre blanco (1.08:1) */
+/* (v22.3) revertido: .num es texto con degradado */
+/* (v22.3) revertido: .num es texto con degradado */
+[data-tema="dia"] #actividades a:not([class]){ color:#b4002b }
+[data-tema="dia"] #presupuesto b{ color:#7a5a00 }
+[data-tema="dia"] #cineProg b{ color:#0b0e14 }
+
+/* ★ v22.3 — clases para los colores que estaban EN LÍNEA.
+   Un `style="color:var(--gold)"` gana a cualquier hoja de estilos, así que el
+   modo día no podía corregirlo. Ahora son clases y sí se pueden pisar. */
+.c-neon{color:var(--neon)} .c-gold{color:var(--gold)} .c-cyan{color:var(--cyan)} .c-violet{color:var(--violet)}
+[data-tema="dia"] .c-neon{color:#b4002b}
+[data-tema="dia"] .c-gold{color:#7a5a00}
+[data-tema="dia"] .c-cyan{color:#0b6a87}
+[data-tema="dia"] .c-violet{color:#5a3fb8}
+
+/* ★ v24.0 — la letra, al mínimo de 15px donde es CONTENIDO.
+   Simón: "letra mínima 15px". La auditoría encontró 631 hojas por debajo.
+   Se suben las de contenido (descripciones, datos, precios, enlaces) y se
+   dejan las micro-etiquetas en mayúsculas con tracking (.eye, .city, .badge,
+   .kicker), que son acentos de diseño y a 15px romperían la proporción. */
+.poi .desc, .desc{ font-size:15px !important; line-height:1.55 }
+.horario{ font-size:14.5px }
+.coste{ font-size:14.5px }
+a.gmap{ font-size:14px }
+.resLinks a, .vidLinks a{ font-size:14px }
+.vid .vidDatos span{ font-size:13.5px }
+.vid .hook{ font-size:15px }
+#checklist .chk .txt b{ font-size:15px }
+#checklist .chk .txt span{ font-size:14px }
+#ruta .dia .fecha{ font-size:13.5px }
+#ruta .dia .city{ font-size:13px }
+#ruta .dia .tag{ font-size:13.5px }
+#ruta .dia .badge{ font-size:13px }
+#ruta .dia b{ font-size:13.5px }
+#actividades .poi b, #comida .poi b, #fiesta .poi b{ font-size:15px }
+#actividades .poi .meta, #comida .poi .meta, #fiesta .poi .meta{ font-size:13.5px }
+#mapa .poi .meta{ font-size:14px }
+#hero .stat span, #hero .stats span{ font-size:12.5px }
+#nav #navlinks a{ font-size:15px }
+#presupuesto .pr span, #presupuesto .pr b{ font-size:14.5px }
+.slot small, .regalo small{ font-size:13.5px }
 
 /* ★ v12.0 — CONTRASTE EN MODO DÍA (auditoría WCAG, medido):
      .precio dorado sobre tarjeta blanca ....... 1.63:1  (mín 4.5)
@@ -1839,7 +1969,7 @@ const CIUDAD_Q = {
     // y los POIs de estas categorías siguen en el MAPA, con un aviso de dónde verlos
     host.innerHTML += `<div class="panel" style="grid-column:1/-1; margin-top:4px">
       <div class="desc">Estas son las actividades concretas del viaje. Los <b>17 puntos de interés</b> (templos, miradores, barrios) con su mapa interactivo están en la sección
-      <a href="#mapa" style="color:var(--neon); font-weight:800">🗺️ Puntos de interés</a>.</div></div>`;
+      <a href="#mapa" class="c-neon" style="font-weight:800">>🗺️ Puntos de interés</a>.</div></div>`;
     console.log('[v19.0] actividades reales:', acts.length, '(antes se pintaban los', pois.length, 'POIs del mapa)');
   } else {
     // respaldo: si no encuentro el grupo, dejo el comportamiento anterior
@@ -1917,17 +2047,26 @@ const CIUDAD_Q = {
       </div>
     </div>`;
     }).join('');
+    actualizaContador();
+  }
+
+  function actualizaContador(){
     const n = Object.keys(hechos).filter(k => hechos[k]).length;
     const marca = document.getElementById('videosProgreso');
     if (marca) marca.textContent = n + ' de ' + VIDEOS.length + ' grabados';
   }
 
+  // ★ v23.0 — antes: pinta(). Eso reconstruía el innerHTML ENTERO (15 tarjetas)
+  //   en cada click y el foco acababa en <body>: quien marca con el teclado
+  //   perdía el sitio. Ahora se toca SOLO la tarjeta afectada.
   host.addEventListener('change', function(ev){
     const inp = ev.target.closest('input[data-vid]'); if (!inp) return;
     const i = inp.dataset.vid;
     hechos[i] = inp.checked;
     try{ localStorage.setItem('japon-videos', JSON.stringify(hechos)); }catch(e){}
-    pinta();
+    const tarjeta = inp.closest('.vid');
+    if (tarjeta) tarjeta.classList.toggle('grabado', !!inp.checked);
+    actualizaContador();
   });
   pinta();
   window.__pintaVideos = pinta;
@@ -1953,7 +2092,7 @@ const CIUDAD_Q = {
     BUDGET.map(b => `<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
         <span style="font-size:14.5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${b[2]};margin-right:9px"></span>${esc(b[0])}</span>
         <b style="font-size:15px;white-space:nowrap">${b[1]} €</b></div>`).join('') +
-    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 0"><b style="font-size:17px">TOTAL</b><b style="font-size:20px;color:var(--gold)">${total} €</b></div>`;
+    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 0"><b style="font-size:17px">TOTAL</b><b class="c-gold" style="font-size:20px">>${total} €</b></div>`;
   if (cv && window.Chart) {
     const css = getComputedStyle(document.documentElement);
     new Chart(cv, {
@@ -2008,18 +2147,21 @@ const CIUDAD_Q = {
     html += '</div>';
   });
   host.innerHTML = html;
-  function pinta(){
+  // ★ v23.0 — cuenta los marcados del DOM y pinta la barra. No reconstruye nada.
+  function actualizaBarra(){
     const marcados = host.querySelectorAll('input:checked').length;
     const pct = total ? Math.round(marcados/total*100) : 0;
-    $('#checkBarra').style.width = pct + '%';
-    $('#checkTxt').textContent = `${marcados} / ${total} completadas · ${pct}%`;
+    const b = $('#checkBarra'), t = $('#checkTxt');
+    if (b) b.style.width = pct + '%';
+    if (t) t.textContent = `${marcados} / ${total} completadas · ${pct}%`;
   }
+  const pinta = actualizaBarra;                 // compatibilidad
   host.addEventListener('change', e => {
     const lbl = e.target.closest('.chk'); if(!lbl) return;
     const id = lbl.getAttribute('data-id');
     if (e.target.checked) { guardado[id] = 1; lbl.classList.add('hecho'); } else { delete guardado[id]; lbl.classList.remove('hecho'); }
     try{ localStorage.setItem('japon-check', JSON.stringify(guardado)); }catch(err){}
-    pinta();
+    actualizaBarra();
   });
   window.__pintaCheck = pinta;
   pinta();
