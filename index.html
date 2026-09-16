@@ -759,7 +759,7 @@ a.gmap{ font-size:14px }
     <h2 class="big">El <em>presupuesto</em></h2>
     <p class="sub" style="margin-bottom:26px">Reparto estimado por persona para los 21 días.</p>
     <div class="dospaneles">
-      <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto del presupuesto por persona para los 21 días: transporte, alojamiento, comida y actividades."></canvas></div>
+      <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto del presupuesto por persona para los 21 días: comida y bebida, transporte, entradas y extras."></canvas></div>
       <div class="panel" id="budgetDetalle"></div>
     </div>
   </div>
@@ -2092,7 +2092,7 @@ const CIUDAD_Q = {
     BUDGET.map(b => `<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
         <span style="font-size:14.5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${b[2]};margin-right:9px"></span>${esc(b[0])}</span>
         <b style="font-size:15px;white-space:nowrap">${b[1]} €</b></div>`).join('') +
-    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 0"><b style="font-size:17px">TOTAL</b><b class="c-gold" style="font-size:20px">>${total} €</b></div>`;
+    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 0"><b style="font-size:17px">TOTAL</b><b class="c-gold" style="font-size:20px">${total} €</b></div>`;
   if (cv && window.Chart) {
     const css = getComputedStyle(document.documentElement);
     new Chart(cv, {
