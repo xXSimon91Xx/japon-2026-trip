@@ -136,6 +136,9 @@ h2.big em{font-style:normal; color:var(--neon)}
 .rejilla{display:grid; grid-template-columns:repeat(auto-fill,minmax(285px,1fr)); gap:18px}
 .panel{background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:22px; backdrop-filter:blur(10px)}
 .dospaneles{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+/* ★ v28.0 — .ancho: ocupa las dos columnas SIN estilo en línea.
+   Con estilo en línea, el clearProps de GSAP (modo sin animaciones) lo borraba. */
+.dospaneles > .ancho{grid-column:1/-1}
 @media(max-width:860px){ .dospaneles{grid-template-columns:1fr} }
 
 /* ══ POI / comida / actividad (tarjeta 3D) ══ */
@@ -761,7 +764,7 @@ a.gmap{ font-size:14px }
     <div class="dospaneles">
       <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto base por persona para los 21 días: comida y bebida, transporte, entradas y extras."></canvas></div>
       <div class="panel" id="budgetDetalle"></div>
-      <div class="panel" id="budgetExtra" style="margin-top:16px"></div>
+      <div class="panel ancho" id="budgetExtra"></div>
     </div>
   </div>
 </section>
@@ -1638,8 +1641,8 @@ var BUDGET_EXTRA = [
  ['🛏️ Cápsula hotel (Tour POV)', '4.900¥'],
  ['💈 Barbería 1870 (ASMR)', '4.000¥'],
  ['💻 Cyber café noche (Tour)', '3.800¥'],
- ['🌀 Bizarre Foods (Reacción)', '2-4.000¥'],
- ['🛍️ Donki haul 24h (Haul)', '3-5.000¥'],
+ ['🌀 Bizarre Foods (Reacción)', '2.000–4.000¥'],
+ ['🛍️ Donki haul 24h (Haul)', '3.000–5.000¥'],
  ['🍱 Ekiben shinkansen (ASMR)', '2.500¥'],
  ['🍙 24h solo konbini (Reto)', '~1.000¥'],
  ['✨ Purikura + gachapon (B-roll)', '1.000¥']
@@ -2249,7 +2252,12 @@ const CIUDAD_Q = {
   var REDUCIDO = false;
   try{ REDUCIDO = matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
   if (REDUCIDO){
-    gsap.set('#rutaLista .dia, .poi, .panel, .vid, .grupo, h2.big', {clearProps:'all'});
+    /* ★ v28.0 — antes era clearProps:'all' y BORRABA TODO el estilo en línea
+       de cada .panel/.poi/.dia/.vid. Eso se llevaba por delante cosas que no
+       tienen nada que ver con la animación: el #budgetExtra perdía su
+       grid-column:1/-1 y el bloque se quedaba a media anchura. Detectado con
+       un MutationObserver + hook de cssText -> la pila apuntaba a gsap. */
+      gsap.set('#rutaLista .dia, .poi, .panel, .vid, .grupo, h2.big', {clearProps:'opacity,transform,filter,willChange'});
     document.documentElement.classList.add('sin-motion');
     console.log('[v17.0] prefers-reduced-motion: reveals desactivados, todo visible');
   }
