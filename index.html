@@ -659,7 +659,7 @@ a.gmap{ font-size:14px }
     <div><b>4</b><span>Ciudades</span></div>
     <div><b>10.400</b><span>Kilómetros</span></div>
     <div><b>6</b><span>Viajeros</span></div>
-    <div><b>620 €</b><span>Presupuesto</span></div>
+    <div><b>770 €</b><span>Presupuesto</span></div>
   </div>
   <div class="wrap capa">
     <div class="kicker">9 DIC — 1 ENE · La Misión de los 6</div>
@@ -672,7 +672,7 @@ a.gmap{ font-size:14px }
       <div><b>6</b>viajeros</div>
       <div><b>10.400</b>km</div>
       <div><b>4</b>ciudades</div>
-      <div><b>~620 €</b>presupuesto</div>
+      <div><b>620 €</b> + 150 € de vídeos</div>
     </div>
   </div>
   <div class="scrollcue">Desliza<i></i></div>
@@ -757,10 +757,11 @@ a.gmap{ font-size:14px }
   <div class="wrap">
     <div class="eye">El dinero</div>
     <h2 class="big">El <em>presupuesto</em></h2>
-    <p class="sub" style="margin-bottom:26px">Reparto estimado por persona para los 21 días.</p>
+    <p class="sub" style="margin-bottom:26px">Reparto por persona para los 21 días. Los vuelos y el alojamiento ya están pagados y no cuentan aquí.</p>
     <div class="dospaneles">
-      <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto del presupuesto por persona para los 21 días: comida y bebida, transporte, entradas y extras."></canvas></div>
+      <div class="panel"><canvas id="graficoBudget" height="260" role="img" aria-label="Gráfico de anillo con el reparto base por persona para los 21 días: comida y bebida, transporte, entradas y extras."></canvas></div>
       <div class="panel" id="budgetDetalle"></div>
+      <div class="panel" id="budgetExtra" style="margin-top:16px"></div>
     </div>
   </div>
 </section>
@@ -1493,26 +1494,26 @@ addEventListener('focus', () => { ultimo = performance.now(); __tick(true); });
 // Datos extraidos de la v3.0 (15-sep-2026) — CONTENIDO INTACTO
 
 var ROUTE = [
- {d:1, fecha:'JUE 10 DIC', city:'OSAKA', title:'Llegada a Osaka', badge:'✈️ KIX 14:00', m:'Vuelo ZH BCN 11:20 → KIX 14:00 (PNR QJ8B3P). Control + Nankai a Namba.', t:'Check-in Shimanouchi 1-13-19 + Dotonbori: Glico.', n:'Dotonbori de noche + karaoke Kan tranqui.', tr:'Nankai KIX→Namba ~920¥', price:'~40 €', vid:'Aterrizaje + primera noche.', food:'Takoyaki + konbini'},
- {d:2, fecha:'VIE 11 DIC', city:'OSAKA', title:'Los 2 solos', badge:'💜 2 PAX', m:'Kuromon sin prisa + Amerikamura a vuestro ritmo.', t:'Spa World onsen relax.', n:'Ura-Namba íntimo: tachinomi.', tr:'Metro', price:'~30 €', vid:'Los 2 solos por Osaka.', food:'Okonomiyaki DIY'},
- {d:3, fecha:'SÁB 12 DIC', city:'OSAKA', title:'Llegan los 4', badge:'✈️ KIX 14:00', m:'Recoger a Erik, Adrià, Ruben y Kamal (llegan KIX 14:00, PNR QWKX47).', t:'Check-in + Dotonbori todos juntos.', n:'Bienvenida: Shinsekai + kushikatsu.', tr:'Nankai (ellos)', price:'~30 €', vid:'Reencuentro en Namba.', food:'Kushikatsu Daruma'},
- {d:4, fecha:'DOM 13 DIC', city:'OSAKA', title:'Castillo + Namba', badge:'', m:'Castillo de Osaka + parque.', t:'Shinsaibashi + Amerikamura (repe con grupo).', n:'Dotonbori noche total.', tr:'Metro', price:'~30 €', vid:'Castillo + Glico de noche.', food:'Takoyaki'},
- {d:5, fecha:'LUN 14 DIC', city:'OSAKA', title:'TATARA Night', badge:'🔥 WAGYU', m:'Kuromon de desayuno.', t:'Den Den Town + Shinsekai.', n:'🔥 TATARA: wagyu al carbón.', tr:'Metro', price:'~55 €', vid:'Wagyu en slow-mo.', food:'TATARA'},
- {d:6, fecha:'MAR 15 DIC', city:'KIOTO', title:'Fushimi + Gion', badge:'', m:'Fushimi Inari 8am: 10.000 torii.', t:'Gion, Kiyomizu, Sannenzaka.', n:'Pontocho iluminado.', tr:'JR Osaka→Kioto ~580¥', price:'~40 €', vid:'Time-lapse torii.', food:'Kitsune udon'},
- {d:7, fecha:'MIÉ 16 DIC', city:'KIOTO', title:'Arashiyama', badge:'', m:'Monos Iwatayama + bambú.', t:'Kinkaku-ji + Nishiki Market.', n:'Pontocho / vuelta Osaka.', tr:'JR + bus', price:'~40 €', vid:'Monos + bambú ASMR.', food:'Nishiki'},
- {d:8, fecha:'JUE 17 DIC', city:'NARA', title:'Ciervos + Buda', badge:'', m:'Nara Park + Todai-ji.', t:'Vuelta Osaka, Ura-Namba.', n:'Tachinomi bar hopping.', tr:'Kintetsu ~680¥', price:'~30 €', vid:'Ciervos por galletas.', food:'Kaki-no-ha sushi'},
- {d:9, fecha:'VIE 18 DIC', city:'OSAKA', title:'USJ', badge:'🎢', m:'USJ: Nintendo World (llegar 7:30).', t:'USJ tarde.', n:'Izakaya Namba.', tr:'JR Loop ~200¥', price:'~70 €', vid:'Mario Kart real.', food:'USJ + izakaya'},
- {d:10, fecha:'SÁB 19 DIC', city:'OSAKA', title:'Spa + compras', badge:'', m:'Spa World (repe con grupo).', t:'Shinsaibashi compras.', n:'300BAR + DJ.', tr:'Metro', price:'~35 €', vid:'Onsen en grupo.', food:'Okonomiyaki DIY'},
- {d:11, fecha:'DOM 20 DIC', city:'KIOTO', title:'Kioto II', badge:'', m:'Nishiki de mañana.', t:'Kisshoukichi Kobe (comida).', n:'Dotonbori última gran noche.', tr:'JR', price:'~80 €', vid:'Kobe a la plancha.', food:'Kisshoukichi'},
- {d:12, fecha:'LUN 21 DIC', city:'OSAKA', title:'Último Osaka', badge:'', m:'Kuromon + souvenirs.', t:'Shinsekai + Tsutenkaku.', n:'Despedida Osaka + maletas listas.', tr:'Metro', price:'~30 €', vid:'Torre + kushikatsu final.', food:'Kushikatsu'},
- {d:13, fecha:'MAR 22 DIC', city:'TOKYO', title:'Nozomi → Tokyo', badge:'🚄', m:'Nozomi Shin-Osaka ~9:00 → Tokyo (~2h21).', t:'Check-in Okubo + Shinjuku (Omoide).', n:'Shibuya + Blue Cave + Golden Gai.', tr:'Nozomi 14.720¥', price:'~110 €', vid:'Fuji desde la ventanilla.', food:'Ekiben + Shibuya'},
- {d:14, fecha:'MIÉ 23 DIC', city:'TOKYO', title:'teamLab + Toyosu', badge:'🌀', m:'Toyosu + Odaiba (Gundam).', t:'teamLab Planets 3.600¥.', n:'Roppongi + Midtown.', tr:'Yurikamome + metro', price:'~45 €', vid:'Agua infinita 4K.', food:'Sushi Toyosu'},
- {d:15, fecha:'JUE 24 DIC', city:'TOKYO', title:'Akihabara Nochebuena', badge:'🎮', m:"M's Pop Life, figuras, gachapon.", t:'Cyber Bagus arcades.', n:'Rice and Circus (bizarre) + neones.', tr:'JR Chuo-Sobu', price:'~45 €', vid:'Neón de Akiba.', food:'Bizarre + ramen'},
- {d:16, fecha:'VIE 25 DIC', city:'TOKYO', title:'Navidad Ginza', badge:'🎄', m:'Barbería Shoji (4.000¥).', t:'Ginza + Tsukiji de paso.', n:'Cena Navidad: Yoshikawa Kaido.', tr:'Metro', price:'~70 €', vid:'Antes/después barbería.', food:'Yoshikawa (omakase)'},
- {d:17, fecha:'SÁB 26 DIC', city:'TOKYO', title:'Donki + Yoroniku', badge:'💎 3.80', m:'Mega Donki + Meiji Jingu.', t:'Nakano / Shin-Okubo.', n:'Yoroniku: yakiniku de dioses.', tr:'JR', price:'~130 €', vid:'Flambeado slow-mo.', food:'Yoroniku'},
- {d:18, fecha:'DOM 27 DIC', city:'TOKYO', title:'Ueno + picante', badge:'🌶️', m:'Ueno + Ameyoko.', t:'Senso-ji + Skytree.', n:'🌶️ Nakamoto Hokkyoku.', tr:'Metro + JR', price:'~30 €', vid:'Picante nivel 10.', food:'Nakamoto'},
- {d:19, fecha:'LUN 28 DIC', city:'TOKYO', title:'Tsukiji + Este', badge:'', m:'Tsukiji 6am sushi.', t:'Shibuya día + compras finales.', n:'Cena clausura: Sendou.', tr:'Metro', price:'~60 €', vid:'Atún 6am.', food:'Sendou (12 piezas)'},
- {d:20, fecha:'MAR 29 DIC', city:'TOKYO', title:'Último día', badge:'', m:'Souvenirs + favoritos.', t:'Comodín: retos pendientes.', n:'Despedida: izakaya + iluminada final.', tr:'Metro', price:'~30 €', vid:'Adiós a Tokyo.', food:'Izakaya final'},
+ {d:1, fecha:'JUE 10 DIC', city:'OSAKA', title:'Llegada a Osaka', badge:'✈️ KIX 14:00', m:'Vuelo ZH BCN 11:20 → KIX 14:00 (PNR QJ8B3P). Control + Nankai a Namba.', t:'Check-in Shimanouchi 1-13-19 + Dotonbori: Glico.', n:'Dotonbori de noche + karaoke Kan tranqui.', tr:'Nankai KIX→Namba ~920¥', price:'~30 €', vid:'Aterrizaje + primera noche.', food:'Takoyaki + konbini'},
+ {d:2, fecha:'VIE 11 DIC', city:'OSAKA', title:'Los 2 solos', badge:'💜 2 PAX', m:'Kuromon sin prisa + Amerikamura a vuestro ritmo.', t:'Spa World onsen relax.', n:'Ura-Namba íntimo: tachinomi.', tr:'Metro', price:'~20 €', vid:'Los 2 solos por Osaka.', food:'Okonomiyaki DIY'},
+ {d:3, fecha:'SÁB 12 DIC', city:'OSAKA', title:'Llegan los 4', badge:'✈️ KIX 14:00', m:'Recoger a Erik, Adrià, Ruben y Kamal (llegan KIX 14:00, PNR QWKX47).', t:'Check-in + Dotonbori todos juntos.', n:'Bienvenida: Shinsekai + kushikatsu.', tr:'Nankai (ellos)', price:'~20 €', vid:'Reencuentro en Namba.', food:'Kushikatsu Daruma'},
+ {d:4, fecha:'DOM 13 DIC', city:'OSAKA', title:'Castillo + Namba', badge:'', m:'Castillo de Osaka + parque.', t:'Shinsaibashi + Amerikamura (repe con grupo).', n:'Dotonbori noche total.', tr:'Metro', price:'~20 €', vid:'Castillo + Glico de noche.', food:'Takoyaki'},
+ {d:5, fecha:'LUN 14 DIC', city:'OSAKA', title:'TATARA Night', badge:'🔥 WAGYU', m:'Kuromon de desayuno.', t:'Den Den Town + Shinsekai.', n:'🔥 TATARA: wagyu al carbón.', tr:'Metro', price:'~40 €', vid:'Wagyu en slow-mo.', food:'TATARA'},
+ {d:6, fecha:'MAR 15 DIC', city:'KIOTO', title:'Fushimi + Gion', badge:'', m:'Fushimi Inari 8am: 10.000 torii.', t:'Gion, Kiyomizu, Sannenzaka.', n:'Pontocho iluminado.', tr:'JR Osaka→Kioto ~580¥', price:'~30 €', vid:'Time-lapse torii.', food:'Kitsune udon'},
+ {d:7, fecha:'MIÉ 16 DIC', city:'KIOTO', title:'Arashiyama', badge:'', m:'Monos Iwatayama + bambú.', t:'Kinkaku-ji + Nishiki Market.', n:'Pontocho / vuelta Osaka.', tr:'JR + bus', price:'~30 €', vid:'Monos + bambú ASMR.', food:'Nishiki'},
+ {d:8, fecha:'JUE 17 DIC', city:'NARA', title:'Ciervos + Buda', badge:'', m:'Nara Park + Todai-ji.', t:'Vuelta Osaka, Ura-Namba.', n:'Tachinomi bar hopping.', tr:'Kintetsu ~680¥', price:'~20 €', vid:'Ciervos por galletas.', food:'Kaki-no-ha sushi'},
+ {d:9, fecha:'VIE 18 DIC', city:'OSAKA', title:'USJ', badge:'🎢', m:'USJ: Nintendo World (llegar 7:30).', t:'USJ tarde.', n:'Izakaya Namba.', tr:'JR Loop ~200¥', price:'~50 €', vid:'Mario Kart real.', food:'USJ + izakaya'},
+ {d:10, fecha:'SÁB 19 DIC', city:'OSAKA', title:'Spa + compras', badge:'', m:'Spa World (repe con grupo).', t:'Shinsaibashi compras.', n:'300BAR + DJ.', tr:'Metro', price:'~25 €', vid:'Onsen en grupo.', food:'Okonomiyaki DIY'},
+ {d:11, fecha:'DOM 20 DIC', city:'KIOTO', title:'Kioto II', badge:'', m:'Nishiki de mañana.', t:'Kisshoukichi Kobe (comida).', n:'Dotonbori última gran noche.', tr:'JR', price:'~60 €', vid:'Kobe a la plancha.', food:'Kisshoukichi'},
+ {d:12, fecha:'LUN 21 DIC', city:'OSAKA', title:'Último Osaka', badge:'', m:'Kuromon + souvenirs.', t:'Shinsekai + Tsutenkaku.', n:'Despedida Osaka + maletas listas.', tr:'Metro', price:'~20 €', vid:'Torre + kushikatsu final.', food:'Kushikatsu'},
+ {d:13, fecha:'MAR 22 DIC', city:'TOKYO', title:'Nozomi → Tokyo', badge:'🚄', m:'Nozomi Shin-Osaka ~9:00 → Tokyo (~2h21).', t:'Check-in Okubo + Shinjuku (Omoide).', n:'Shibuya + Blue Cave + Golden Gai.', tr:'Nozomi 14.720¥', price:'~80 €', vid:'Fuji desde la ventanilla.', food:'Ekiben + Shibuya'},
+ {d:14, fecha:'MIÉ 23 DIC', city:'TOKYO', title:'teamLab + Toyosu', badge:'🌀', m:'Toyosu + Odaiba (Gundam).', t:'teamLab Planets 3.600¥.', n:'Roppongi + Midtown.', tr:'Yurikamome + metro', price:'~35 €', vid:'Agua infinita 4K.', food:'Sushi Toyosu'},
+ {d:15, fecha:'JUE 24 DIC', city:'TOKYO', title:'Akihabara Nochebuena', badge:'🎮', m:"M's Pop Life, figuras, gachapon.", t:'Cyber Bagus arcades.', n:'Rice and Circus (bizarre) + neones.', tr:'JR Chuo-Sobu', price:'~35 €', vid:'Neón de Akiba.', food:'Bizarre + ramen'},
+ {d:16, fecha:'VIE 25 DIC', city:'TOKYO', title:'Navidad Ginza', badge:'🎄', m:'Barbería Shoji (4.000¥).', t:'Ginza + Tsukiji de paso.', n:'Cena Navidad: Yoshikawa Kaido.', tr:'Metro', price:'~50 €', vid:'Antes/después barbería.', food:'Yoshikawa (omakase)'},
+ {d:17, fecha:'SÁB 26 DIC', city:'TOKYO', title:'Donki + Yoroniku', badge:'💎 3.80', m:'Mega Donki + Meiji Jingu.', t:'Nakano / Shin-Okubo.', n:'Yoroniku: yakiniku de dioses.', tr:'JR', price:'~95 €', vid:'Flambeado slow-mo.', food:'Yoroniku'},
+ {d:18, fecha:'DOM 27 DIC', city:'TOKYO', title:'Ueno + picante', badge:'🌶️', m:'Ueno + Ameyoko.', t:'Senso-ji + Skytree.', n:'🌶️ Nakamoto Hokkyoku.', tr:'Metro + JR', price:'~20 €', vid:'Picante nivel 10.', food:'Nakamoto'},
+ {d:19, fecha:'LUN 28 DIC', city:'TOKYO', title:'Tsukiji + Este', badge:'', m:'Tsukiji 6am sushi.', t:'Shibuya día + compras finales.', n:'Cena clausura: Sendou.', tr:'Metro', price:'~45 €', vid:'Atún 6am.', food:'Sendou (12 piezas)'},
+ {d:20, fecha:'MAR 29 DIC', city:'TOKYO', title:'Último día', badge:'', m:'Souvenirs + favoritos.', t:'Comodín: retos pendientes.', n:'Despedida: izakaya + iluminada final.', tr:'Metro', price:'~20 €', vid:'Adiós a Tokyo.', food:'Izakaya final'},
  {d:21, fecha:'MIÉ 30 DIC', city:'Aeropuerto de Narita', title:'Hasta pronto ✈️', badge:'', m:'Check-out + NEX ~15:30 a NRT.', t:'Vuelos NRT 19:00 (QJ8B3P + QWKX47).', n:'En el avión, editando el trailer.', tr:"N'EX ~3.200¥ + vuelo", price:'~25 €', vid:'Créditos en loop.', food:'Konbini final'}
 ];
 
@@ -1629,6 +1630,19 @@ var BUDGET = [
  ['Transporte (shinkansen + urbano)', 150, '#00c2ff'],
  ['Entradas (USJ 8.600¥, teamLab 3.600¥…)', 90, '#ffb020'],
  ['Extras y compras', 100, '#3ddc84']
+];
+/* ★ v26.0 — el EXTRA DE GRABACIÓN: los vídeos que solo paga Simón.
+   Sale de su propia lista de vídeos (24.200¥ ≈ 150 €). Los demás no lo gastan,
+   por eso va en un bloque aparte y no en el reparto común. */
+var BUDGET_EXTRA = [
+ ['🛏️ Cápsula hotel (Tour POV)', '4.900¥'],
+ ['💈 Barbería 1870 (ASMR)', '4.000¥'],
+ ['💻 Cyber café noche (Tour)', '3.800¥'],
+ ['🌀 Bizarre Foods (Reacción)', '2-4.000¥'],
+ ['🛍️ Donki haul 24h (Haul)', '3-5.000¥'],
+ ['🍱 Ekiben shinkansen (ASMR)', '2.500¥'],
+ ['🍙 24h solo konbini (Reto)', '~1.000¥'],
+ ['✨ Purikura + gachapon (B-roll)', '1.000¥']
 ];
 
 var VIDEOS = [
@@ -2092,7 +2106,24 @@ const CIUDAD_Q = {
     BUDGET.map(b => `<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)">
         <span style="font-size:14.5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${b[2]};margin-right:9px"></span>${esc(b[0])}</span>
         <b style="font-size:15px;white-space:nowrap">${b[1]} €</b></div>`).join('') +
-    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 0"><b style="font-size:17px">TOTAL</b><b class="c-gold" style="font-size:20px">${total} €</b></div>`;
+    `<div style="display:flex;justify-content:space-between;gap:14px;padding:16px 0 8px"><b style="font-size:17px">BASE POR PERSONA</b><b class="c-gold" style="font-size:20px">${total} €</b></div>`
+    + `<p style="font-size:13.5px;color:var(--muted);margin:0 0 6px">✈️ No incluye los vuelos ni el alojamiento (Osaka 10-22 dic · Tokyo 22-30 dic): eso ya está pagado aparte.</p>`;
+
+  /* ★ v26.0 — segundo bloque: el extra que solo gasta Simon al grabar.
+     Simon: "los vídeos es muy probable que solo lo gaste yo, así que ellos no
+     gastarán" -> se muestra aparte, para que se vea qué es suyo y qué es común. */
+  const extra = document.getElementById('budgetExtra');
+  if (extra && typeof BUDGET_EXTRA !== 'undefined'){
+    extra.innerHTML =
+      `<div style="font-size:13px;letter-spacing:.2em;color:var(--muted);font-weight:900;margin-bottom:6px">🎬 EXTRA DE GRABACIÓN — SOLO SIMON</div>
+       <p style="font-size:13.5px;color:var(--muted);margin:0 0 12px">Los vídeos que solo grabas tú. Los demás no lo gastan, así que va aparte del reparto común.</p>`
+      + BUDGET_EXTRA.map(x => `<div style="display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)">
+          <span style="font-size:14.5px">${esc(x[0])}</span><b class="c-cyan" style="font-size:14.5px;white-space:nowrap">${esc(x[1])}</b></div>`).join('')
+      + `<div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0 6px"><b style="font-size:15px">TOTAL VÍDEOS</b><b class="c-cyan" style="font-size:17px">24.200¥ ≈ 150 €</b></div>`
+      + `<div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0 0;border-top:2px solid var(--line);margin-top:6px">
+           <b style="font-size:16px">TOTAL SI GRABAS</b><b class="c-gold" style="font-size:20px">770 €</b></div>
+         <p style="font-size:13px;color:var(--muted);margin:10px 0 0">620 € de base (igual para todos) + ~150 € de los vídeos (solo tuyos).</p>`;
+  }
   if (cv && window.Chart) {
     const css = getComputedStyle(document.documentElement);
     new Chart(cv, {
