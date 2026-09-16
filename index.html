@@ -547,6 +547,61 @@ body.cine-puro #bg3d{background:#000}
   padding:12px 18px; background:var(--neon); color:#0b0e14; font-weight:900; border-radius:10px;
   clip-path:none; white-space:normal;
 }
+
+/* ══ v20.0 — botones de ciudad del mapa (como en la v1.0) ══ */
+#mapaCiudades{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px}
+#mapaCiudades button{
+  font:700 13px/1 ui-sans-serif,system-ui; color:var(--txt);
+  background:var(--panel2); border:1px solid var(--line); border-radius:999px;
+  padding:9px 15px; cursor:pointer; transition:.18s;
+}
+#mapaCiudades button:hover{border-color:var(--neon); color:var(--neon)}
+#mapaCiudades button.on{background:var(--neon); color:#0b0e14; border-color:var(--neon)}
+#mapaCiudades button.casa{border-color:var(--gold); color:var(--gold)}
+[data-tema="dia"] #mapaCiudades button{background:#fff; color:#38445c}
+[data-tema="dia"] #mapaCiudades button.on{background:var(--neon); color:#0b0e14}
+/* leyenda de colores */
+#mapaLeyenda{display:flex; flex-wrap:wrap; gap:14px; margin:0 0 14px; font:600 12px/1 ui-sans-serif}
+#mapaLeyenda span{display:inline-flex; align-items:center; gap:6px; color:var(--muted)}
+#mapaLeyenda i{width:11px; height:11px; border-radius:50%; display:inline-block}
+.pin-lista{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:-1px}
+
+/* ══ v20.1 — tarjetas de vídeo con el check "Grabado" (como la v1.0) ══ */
+.vid{display:flex; flex-direction:column; gap:9px}
+.vid .vidCab{display:flex; justify-content:space-between; align-items:flex-start; gap:12px}
+.vid .vidCab b{font-size:16px; line-height:1.25}
+.vid .marcar{
+  display:inline-flex; align-items:center; gap:7px; flex:0 0 auto; cursor:pointer;
+  font:800 12px/1 ui-sans-serif; color:var(--muted); background:var(--panel2);
+  border:1px solid var(--line); border-radius:999px; padding:7px 12px; transition:.18s;
+}
+.vid .marcar:hover{border-color:var(--neon); color:var(--txt)}
+.vid .marcar input{width:16px; height:16px; accent-color:var(--neon); cursor:pointer}
+.vid.grabado{opacity:.58; border-color:var(--neon)!important}
+.vid.grabado .marcar{background:var(--neon); color:#0b0e14; border-color:var(--neon)}
+.vid .vidDatos{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px}
+.vid .vidDatos span{
+  background:var(--panel2); border:1px solid var(--line); border-radius:999px;
+  padding:5px 10px; font:600 11.5px/1 ui-sans-serif; color:var(--muted);
+}
+.vid .vidLinks{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+.vid .vidLinks a{
+  font:700 12px/1 ui-sans-serif; text-decoration:none; border-radius:999px;
+  padding:8px 12px; border:1px solid var(--line); color:var(--txt); transition:.18s;
+}
+.vid .vidLinks a:hover{border-color:var(--neon); color:var(--neon)}
+.vid .vidLinks a.ejemplo{border-color:var(--gold); color:var(--gold)}
+[data-tema="dia"] .vid .marcar{background:#fff; color:#5a6579}
+[data-tema="dia"] .vid .vidDatos span{background:#fff}
+[data-tema="dia"] .vid .vidLinks a{background:#fff; color:#38445c}
+/* y los enlaces de reserva del checklist */
+.chk .resLinks{display:flex; flex-wrap:wrap; gap:7px; margin-top:8px}
+.chk .resLinks a{
+  font:700 12px/1 ui-sans-serif; text-decoration:none; border-radius:999px;
+  padding:8px 12px; border:1px solid var(--gold); color:var(--gold); transition:.18s;
+}
+.chk .resLinks a.mapa{border-color:var(--line); color:var(--muted)}
+.chk .resLinks a:hover{border-color:var(--neon); color:var(--neon)}
 </style>
 </head>
 <body>
@@ -645,6 +700,15 @@ body.cine-puro #bg3d{background:#000}
     <div class="eye">Orientación</div>
     <h2 class="big">El <em>mapa</em> del viaje</h2>
     <p class="sub" style="margin-bottom:26px">Las dos bases, los restaurantes y todo lo que merece una parada. Cada pin tiene su botón para abrirlo en Google Maps.</p>
+    <div id="mapaCiudades" role="group" aria-label="Centrar el mapa en una ciudad">
+      <button data-area="todas" class="on" type="button">🇯🇵 Todo el viaje</button>
+      <button data-area="osaka" type="button">Osaka</button>
+      <button data-area="kioto" type="button">Kioto</button>
+      <button data-area="nara" type="button">Nara</button>
+      <button data-area="tokio" type="button">Tokio</button>
+      <button data-casa="1" class="casa" type="button">🏠 Las 2 casas</button>
+    </div>
+    <div id="mapaLeyenda"></div>
     <div id="mapaMarco"><div id="mapaCaja" role="application" aria-label="Mapa interactivo del viaje"></div></div>
     <div id="mapaLista" class="rejilla"></div>
   </div>
@@ -687,6 +751,7 @@ body.cine-puro #bg3d{background:#000}
     <div class="eye">Qué grabamos</div>
     <h2 class="big">Los <em>vídeos</em></h2>
     <p class="sub" style="margin-bottom:30px">Las tomas que hay que traer grabadas de cada día para montar el vídeo a la vuelta.</p>
+    <p class="sub" style="margin-top:-10px; margin-bottom:22px; font-size:13px"><b id="videosProgreso">0 de 0 grabados</b> · marca cada idea al grabarla (se guarda en este navegador)</p>
     <div id="videosLista"></div>
   </div>
 </section>
@@ -1825,11 +1890,47 @@ const CIUDAD_Q = {
   L.control.layers({'Satélite':sat, 'Calles':calles}, null, {position:'topright'}).addTo(mapa);
   L.control.scale({imperial:false}).addTo(mapa);
 
-  const pin = (lat,lng,titulo,desc,color) => {
-    const m = L.circleMarker([lat,lng], {radius:8, color:color||'#ff3b5c', weight:2, fillColor:color||'#ff3b5c', fillOpacity:0.85}).addTo(mapa);
-    m.bindPopup(`<b>${esc(titulo)}</b><br><span style="color:#98a3b8">${esc(desc||'')}</span><br><a href="${maps(titulo)}" target="_blank" rel="noopener">Cómo llegar →</a>`);
+  // ══════════════════════════════════════════════════════════════════
+  // ★ v20.0 — todo esto viene de la v1.0 y se había perdido:
+  //   colores por categoría, las 2 casas, distancia a la casa y el
+  //   link de "cómo llegar" que elige andando o transporte solo.
+  // ══════════════════════════════════════════════════════════════════
+  const CASAS = [
+    {n:'🏠 Casa Osaka', d:'Shimanouchi 1-13-19 · Abe Heights · 10-22 dic', c:[34.6686,135.5017]},
+    {n:'🏠 Casa Tokio', d:'Okubo 1-39 · Shinjuku · 22-30 dic', c:[35.7013,139.6935]}
+  ];
+  const PIN_COL = {'base':'#ff3b5c','Ciudad y ocio':'#00c2ff','Naturaleza':'#3ddc84','Cultura':'#f5c518','Museos y parques':'#a13dff','spot':'#3ddcff','food':'#ff3b5c','light':'#f5c518'};
+  // ¿a qué casa está más cerca este punto? (Osaka si lat<35.6, Tokio si no, como en la v1.0)
+  function poiBase(lat){ return lat < 35.6 ? CASAS[0] : CASAS[1]; }
+  function poiDistKm(lat, lng){
+    const b = poiBase(lat).c, R = 6371;
+    const la1 = b[0]*Math.PI/180, la2 = lat*Math.PI/180;
+    const dLa = (lat-b[0])*Math.PI/180, dLn = (lng-b[1])*Math.PI/180;
+    const a = Math.sin(dLa/2)*Math.sin(dLa/2) + Math.cos(la1)*Math.cos(la2)*Math.sin(dLn/2)*Math.sin(dLn/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+  function poiDist(lat, lng){
+    const km = poiDistKm(lat, lng);
+    const modo = km < 0.2 ? 'andando' : (km < 30 ? 'transporte' : 'tren');
+    return '📍 ~' + (km < 1 ? Math.round(km*1000) + ' m' : km.toFixed(km < 10 ? 1 : 0) + ' km') + ' de la casa de ' + poiBase(lat).n.replace('🏠 Casa ','') + ' · ' + modo;
+  }
+  // link de cómo llegar eligiendo modo solo (v1.0)
+  function dirLink(lat, lng){
+    const b = poiBase(lat).c;
+    const d = Math.hypot(lat - b[0], lng - b[1]);
+    return 'https://www.google.com/maps/dir/' + b[0] + ',' + b[1] + '/' + lat + ',' + lng + '?travelmode=' + (d < 0.2 ? 'walking' : 'transit') + '&hl=es';
+  }
+  const pin = (lat,lng,titulo,desc,color,icono) => {
+    const c = color || '#ff3b5c';
+    const texto = icono || '';
+    const m = L.circleMarker([lat,lng], {radius:icono?11:8, color:c, weight:icono?3:2, fillColor:c, fillOpacity:icono?0.95:0.85}).addTo(mapa);
+    m.bindPopup('<b>' + texto + ' ' + esc(titulo) + '</b><br><span style="color:#98a3b8">' + esc(desc||'') + '</span><br><span style="color:#7c8aa0;font-size:11px">' + poiDist(lat,lng) + '</span><br><a href="' + dirLink(lat,lng) + '" target="_blank" rel="noopener">Cómo llegar →</a>');
     return m;
   };
+  // las 2 casas, con pin grande y ambar
+  const casasMarcadores = [];
+  CASAS.forEach(c => casasMarcadores.push(pin(c.c[0], c.c[1], c.n, c.d, '#f5c518', '🏠')));
+  window.__casasMarcadores = casasMarcadores;
   // bases + sitios
   if (typeof MAPS_DATA !== 'undefined') {
     MAPS_DATA.forEach(s => {
@@ -1840,19 +1941,63 @@ const CIUDAD_Q = {
   }
   // POIs del catálogo
   if (typeof POIS !== 'undefined') {
-    POIS.forEach(p => { if(p.lat && p.lng) pin(p.lat, p.lng, p.n, (p.d||'').slice(0,110), '#7c5cff'); });
+    // ★ v20.0 — cada categoría con su color (antes los 17 salían todos del mismo morado)
+    POIS.forEach(p => { if(p.lat && p.lng) pin(p.lat, p.lng, p.n, (p.d||'').slice(0,110), PIN_COL[p.cat] || '#7c5cff'); });
   }
+  // ── leyenda de colores ──
+  (function(){
+    const host = document.getElementById('mapaLeyenda');
+    if (!host || typeof POIS === 'undefined') return;
+    const cats = {};
+    POIS.forEach(p => { cats[p.cat] = (cats[p.cat]||0)+1; });
+    host.innerHTML = '<span><i style="background:#f5c518"></i>🏠 Casa (2)</span>' +
+      Object.keys(cats).map(c => '<span><i style="background:' + (PIN_COL[c]||'#7c5cff') + '"></i>' + esc(c) + ' (' + cats[c] + ')</span>').join('');
+  })();
+  // ── botones de ciudad (v1.0: AREAS) ──
+  (function(){
+    // ★ v20.0b — cada area con su centro Y su zoom separados. Antes iba aplanado
+    //   ([lat,lng,zoom]) y setView recibía un NÚMERO como centro -> el mapa volaba
+    //   a 85.050,-179.961 (borde del mundo). Medido y corregido.
+    const AREAS = {
+      todas:{c:[34.9,136.9],        z:5},
+      osaka:{c:CASAS[0].c.slice(),  z:13},
+      kioto:{c:[35.0116,135.7681],  z:12},
+      nara: {c:[34.6851,135.8049],  z:13},
+      tokio:{c:CASAS[1].c.slice(),  z:12}
+    };
+    const cont = document.getElementById('mapaCiudades');
+    if (!cont) return;
+    cont.addEventListener('click', function(ev){
+      const b = ev.target.closest('button'); if (!b) return;
+      // 🏠 las 2 casas: encuadrar el mapa para que se vean las dos
+      if (b.dataset.casa){
+        mapa.fitBounds([CASAS[0].c, CASAS[1].c], {padding:[70,70]});
+        cont.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on');
+        return;
+      }
+      const k = b.dataset.area, a = AREAS[k];
+      if (!a) return;
+      mapa.setView(a.c, a.z, {animate:true, duration:0.6});
+      cont.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+    });
+    window.__mapaCiudades = AREAS;
+  })();
   // lista bajo el mapa
   const lista = $('#mapaLista');
   if (lista && typeof POIS !== 'undefined') {
+    // ★ v20.0 — ordenar por cercanía a la casa, como hacía la v1.0
+    try{ POIS.sort(function(a,b){ return poiDistKm(a.lat,a.lng) - poiDistKm(b.lat,b.lng); }); }catch(e){}
     lista.innerHTML = POIS.map(p => `
       <article class="poi">
         ${p.img?`<img src="img/web/${esc(p.img)}" alt="${esc(p.n)}" loading="lazy" decoding="async">`:''}
         <div class="poiCuerpo">
-          <div class="cat">${esc(p.cat||'')}</div>
+          <div class="cat"><span class="pin-lista" style="background:${PIN_COL[p.cat]||'#7c5cff'}"></span>${esc(p.cat||'')}</div>
           <h3>${p.f||''} ${esc(p.n)}</h3>
           <div class="desc">${esc(p.d||'')}</div>
           ${p.h?`<div class="horario">${esc(p.h)}</div>`:''}
+          <div class="desc" style="margin-top:7px;font-size:12px;color:var(--muted)">${poiDist(p.lat,p.lng)}</div>
           ${p.w?`<div class="desc" style="margin-top:9px; font-size:13px">💡 ${esc(p.w)}</div>`:''}
           <div class="meta"><a class="gmap" href="${maps(p.n + ', Japón')}" target="_blank" rel="noopener">📍 Cómo llegar</a></div>
         </div>
@@ -1927,7 +2072,7 @@ const CIUDAD_Q = {
         <h3>${p.f||''} ${esc(p.n)}</h3>
         <div class="desc">${esc(p.d||'')}</div>
         ${p.h?`<div class="horario">${esc(p.h)}</div>`:''}
-        <div class="meta"><a class="gmap" href="${maps(p.n + ', Japón')}" target="_blank" rel="noopener">📍 Cómo llegar</a></div>
+        <div class="meta"><a class="gmap" href="${dirLink(p.lat,p.lng)}" target="_blank" rel="noopener">📍 Cómo llegar</a></div>
       </div>
     </article>`).join('');
   }
@@ -1962,15 +2107,51 @@ const CIUDAD_Q = {
 /* ── 6) VÍDEOS ── */
 (function(){
   const host = $('#videosLista'); if(!host || typeof VIDEOS==='undefined') return;
-  host.innerHTML = VIDEOS.map(v => `
-    <div class="vid">
-      <div class="dia">${esc(v.d||'')}</div>
-      <div>
-        <b>${esc(v.t)}</b>
-        <div class="hook">${esc(v.hook||'')} ${v.c?('· 💴 '+esc(v.c)):''} ${v.h?(' · 🕐 '+esc(v.h)):''}</div>
+  // ★ v20.1 — se recupera el render de la v1.0: check "Grabado" que se guarda,
+  //   📍 cómo llegar (desde la base del día) y 🎬 un vídeo parecido en YouTube.
+  //   Los datos ya estaban en el array (v.y, v.lat, v.lng, v.b, v.h).
+  let hechos = {};
+  try{ hechos = JSON.parse(localStorage.getItem('japon-videos') || '{}'); }catch(e){}
+
+  function pinta(){
+    host.innerHTML = VIDEOS.map((v, i) => {
+      const ok = !!hechos[i];
+      const base = (v.b && v.b.length === 2) ? v.b : [34.6686, 135.5017];
+      const dir = 'https://www.google.com/maps/dir/' + base[0] + ',' + base[1] + '/' + (v.lat||base[0]) + ',' + (v.lng||base[1]) + '?travelmode=walking&hl=es';
+      return `
+    <div class="vid${ok?' grabado':''}" data-idx="${i}">
+      <div class="vidCab">
+        <b>🎬 ${esc(v.t||'')}</b>
+        <label class="marcar" title="Marca esta idea cuando la hayas grabado">
+          <input type="checkbox" ${ok?'checked':''} data-vid="${i}"> Grabado
+        </label>
       </div>
-      <div class="formato">${esc(v.f||'')}</div>
-    </div>`).join('');
+      <div class="hook"><b>📅 ${esc(v.d||'')}</b> · ${esc(v.hook||'')}</div>
+      <div class="vidDatos">
+        ${v.f?`<span>${esc(v.f)}</span>`:''}
+        ${v.c?`<span>💴 ${esc(v.c)}</span>`:''}
+        ${v.h?`<span>🕐 ${esc(v.h)}</span>`:''}
+      </div>
+      <div class="vidLinks">
+        ${v.y?`<a class="ejemplo" href="${esc(v.y)}" target="_blank" rel="noopener">🎬 Ver uno parecido</a>`:''}
+        <a href="${dir}" target="_blank" rel="noopener">📍 Cómo llegar</a>
+      </div>
+    </div>`;
+    }).join('');
+    const n = Object.keys(hechos).filter(k => hechos[k]).length;
+    const marca = document.getElementById('videosProgreso');
+    if (marca) marca.textContent = n + ' de ' + VIDEOS.length + ' grabados';
+  }
+
+  host.addEventListener('change', function(ev){
+    const inp = ev.target.closest('input[data-vid]'); if (!inp) return;
+    const i = inp.dataset.vid;
+    hechos[i] = inp.checked;
+    try{ localStorage.setItem('japon-videos', JSON.stringify(hechos)); }catch(e){}
+    pinta();
+  });
+  pinta();
+  window.__pintaVideos = pinta;
 })();
 
 /* ── 7) PRESUPUESTO ── */
@@ -2032,10 +2213,16 @@ const CIUDAD_Q = {
     (grupo[1]||[]).forEach((it, ii) => {
       const id = gi+'-'+ii; total++;
       const hecho = !!guardado[id];
-      const link = it[6] ? `<a class="gmap" style="margin-left:8px" href="${esc(it[6])}" target="_blank" rel="noopener">📍</a>` : '';
+      // ★ v20.2 — enlaces con su texto, como en la v1.0:
+      //   it[5] = reservar/comprar (con el texto de it[7]) · it[6] = cómo llegar
+      const enlaces = [
+        it[5] ? `<a href="${esc(it[5])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(it[7] || '🔗 Reservar / comprar')}</a>` : '',
+        it[6] ? `<a class="mapa" href="${esc(it[6])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">📍 Cómo llegar</a>` : ''
+      ].filter(Boolean).join('');
       html += `<label class="chk${hecho?' hecho':''}" data-id="${id}">
         <input type="checkbox" ${hecho?'checked':''}>
-        <span class="txt"><b>${it[0]||''} ${esc(it[1]||'')}</b>${it[2]?`<span>${esc(it[2])}</span>`:''}${link}</span>
+        <span class="txt"><b>${it[0]||''} ${esc(it[1]||'')}</b>${it[2]?`<span>${esc(it[2])}</span>`:''}
+          ${enlaces?`<span class="resLinks">${enlaces}</span>`:''}</span>
         ${it[3]&&it[3]!=='—'?`<span class="coste">${esc(it[3])}</span>`:''}
       </label>`;
     });
