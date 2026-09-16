@@ -312,43 +312,22 @@ h2.big em{font-style:normal; color:var(--neon)}
 .tilt-in{max-width:100%; box-sizing:border-box}
 
 /* ══ v8.0 — CINE: contador de progreso + ficha técnica del viaje ══ */
-#cineProg{
-  position:fixed; left:26px; bottom:24px; z-index:60;
-  font:600 12.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing:.14em; color:var(--neon);
-  background:rgba(11,14,20,.62); border:1px solid rgba(255,59,92,.30);
-  padding:8px 12px; border-radius:999px; backdrop-filter:blur(10px);
-  opacity:0; transition:opacity .5s ease; pointer-events:none;
-}
+
 #cineProg.on{opacity:1}
 #cineProg b{color:#fff; font-weight:700}
 /* ficha técnica que aparece al avanzar (como el short del museo) */
-#cineFicha{
-  position:absolute; left:0; right:0; bottom:12%; z-index:5;
-  display:flex; gap:34px; justify-content:center; flex-wrap:wrap;
-  opacity:0; transition:opacity .4s ease; pointer-events:none;
-}
+
 #cineFicha.on{opacity:1}
-#cineFicha div{min-width:120px; text-align:center}
-#cineFicha b{
-  display:block; font:800 clamp(26px,3.4vw,52px)/1 ui-sans-serif,system-ui;
-  color:#fff; letter-spacing:-.02em;
-}
+
 #cineFicha span{
   display:block; margin-top:7px; font:600 10.5px/1.4 ui-monospace,monospace;
   letter-spacing:.22em; text-transform:uppercase; color:var(--neon);
 }
-#cineFicha i{width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); margin:0 0 12px}
-/* linea de progreso del hero mientras está pinneado */
-#cineBarra{
-  position:absolute; left:0; bottom:0; height:2px; width:0%;
-  background:linear-gradient(90deg,var(--neon),var(--acento2,#f5c518));
-  z-index:6; opacity:0; transition:opacity .4s ease;
-}
+
+
 /* ★ la línea de progreso de la PÁGINA se oculta durante el cine: era el segundo
    indicador que contradecía a la pastilla (3.6% vs 55%) */
-body.cine-ficha #progreso, body.cine-activo #progreso{opacity:0 !important}
-#cineBarra.on{opacity:1}
+
 
 /* ══ v8.1 — menos es más: el titular respira y nada compite con él ══ */
 #hero .wrap{position:relative; z-index:4}
@@ -358,10 +337,7 @@ body.cine-ficha #progreso, body.cine-activo #progreso{opacity:0 !important}
 
 /* ══ v8.2 — una sola ficha: la fila compacta desaparece cuando entra la grande ══ */
 #hero .metricas, #hero .stats, #hero .datos{transition:opacity .45s ease}
-body.cine-ficha #avionInfo,
-body.cine-ficha #hero .metricas,
-body.cine-ficha #hero .stats,
-body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
+
 
 /* ══ v8.4 — sin costura: el hero se funde con la siguiente sección ══
    El análisis lo marcó como "bug visual, no estilo": había un corte recto duro
@@ -387,92 +363,6 @@ body.cine-ficha #hero .datos{opacity:0 !important; pointer-events:none}
 /* el brillo del titular, más contenido */
 #hero .big em{text-shadow:0 0 26px rgba(255,59,92,.42)}
 
-/* ══════════════════════════════════════════════════════════════════════
-   v9.0 — SECCIÓN CINEMATOGRÁFICA
-   Pantalla completa SOLO para el 3D. Sin nav, sin métricas, sin botones.
-   Es el "hero de museo" de los shorts: el objeto es el protagonista.
-   ══════════════════════════════════════════════════════════════════════ */
-#cine{
-  position:relative; min-height:100vh; display:flex;
-  /* ★ v13.0 — el texto abajo (ficha de museo) para que NO tape al Buda, que
-     queda arriba y centrado, como en los shorts de referencia. */
-  align-items:flex-end; justify-content:center;
-  padding-bottom:clamp(28px, 7vh, 90px);
-  background:transparent; overflow:hidden;
-}
-/* durante esta sección, fuera la interfaz: solo el objeto */
-body.cine-puro #navlinks,
-body.cine-puro #btnTema,
-body.cine-puro .marca, body.cine-puro .logo,
-body.cine-puro #velo,
-body.cine-puro #progreso,
-body.cine-puro #cineProg,
-body.cine-puro #cineFicha,
-body.cine-puro #cineBarra{opacity:0 !important; pointer-events:none !important; transition:opacity .5s ease}
-body.cine-puro .nav{background:transparent !important; border-color:transparent !important; backdrop-filter:none !important}
-body.cine-puro #bg3d{background:#000}
-
-/* el texto de la sección: mínimo y elegante, como una ficha de museo */
-#cineTexto{
-  position:relative; z-index:4; text-align:center; max-width:820px;
-  padding:0 26px; pointer-events:none;
-}
-/* ★ v17.0 — en DÍA el velo claro lavaba el fondo y el texto blanco quedaba
-   ilegible (medido en píxeles: h2 2.63:1, .sub 1.04:1, .ficha 1.75:1).
-   Se pone un scrim oscuro detrás del bloque SOLO en modo día. */
-[data-tema="dia"] #cineTexto{
-  background:radial-gradient(120% 130% at 50% 55%, rgba(6,8,14,.86) 0%, rgba(6,8,14,.72) 55%, rgba(6,8,14,0) 100%);
-  border-radius:20px;
-}
-[data-tema="dia"] #cineTexto h2{color:#fff; text-shadow:0 2px 22px rgba(0,0,0,.9)}
-[data-tema="dia"] #cineTexto .sub{color:#d7dfec}
-[data-tema="dia"] #cineTexto .ficha b{color:#fff}
-#cineTexto .eye{
-  font:700 10.5px/1 ui-monospace,monospace; letter-spacing:.34em;
-  text-transform:uppercase; color:var(--neon); opacity:0;
-  transition:opacity .6s ease, transform .6s ease; transform:translateY(14px);
-}
-#cineTexto h2{
-  /* ★ v15.3 — de clamp(40,7.6vw,118) a clamp(26,4.4vw,72): el titular ocupaba
-     214px de alto y tapaba el 72% del Buda. Ahora es una ficha, no un cartel. */
-  margin:12px 0 0; font:800 clamp(26px,4.4vw,72px)/.98 ui-sans-serif,system-ui;
-  letter-spacing:-.035em; color:#fff; opacity:0;
-  transition:opacity .7s ease, transform .7s ease; transform:translateY(20px);
-  text-shadow:0 10px 60px rgba(0,0,0,.75);
-}
-#cineTexto h2 em{font-style:normal; color:var(--neon)}
-#cineTexto .sub{
-  margin:12px auto 0; max-width:520px; font:500 clamp(13px,1.25vw,15px)/1.6 ui-sans-serif,system-ui;
-  color:#aab5c8; opacity:0; transition:opacity .7s ease .1s, transform .7s ease .1s;
-  transform:translateY(16px);
-}
-#cineTexto .ficha{
-  display:flex; gap:26px; justify-content:center; flex-wrap:wrap;
-  margin-top:20px; opacity:0; transition:opacity .7s ease .2s;   /* v15.3 — 34->20 */
-}
-#cineTexto .ficha div{min-width:92px}
-#cineTexto .ficha b{display:block; font:800 clamp(20px,2.6vw,38px)/1 ui-sans-serif,system-ui; color:#fff}
-#cineTexto .ficha span{
-  display:block; margin-top:6px; font:600 9.5px/1.4 ui-monospace,monospace;
-  letter-spacing:.2em; text-transform:uppercase; color:var(--neon);
-}
-/* estados que activa el scroll */
-#cine.f0 .eye, #cine.f1 .eye, #cine.f2 .eye, #cine.f3 .eye{opacity:1; transform:none}
-#cine.f1 h2, #cine.f2 h2, #cine.f3 h2{opacity:1; transform:none}
-#cine.f2 .sub, #cine.f3 .sub{opacity:1; transform:none}
-#cine.f3 .ficha{opacity:1}
-/* indicador de scroll propio de la sección */
-#cineHint{
-  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
-  z-index:4; font:600 10px/1 ui-monospace,monospace; letter-spacing:.3em;
-  text-transform:uppercase; color:#5d6a80; opacity:0; transition:opacity .6s ease;
-}
-#cine.f0 #cineHint{opacity:1}
-@media (max-width:640px){
-  #cineTexto .ficha{gap:18px}
-  #cineTexto .ficha div{min-width:74px}
-}
-
 /* ★ v12.0 — CONTRASTE EN MODO DÍA (auditoría WCAG, medido):
      .precio dorado sobre tarjeta blanca ....... 1.63:1  (mín 4.5)
      .bl b / .city dorado sobre fondo claro .... 1.51:1
@@ -485,12 +375,7 @@ body.cine-puro #bg3d{background:#000}
 [data-tema="dia"] #ruta .city{ color:#7a4a00; font-weight:700 }
 /* v12.1 — el .eye en dia: la regla anterior perdia por especificidad (medido 3.22:1).
    #ff3b5c no es legible sobre claro: se oscurece a un granate que mantiene el tono. */
-[data-tema="dia"] .eye,
-[data-tema="dia"] section .eye,
-[data-tema="dia"] #cineTexto .eye,
-[data-tema="dia"] .panel .eye,
-[data-tema="dia"] h2 + .eye,
-[data-tema="dia"] [class*="eye"]{ color:#b3123a !important }
+
 [data-tema="dia"] .eye span,
 [data-tema="dia"] section .eye span{ color:#b3123a !important }
 [data-tema="dia"] #comida .poi .precio::before,
@@ -534,14 +419,11 @@ body.cine-puro #bg3d{background:#000}
 /* ★ v17.1 — 95 nodos por debajo de 12px eran ilegibles en móvil.
    Se sube el suelo de las etiquetas más pequeñas en pantallas táctiles. */
 @media (pointer: coarse), (max-width: 820px){
-  .stat b + span, .stats span, .hint, .scrollcue, #cineTexto .ficha span,
+  .stat b + span, .stats span, .hint, .scrollcue,
   .city, .badge, .bl span, .eye, .kicker{ font-size:max(11.5px, .78rem) !important }
-  #cineTexto .ficha span{ font-size:11.5px !important }
 }
 
-/* ★ v17.2 — accesibilidad: skip-link y utilidad sr-only */
-.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
-  clip:rect(0,0,0,0); white-space:nowrap; border:0}
+
 #saltar:focus{
   position:fixed; top:10px; left:10px; z-index:9999; width:auto; height:auto; clip:auto; margin:0;
   padding:12px 18px; background:var(--neon); color:#0b0e14; font-weight:900; border-radius:10px;
@@ -607,7 +489,7 @@ body.cine-puro #bg3d{background:#000}
 <body>
 <!-- ★ v17.2 — skip-link: el teclado puede saltar la nav (10 enlaces) e ir directo al contenido -->
 <a href="#contenido" id="saltar" class="sr-only">Saltar al contenido</a>
-<div id="bg3d" aria-hidden="true" role="img" aria-label="Escena 3D de fondo con seis objetos japoneses: una pagoda, un torii, un farol, el Gran Buda, una tarta y un ramen."></div>
+<div id="bg3d" aria-hidden="true" role="img" aria-label="Escena 3D de fondo con cinco objetos japoneses: una pagoda, un torii, un farol, una tarta y un ramen."></div>
 <div id="velo" aria-hidden="true"></div>
 <div id="progreso" aria-hidden="true"></div>
 
@@ -667,23 +549,7 @@ body.cine-puro #bg3d{background:#000}
 </section>
 
 <!-- ══════════════ RUTA 21 DÍAS ══════════════ -->
-<section id="cine">
-  <!-- ══════════════════════════════════════════════════════════════
-       v9.0 — SECCIÓN CINEMATOGRÁFICA (el objeto es el protagonista)
-       ══════════════════════════════════════════════════════════════ -->
-  <div id="cineHint">Sigue bajando</div>
-  <div id="cineTexto">
-    <div class="eye">Nara · Tōdai-ji</div>
-    <h2>El <em>Gran Buda</em><br>de bronce</h2>
-    <p class="sub">15 metros de altura y 500 toneladas, dentro del mayor edificio de madera del mundo. Lleva ahí desde el año 752.</p>
-    <div class="ficha">
-      <div><b>15 m</b><span>Altura</span></div>
-      <div><b>500 t</b><span>Peso</span></div>
-      <div><b>752</b><span>Año</span></div>
-      <div><b>Día 6</b><span>Del viaje</span></div>
-    </div>
-  </div>
-</section>
+
 
 <section id="ruta">
   <div class="wrap">
@@ -1209,11 +1075,8 @@ function loop(now){
         //  progreso  cámara (x,y,z)                 mira a (x,y,z)
         [0.000,   0,   1.90,  10.60,     0,  1.00,   0.00],  // hero: plano general
         [0.055,   0,   2.30,   7.40,     0,  0.90,  -2.00],  // hero: se acerca
-        [0.120,   0,   1.55,   7.60,     0,  0.90,  -1.20],  // entrada al cine
-        [0.165,   0,   1.45,   6.90,     0,  0.72,  -1.50],  // ★ v15.1 — más atrás y mirando
-                                                              //   más bajo: el Buda sube en el
-                                                              //   encuadre y libra el texto
-        [0.225,   0,   1.85,   7.90,     0,  0.95,  -2.00],  // saliendo del cine
+        // (v21.0 — esta zona era la entrada/salida de la sección cinematográfica,
+        //  que Simon pidió quitar. La cámara pasa ahora con un travelling suave.)
         [0.320,  -1.6, 2.55,   8.60,     0,  1.20,  -3.00],  // trav. lateral izq
         [0.460,   1.9, 2.95,   9.30,     0,  1.30,  -3.60],  // trav. lateral der
         [0.600,  -1.3, 2.20,   8.90,     0,  1.10,  -2.80],  // vuelve a la izq
@@ -1239,89 +1102,6 @@ function loop(now){
 
 
   // ★ v14.0 (retirado) — la transición la hace la senda continua de arriba.
-  // ★★ v9.1 — SECCIÓN CINEMATOGRÁFICA: aquí el objeto es el protagonista
-  if (window.__cine2P !== undefined){
-    const p = window.__cine2P;
-    const suave = p*p*(3-2*p);                       // smoothstep
-
-    // el Gran Buda al centro y grande
-    if (window.__galeria3d && window.__galeria3d.modelos){
-      const buda = window.__galeria3d.modelos.filter(function(m){ return /buda/i.test(m.nombre); })[0];
-      window.__galeria3d.modelos.forEach(function(m){
-        const esBuda = (m === buda);
-        const o = m.nodo;
-        if (!o) return;
-        o.visible = esBuda;                          // solo el buda durante esta sección
-        if (esBuda){
-          // ★ v16.1 — m es el objeto de modelos[] (creado al cargar), no la entrada de
-          //   CUADROS: el flag _tumbado hay que copiarlo ahi o no llega.
-          if (m._tumbado === undefined && buda && buda.__tumbado !== undefined) m._tumbado = buda.__tumbado;
-          // v10.2 — la escala base se guarda en la CARGA (m.escalaBase), no aqui:
-          // antes se capturaba la escala ya animada por el hero -> el x2.05 daba un valor sin sentido
-          if (!m.cineGuardado){ m.cineGuardado = o.position.clone(); m.cineEscala = (m.escalaBase || o.scale.x); }
-          // ★ v15.3 — subido de 0.95 a 2.4: MEDIDO en pantalla, con 0.95 el Buda
-          //   caia en y 360-780 y el texto empieza en 477 -> 72% tapado.
-          //   lerp mas rapido (0.14) para que la posicion se asiente de verdad.
-          o.position.lerp(new THREE.Vector3(0, 2.40, -1.5), 0.14);
-          o.scale.setScalar(THREE.MathUtils.lerp(o.scale.x, m.cineEscala * 1.75, 0.08));   // ★ v15.1 — 1.75: a 2.05 no libraba el bloque de texto
-          // ★ v15.2 — ORDEN YXZ. Medido: con el orden por defecto ('XYZ') Three.js
-          //   aplica X al final, así que el giro alrededor de Y TUMBABA el Buda y el
-          //   enderezado no servía. Con 'YXZ' se endereza primero y gira después sobre
-          //   el eje vertical. bbox: tumbado (4.13 x 2.53) -> de pie (1.01 x 3.85).
-          o.rotation.order = 'YXZ';
-          o.rotation.y = estado.t * 0.16;
-          // ★ v16.1 — solo se endereza si el modelo venía tumbado. Forzar SIEMPRE el
-          //   -90º tumbaba el modelo actual (que ya viene de pie).
-          o.rotation.x = 0;   // ★ v16.3 — sin enderezado automatico: los modelos ya vienen bien
-        } else if (m.cineGuardado){
-          o.position.copy(m.cineGuardado);
-          o.scale.setScalar(m.cineEscala);
-          m.cineGuardado = null;
-        }
-      });
-    }
-
-    // ★ v10.6 — LUZ DEDICADA al Buda: con MeshBasicMaterial se veia (600x400px) pero con
-    //   MeshStandardMaterial no -> ninguna luz le llegaba con fuerza. Key + fill + rim.
-    if (!window.__luzBuda){
-      const lk = new THREE.DirectionalLight(0xfff0d8, 3.2); lk.position.set(3.2, 5.0, 4.5);
-      const lf = new THREE.DirectionalLight(0x9fc4ff, 1.3); lf.position.set(-4.0, 1.6, 3.0);
-      const lr = new THREE.DirectionalLight(0xff8a5c, 1.1); lr.position.set(0, 2.4, -5.0);
-      const lp = new THREE.PointLight(0xffe6c0, 12, 12, 2); lp.position.set(0, 1.6, 2.2);
-      window.__luzBuda = [lk, lf, lr, lp];
-      var _esc = window.__escena3d.escena;
-      window.__luzBuda.forEach(function(l){
-        l.visible = false;
-        _esc.add(l);
-      });
-    }
-    // solo encendidas en la seccion de cine
-    window.__luzBuda.forEach(function(l){ l.visible = (p > 0.002); });
-
-    // ★ v14.0 — TRANSICIÓN SIN CORTE desde el hero.
-    //   Pose final del hero (medida leyendo su codigo, cineP=1):
-    //     position (-0.67, 1.8, 5.2)  lookAt (0, 1.7, -7.0)
-    //   Pose del cine: position (0, 0.75+, 9.0-)  lookAt (0, 1.05+, -1.0)
-    //   Sin esto la camara saltaba 3.8 unidades hacia atrás de golpe al entrar.
-    // ★ v15.0 — la cámara la gobierna la SENDA CONTINUA (arriba). Aquí solo quedan
-    //   los efectos locales de esta sección (Buda, anillo, fases). El bloque de
-    //   cámara de v14.1 se retiró: era un parche para el salto, y la senda lo
-    //   resuelve de raíz porque NUNCA hay dos sistemas peleándose.
-
-    // el anillo aparece al principio y se desvanece al acercarse
-    if (window.__anilloCine){
-      const entrada = Math.min(1, p*4), salida = 1 - Math.max(0, (p-0.55)/0.45);
-      const op = entrada * salida;
-      window.__anilloCine.aro.material.opacity = op * 0.95;
-      window.__anilloCine.glow.material.opacity = op * 0.30;
-      const esc = 1 + p*0.55;
-      window.__anilloCine.aro.scale.setScalar(esc);
-      window.__anilloCine.glow.scale.setScalar(esc);
-    }
-  } else if (window.__anilloCine && window.__anilloCine.aro.material.opacity !== 0){
-    window.__anilloCine.aro.material.opacity = 0;
-    window.__anilloCine.glow.material.opacity = 0;
-  }
   // ★ v8.0 — el scroll dirige la escena del hero (pin + scrub)
   if (window.__cineP !== undefined && estado.seccion === 'hero'){
     const p = window.__cineP;
@@ -1345,7 +1125,6 @@ function loop(now){
       //   en cada frame, y durante #cine pisaba los lerps de la sección (el Buda se
       //   quedaba en y=0.07 en vez de 2.40, se tumbaba al girar y la escala no asentaba).
       //   Mientras el Buda está en la sección cinematográfica, manda la sección.
-      if (/buda/i.test(__gm.nombre || '') && window.__cine2P !== undefined) continue;
       if (__gm.baseY === undefined) __gm.baseY = __go.position.y;
       __gm.baseEje = __gm.baseEje === undefined ? (__go.rotation.y || 0) : __gm.baseEje;
       __go.rotation.y = __gm.baseEje + estado.t * (0.26 + (__gi % 3) * 0.06);
@@ -2561,7 +2340,6 @@ try{
   const CUADROS = [
     {f:'torii.glb',    n:'Torii',            d:'La puerta sagrada de los santuarios sintoístas'},
     {f:'castillo.glb', n:'Castillo',         d:'El Osaka-jo, la fortaleza de la ciudad'},
-    {f:'buda.glb',     n:'Gran Buda',        d:'El Daibutsu del Todai-ji en Nara'},
     {f:'linterna.glb', n:'Chochin',          d:'La linterna de papel de los izakayas'},
     {f:'tarta.glb',    n:'Tarta',            d:'El cumpleaños de Marc, día 10 del viaje'},
     {f:'ramen.glb',    n:'Ramen',            d:'El plato que vamos a comer 20 veces'},
@@ -2651,27 +2429,7 @@ try{
         o.userData.girando = true;
         o.userData.nombre = c.n;
         // ★ v11.0 — el Buda con material visible sin luces (bronce + sombreado falso por normales)
-        if (/buda/i.test(c.n || '')){
-          o.traverse(function(nn){
-            if (!nn.isMesh || !nn.geometry) return;
-            var geo = nn.geometry;
-            if (!geo.attributes.normal) geo.computeVertexNormals();
-            var pos = geo.attributes.position, nor = geo.attributes.normal;
-            var col = new Float32Array(pos.count * 3);
-            var cA = new THREE.Color(0x3d2a12), cB = new THREE.Color(0xf2c98a);
-            var lz = new THREE.Vector3(0.35, 0.62, 0.70).normalize();
-            for (var k2 = 0; k2 < pos.count; k2++){
-              var d = Math.max(0, nor.getX(k2)*lz.x + nor.getY(k2)*lz.y + nor.getZ(k2)*lz.z);
-              var t2 = 0.20 + 0.80 * Math.pow(d, 0.8);
-              col[k2*3] = cA.r + (cB.r-cA.r)*t2;
-              col[k2*3+1] = cA.g + (cB.g-cA.g)*t2;
-              col[k2*3+2] = cA.b + (cB.b-cA.b)*t2;
-            }
-            geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-            nn.material = new THREE.MeshBasicMaterial({vertexColors: true, toneMapped: false});
-            nn.frustumCulled = false;
-          });
-        }
+        
         // ⛔ v11.0 — NO aplicarRim: rompia el shader de los GLB (Shader Error) y no se dibujaban
         // colocar en un arco detrás de la escena, repartidos
         const ang = (i / CUADROS.length) * Math.PI * 2;
@@ -2700,7 +2458,6 @@ try{
   var CUADROS = [
     {f:'torii.glb',    n:'Torii',     d:'La puerta sagrada de los santuarios sintoístas'},
     {f:'castillo.glb', n:'Castillo',  d:'El Osaka-jo, la fortaleza de la ciudad'},
-    {f:'buda.glb',     n:'Gran Buda', d:'El Daibutsu del Todai-ji en Nara'},
     {f:'linterna.glb', n:'Chochin',   d:'La linterna de papel de los izakayas'},
     {f:'tarta.glb',    n:'Tarta',     d:'El cumpleaños de Marc, día 10 del viaje'},
     {f:'ramen.glb',    n:'Ramen',     d:'El plato que vamos a comer 20 veces'}
@@ -2891,15 +2648,7 @@ try{
               mat.envMapIntensity = 2.2;   // v10: los escaneos del Smithsonian necesitan más entorno
               // ★ v10.5 — el Gran Buda del Todai-ji es DE BRONCE y el escaneo no trae material:
               //   con el material por defecto (blanco, metalness 1) se veia NEGRO sobre fondo negro.
-              if (esBudaMat){
-                // ★ v10.8 — MEDIDO: el canvas #bg3d NO recibe la luz de la escena
-                //   (con MeshBasicMaterial el Buda aparece 610x430px; con
-                //   MeshStandardMaterial no aparece ni con 4 luces ni con emissive).
-                //   Solucion: material que no depende de luces, con sombreado falso
-                //   a partir de las NORMALES para que conserve volumen.
-                mat.dispose && mat.dispose();
-                mm.material = budaMat(mm.geometry);
-              }
+              
               mat.needsUpdate = true;
             });
           });
@@ -2994,82 +2743,6 @@ try{
 })();
 </script>
 <div id="cineProg" aria-hidden="true"><b>0</b>% RECORRIDO</div>
-<script>
-/* ══════════════════════════════════════════════════════════════════════
-   v9.2 — SCROLLTRIGGER de la sección cinematográfica.
-   Patrón de los sitios de referencia:
-       trigger + start 'top top' + end '+=2600' + pin:true + scrub:1
-   El scroll es el director: dolly-in, rotación y revelado del texto.
-   Mientras dura, body.cine-puro oculta TODA la interfaz (solo el objeto).
-   ══════════════════════════════════════════════════════════════════════ */
-(function(){
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-    console.warn('[v9.2] GSAP o ScrollTrigger no disponibles');
-    return;
-  }
-  var sec = document.getElementById('cine');
-  if (!sec){ console.warn('[v9.2] no hay #cine'); return; }
 
-  function fase(p){
-    var f = p < 0.10 ? 'f0' : (p < 0.38 ? 'f1' : (p < 0.68 ? 'f2' : 'f3'));
-    if (sec.dataset.fase !== f){
-      sec.dataset.fase = f; sec.className = f;
-      // ★ v12.0 — accesibilidad: los hijos con opacity:0 seguian en el DOM sin aria-hidden
-      //   -> el lector de pantalla leia el texto invisible y las 4 fases a la vez.
-      try{
-        var ct2 = document.getElementById('cineTexto');
-        if (ct2){
-          var nf = parseInt(String(f).replace('f',''), 10) || 0;
-          [].slice.call(ct2.children).forEach(function(el, k3){
-            el.setAttribute('aria-hidden', (k3 <= nf) ? 'false' : 'true');
-          });
-          ct2.setAttribute('aria-hidden', 'false');
-        }
-      }catch(e){}
-    }
-  }
-
-  ScrollTrigger.create({
-    trigger: sec,
-    start: 'top top',
-    end: '+=2600',
-    pin: true,
-    pinSpacing: true,
-    scrub: 1,
-    anticipatePin: 1,
-    onUpdate: function(self){
-      window.__cine2P = self.progress;
-      fase(self.progress);
-      document.body.classList.add('cine-puro');
-    },
-    onLeave: function(){
-      window.__cine2P = undefined;
-      window.__poseEntrada = null;   // v14.1 — la proxima entrada vuelve a capturar la pose
-      // ★ v15.4 — al salir del cine, el Buda vuelve a su base para que el bucle
-      //   de flotación no arranque desde y=2.40 (daria un salto visible).
-      try{
-        (window.__galeria3d.modelos || []).forEach(function(mm){
-          if (/buda/i.test(mm.nombre || '') && mm.cineGuardado){
-            mm.baseY = mm.cineGuardado.y;
-            mm.baseEje = 0;
-          }
-        });
-      }catch(e){}
-      document.body.classList.remove('cine-puro');
-      sec.className = 'f3';
-    },
-    onLeaveBack: function(){
-      window.__cine2P = undefined;
-      document.body.classList.remove('cine-puro');
-      sec.className = 'f0';
-    },
-    onEnterBack: function(){
-      window.__cine2P = 0;
-      document.body.classList.add('cine-puro');
-    }
-  });
-  console.log('[v9.2] seccion cinematografica lista (2600px)');
-})();
-</script>
 </body>
 </html>
